@@ -1,10 +1,12 @@
 # Matter Bridge for Mobilus Cosmo GTW
 
-An **uncertified** matter bridge based on the official [Matter SDK](https://github.com/project-chip/connectedhomeip), designed to connect and control **Mobilus Cosmo GTW** devices via the Matter protocol.
+An **uncertified** matter bridge based on the official [Matter SDK](https://github.com/project-chip/connectedhomeip), designed to connect, control and subscribe to events of **Mobilus Cosmo GTW** devices via the Matter protocol.
 
 ## Overview
 
-This application acts as a **bridge** between the Matter ecosystem and Mobilus Cosmo GTW devices, enabling integration of window coverings (e.g., blinds, shutters) into Matter-compatible smart home platforms such as Apple HomeKit, Google Home, and Home Assistant. It is a native application targeted to run on the Cosmo GTW itself, which runs OpenWRT 15.05.1 as its underlying operating system.
+This application acts as a **bridge** between the Matter ecosystem and Mobilus Cosmo GTW devices, enabling integration of window coverings (e.g., blinds, shutters) into Matter-compatible smart home platforms such as Apple HomeKit, Google Home, and Home Assistant. 
+
+It is a native application targeted to run on the Cosmo GTW itself, which runs OpenWRT 15.05.1 as its underlying operating system.
 
 ## Features
 
@@ -36,16 +38,16 @@ The Cosmo GTW uses the Hi-Link HLK-7668A module, so configure OpenWRT for the ta
 
 ### Host Build
 
-Clone the project with its submodules
+Clone the project with its submodules:
 
 ```bash
-git clone --recurse-submodules --depth=1 https://github.com/piku235/matter-mobilus-bridge.git
+git clone https://github.com/piku235/matter-mobilus-bridge.git
+git submodule update --init
 ```
 
 For first-time setup:
 
 ```bash
-git submodule update --init
 source third_party/connectedhomeip/scripts/bootstrap.sh
 third_party/connectedhomeip/scripts/check_submodules.py --platform <host> --shallow
 gn gen out/host
@@ -65,7 +67,6 @@ ninja -C out/host
 For first time use:
 
 ```bash
-git submodule update --init
 source third_party/connectedhomeip/scripts/bootstrap.sh
 third_party/connectedhomeip/scripts/check_submodules.py --platform linux --shallow
 export OPENWRT_TARGET_DIR=<path_to_openwrt_build>
