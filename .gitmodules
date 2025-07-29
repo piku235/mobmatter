@@ -6,4 +6,4 @@
 	url = https://github.com/project-chip/connectedhomeip.git
 [submodule "third_party/mobilus_gtw_client/repo"]
 	path = third_party/mobilus_gtw_client/repo
-	url = https://github.com/piku235/mobilus_gtw_client.git
+	url = https://github.com/piku235/mobilus-gtw-client.git
