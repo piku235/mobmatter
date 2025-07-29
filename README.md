@@ -1,4 +1,4 @@
-# Matter Bridge for Mobilus Cosmo GTW
+# <img src="assets/icon.svg" width="24" /> Matter Bridge for Mobilus Cosmo GTW
 
 An **uncertified** matter bridge built on the official [Matter SDK](https://github.com/project-chip/connectedhomeip), designed to connect, control and subscribe to events from devices connected to **Mobilus Cosmo GTW** via the Matter protocol.
 
@@ -42,7 +42,7 @@ Clone the project with its submodules:
 
 ```bash
 git clone https://github.com/piku235/matter-mobilus-bridge.git
-git submodule update --init
+cd matter-mobilus-bridge && git submodule update --init
 ```
 
 ### Host Build
@@ -50,8 +50,8 @@ git submodule update --init
 For first-time setup:
 
 ```bash
+third_party/connectedhomeip/scripts/checkout_submodules.py --platform <host> --shallow
 source third_party/connectedhomeip/scripts/bootstrap.sh
-third_party/connectedhomeip/scripts/check_submodules.py --platform <host> --shallow
 gn gen out/host
 ninja -C out/host
 ```
@@ -69,8 +69,8 @@ ninja -C out/host
 For first time use:
 
 ```bash
+third_party/connectedhomeip/scripts/checkout_submodules.py --platform linux --shallow
 source third_party/connectedhomeip/scripts/bootstrap.sh
-third_party/connectedhomeip/scripts/check_submodules.py --platform linux --shallow
 export OPENWRT_TARGET_DIR=<path_to_openwrt_build>
 gn gen out/target --args='import("//build/target.gni")'
 ninja -C out/target
