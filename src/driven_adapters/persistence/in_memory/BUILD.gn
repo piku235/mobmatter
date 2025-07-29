@@ -1,0 +1,17 @@
+source_set("in_memory") {
+  sources = [
+    "InMemoryEndpointIdGenerator.cpp",
+    "InMemoryCoverRepository.cpp",
+  ]
+
+  public = [
+    "InMemoryEndpointIdGenerator.h",
+    "InMemoryCoverRepository.h",
+  ]
+
+  deps = [
+    "//src/application"
+  ]
+
+  configs += ["//:includes"]
+}

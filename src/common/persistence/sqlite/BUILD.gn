@@ -1,0 +1,20 @@
+import("//build_overrides/build.gni")
+import("${build_root}/config/linux/pkg_config.gni")
+
+pkg_config("sqlite_config") {
+  packages = [ "sqlite3" ]
+}
+
+source_set("sqlite") {
+  sources = [
+    "Connection.cpp",
+    "Statement.cpp",
+  ]
+
+  public = [
+    "Connection.h",
+    "Statement.h",
+  ]
+
+  configs += [":sqlite_config"]
+}

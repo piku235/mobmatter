@@ -1,0 +1,171 @@
+import("//build_overrides/build.gni")
+import("${build_root}/config/linux/pkg_config.gni")
+
+protobuf_dir = "//third_party/protobuf/repo"
+mobilus_proto_dir = "repo/include/jungi/mobilus_gtw_client/proto"
+mobilus_proto_outdir = "${target_gen_dir}/jungi/mobilus_gtw_client/proto"
+
+config("protobuf_config") {
+  include_dirs = [
+    "${protobuf_dir}/src",
+    target_gen_dir,
+  ]
+
+  defines = [
+    "GOOGLE_PROTOBUF_NO_RTTI",
+  ]
+}
+
+pkg_config("mosquitto_config") {
+  packages = [ "libmosquitto" ]
+}
+
+pkg_config("openssl_config") {
+  packages = [ "openssl" ]
+}
+
+config("includes") {
+  include_dirs = [
+    "repo/include",
+  ]
+}
+
+action("gen_mobilus_proto") {
+  script = "//third_party/protobuf/scripts/protoc.py"
+  outputs = [
+    "${mobilus_proto_outdir}/CallEvents.pb.cc",
+    "${mobilus_proto_outdir}/CurrentStateRequest.pb.cc",
+    "${mobilus_proto_outdir}/CurrentStateResponse.pb.cc",
+    "${mobilus_proto_outdir}/Device.pb.cc",
+    "${mobilus_proto_outdir}/DevicesListRequest.pb.cc",
+    "${mobilus_proto_outdir}/DevicesListResponse.pb.cc",
+    "${mobilus_proto_outdir}/DeviceSettingsRequest.pb.cc",
+    "${mobilus_proto_outdir}/DeviceSettingsResponse.pb.cc",
+    "${mobilus_proto_outdir}/NetworkSettingsRequest.pb.cc",
+    "${mobilus_proto_outdir}/NetworkSettingsResponse.pb.cc",
+    "${mobilus_proto_outdir}/Event.pb.cc",
+    "${mobilus_proto_outdir}/LoginRequest.pb.cc",
+    "${mobilus_proto_outdir}/LoginResponse.pb.cc",
+    "${mobilus_proto_outdir}/CallEvents.pb.h",
+    "${mobilus_proto_outdir}/CurrentStateRequest.pb.h",
+    "${mobilus_proto_outdir}/CurrentStateResponse.pb.h",
+    "${mobilus_proto_outdir}/Device.pb.h",
+    "${mobilus_proto_outdir}/DevicesListRequest.pb.h",
+    "${mobilus_proto_outdir}/DevicesListResponse.pb.h",
+    "${mobilus_proto_outdir}/DeviceSettingsRequest.pb.h",
+    "${mobilus_proto_outdir}/DeviceSettingsResponse.pb.h",
+    "${mobilus_proto_outdir}/NetworkSettingsRequest.pb.h",
+    "${mobilus_proto_outdir}/NetworkSettingsResponse.pb.h",
+    "${mobilus_proto_outdir}/Event.pb.h",
+    "${mobilus_proto_outdir}/LoginRequest.pb.h",
+    "${mobilus_proto_outdir}/LoginResponse.pb.h",
+  ]
+  sources = [
+    "${mobilus_proto_dir}/CallEvents.proto",
+    "${mobilus_proto_dir}/CurrentStateRequest.proto",
+    "${mobilus_proto_dir}/CurrentStateResponse.proto",
+    "${mobilus_proto_dir}/Device.proto",
+    "${mobilus_proto_dir}/DevicesListRequest.proto",
+    "${mobilus_proto_dir}/DevicesListResponse.proto",
+    "${mobilus_proto_dir}/DeviceSettingsRequest.proto",
+    "${mobilus_proto_dir}/DeviceSettingsResponse.proto",
+    "${mobilus_proto_dir}/NetworkSettingsRequest.proto",
+    "${mobilus_proto_dir}/NetworkSettingsResponse.proto",
+    "${mobilus_proto_dir}/Event.proto",
+    "${mobilus_proto_dir}/LoginRequest.proto",
+    "${mobilus_proto_dir}/LoginResponse.proto",
+  ]
+
+  args = [
+    "-I", rebase_path("${mobilus_proto_dir}", root_build_dir),
+    "--cpp_out", rebase_path(mobilus_proto_outdir, root_build_dir),
+  ] + rebase_path(sources, root_build_dir)
+}
+
+source_set("proto") {
+  deps = [
+    "//third_party/protobuf:libprotobuf-lite",
+    ":gen_mobilus_proto",
+  ]
+
+  sources = get_target_outputs(":gen_mobilus_proto")
+
+  public_configs = [
+    ":protobuf_config"
+  ]
+}
+
+source_set("crypto") {
+  sources = [
+    "repo/src/crypto/Aes256Encryptor.cpp",
+    "repo/src/crypto/hash.cpp",
+    "repo/src/crypto/utils.cpp",
+  ]
+  public = [
+    "repo/src/crypto/Encryptor.h",
+    "repo/src/crypto/Aes256Encryptor.h",
+    "repo/src/crypto/hash.h",
+    "repo/src/crypto/utils.h",
+  ]
+
+  configs += [":openssl_config"]
+}
+
+static_library("mobilus_gtw_client") {
+  output_name = "libmobgtw"
+
+  sources = [
+    "repo/src/ClientId.cpp",
+    "repo/src/Envelope.cpp",
+    "repo/src/ExponentialBackoff.h",
+    "repo/src/ExponentialBackoff.cpp",
+    "repo/src/MosquittoCondition.h",
+    "repo/src/MosquittoCondition.cpp",
+    "repo/src/MqttMobilusGtwClient.cpp",
+    "repo/src/MqttMobilusGtwClientImpl.cpp",
+    "repo/src/ProtoUtils.cpp",
+    "repo/src/io/BlockingClientWatcher.cpp",
+  ]
+
+  public = [
+    "repo/include/jungi/mobilus_gtw_client/Action.h",
+    "repo/include/jungi/mobilus_gtw_client/ClientId.h",
+    "repo/include/jungi/mobilus_gtw_client/EventNumber.h",
+    "repo/include/jungi/mobilus_gtw_client/Envelope.h",
+    "repo/include/jungi/mobilus_gtw_client/MessageType.h",
+    "repo/include/jungi/mobilus_gtw_client/MessageBus.h",
+    "repo/include/jungi/mobilus_gtw_client/MobilusClient.h",
+    "repo/include/jungi/mobilus_gtw_client/MqttMobilusGtwClient.h",
+    "repo/include/jungi/mobilus_gtw_client/MqttMobilusGtwClientConfig.h",
+    "repo/include/jungi/mobilus_gtw_client/Platform.h",
+    "repo/include/jungi/mobilus_gtw_client/ProtoUtils.h",
+    "repo/include/jungi/mobilus_gtw_client/SessionInformation.h",
+    "repo/include/jungi/mobilus_gtw_client/io/SocketEventHandler.h",
+    "repo/include/jungi/mobilus_gtw_client/io/TimerEventHandler.h",
+    "repo/include/jungi/mobilus_gtw_client/io/SocketEvents.h",
+    "repo/include/jungi/mobilus_gtw_client/io/ClientWatcher.h",
+    "repo/include/jungi/mobilus_gtw_client/io/BlockingClientWatcher.h",
+    "repo/include/jungi/mobilus_gtw_client/io/NullClientWatcher.h",
+  ]
+
+  include_dirs = [
+    "repo/src"
+  ]
+
+  deps = [
+    ":crypto",
+  ]
+
+  public_deps = [
+    ":proto",
+  ]
+
+  configs += [
+    ":openssl_config",
+  ]
+
+  public_configs = [
+    ":includes",
+    ":mosquitto_config",
+  ]
+}

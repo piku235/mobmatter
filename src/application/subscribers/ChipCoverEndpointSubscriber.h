@@ -1,0 +1,21 @@
+#include "application/driven_ports/CoverEndpointService.h"
+#include "application/model/window_covering/CoverAdded.h"
+#include "application/model/window_covering/CoverRemoved.h"
+#include "common/domain/MultiDomainEventSubscriber.h"
+
+namespace mmbridge::application::subscribers {
+
+namespace driven_ports = mmbridge::application::driven_ports;
+namespace wc = mmbridge::application::model::window_covering;
+
+class ChipCoverEndpointSubscriber final : public mmbridge::common::domain::MultiDomainEventSubscriber<wc::CoverAdded, wc::CoverRemoved> {
+public:
+    ChipCoverEndpointSubscriber(driven_ports::CoverEndpointService& coverEndpointService);
+    void handle(const wc::CoverAdded& event) override;
+    void handle(const wc::CoverRemoved& event) override;
+
+private:
+    driven_ports::CoverEndpointService& mCoverEndpointService;
+};
+
+}

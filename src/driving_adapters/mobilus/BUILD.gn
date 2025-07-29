@@ -1,0 +1,12 @@
+source_set("common") {
+  sources = [
+    "ConversionUtils.cpp",
+    "ConversionUtils.h",
+  ]
+
+  deps = [
+    "//src/application",
+  ]
+
+  configs += ["//:includes"]
+}

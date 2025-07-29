@@ -1,0 +1,23 @@
+import("//build_overrides/chip.gni")
+
+chip_device_project_config_include = "<CHIPProjectAppConfig.h>"
+chip_project_config_include = "<CHIPProjectAppConfig.h>"
+chip_system_project_config_include = "<SystemProjectConfig.h>"
+
+chip_project_config_include_dirs = [
+    "//include", 
+    "${chip_root}/config/standalone"
+]
+
+chip_enable_ble = false
+chip_enable_wifi = false
+chip_enable_openthread = false
+chip_config_network_layer_ble = false
+
+matter_enable_recommended = false
+chip_logging = true
+chip_use_external_logging = true
+# chip_error_logging = true
+chip_build_default_attestation_verifier = false
+chip_build_controller = false
+chip_build_tests = false

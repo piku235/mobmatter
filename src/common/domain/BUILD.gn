@@ -1,0 +1,13 @@
+source_set("domain") {
+  sources = [
+    "DomainEventPublisher.cpp",
+  ]
+
+  public = [
+    "Entity.h",
+    "DomainEvent.h",
+    "DomainEventPublisher.h",
+    "DomainEventSubscriber.h",
+    "MultiDomainEventSubscriber.h",
+  ]
+}

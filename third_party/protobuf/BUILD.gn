@@ -1,0 +1,71 @@
+import("protobuf.gni")
+
+config("protobuf_includes") {
+  include_dirs = [
+    "include",
+    "repo/src",
+  ]
+}
+
+config("protobuf_flags") {
+  defines = [
+    "GOOGLE_PROTOBUF_NO_RTTI",
+  ]
+
+  if (current_cpu == "x86" || current_cpu == "x64") {
+    defines += [ "GOOGLE_PROTOBUF_ARCH_X64" ]
+  } else if (current_cpu == "mipsel_24kec") {
+    defines += [ "GOOGLE_PROTOBUF_ARCH_MIPS" ]
+  }
+
+  cflags_cc = ["-w"] # suppress all warnings
+}
+
+source_set("libprotobuf-common") {
+  sources = [
+    "repo/src/google/protobuf/stubs/common.cc",
+    "repo/src/google/protobuf/stubs/once.cc",
+    "repo/src/google/protobuf/stubs/stringprintf.cc",
+    "repo/src/google/protobuf/extension_set.cc",
+    "repo/src/google/protobuf/generated_message_util.cc",
+    "repo/src/google/protobuf/message_lite.cc",
+    "repo/src/google/protobuf/repeated_field.cc",
+    "repo/src/google/protobuf/wire_format_lite.cc",
+    "repo/src/google/protobuf/io/coded_stream.cc",
+    "repo/src/google/protobuf/io/zero_copy_stream.cc",
+    "repo/src/google/protobuf/io/zero_copy_stream_impl_lite.cc",
+  ]
+
+  if (current_cpu == "x86" || current_cpu == "x64") {
+    sources += [
+      "repo/src/google/protobuf/stubs/atomicops_internals_x86_gcc.cc",
+      "repo/src/google/protobuf/stubs/atomicops_internals_x86_msvc.cc",
+    ]
+  }
+
+  public = [
+    "repo/src/google/protobuf/stubs/hash.h",
+    "repo/src/google/protobuf/stubs/map_util.h",
+    "repo/src/google/protobuf/stubs/shared_ptr.h",
+    "repo/src/google/protobuf/stubs/stringprintf.h",
+    "repo/src/google/protobuf/stubs/coded_stream_inl.h",
+  ]
+
+  public_configs = [
+    ":protobuf_flags",
+    ":protobuf_includes"
+  ]
+}
+
+if (libprotobuf_static) {
+  static_library("libprotobuf-lite") {
+    deps = [":libprotobuf-common"]
+  }
+} else {
+  shared_library("libprotobuf-lite") {
+    deps = [":libprotobuf-common"]
+
+    output_extension = "so.9"
+    output_dir = root_out_dir
+  }
+}

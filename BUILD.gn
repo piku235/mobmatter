@@ -1,0 +1,79 @@
+import("//build/app_config.gni")
+import("//build_overrides/chip.gni")
+import("${chip_root}/src/app/chip_data_model.gni")
+import("${chip_root}/src/app/common_flags.gni")
+import("${chip_root}/src/lib/core/core.gni")
+import("${chip_root}/src/lib/lib.gni")
+
+chip_data_model("mmbridge-zap") {
+  zap_file = "//mmbridge.zap"
+  is_server = true
+
+  cflags = [ "-DDYNAMIC_ENDPOINT_COUNT=100" ]
+}
+
+config("includes") {
+  include_dirs = ["//src"]
+}
+
+config("app_config") {
+  defines = [
+    "DATABASE_FILE=\"${database_file}\"",
+    "DATABASE_PRAGMA_SQL=\"${database_pragma_sql}\"",
+    "MOBILUS_HOST=\"${mobilus_host}\"",
+    "MOBILUS_PORT=${mobilus_port}",
+    "MOBILUS_CA_FILE=\"${mobilus_ca_file}\"",
+  ]
+
+  if (config_ini_file != "") {
+    defines += ["CONFIG_INI_FILE=\"${config_ini_file}\""]
+  }
+}
+
+executable("matter-bridge") {
+  sources = [
+    "include/CHIPProjectAppConfig.h",
+    "include/AppConfig.h",
+    "include/SqliteDatabaseSchema.h",
+    "src/main.cpp",
+  ]
+
+  deps = [
+    "//src/matter",
+    "//src/matter/event_loop",
+    "//src/matter/persistence:sqlite",
+    "//src/matter/logging",
+    "//src/common/logging:stdio",
+    "//src/common/logging:syslog",
+    "//src/application",
+    "//src/driven_adapters/logging",
+    "//src/driven_adapters/mobilus/cover_control",
+    "//src/driven_adapters/persistence/sqlite",
+    "//src/driven_adapters/matter/window_covering_reporting",
+    "//src/driven_adapters/matter/zcl_cover_endpoint",
+    "//src/driving_adapters/matter/cluster_stubs",
+    "//src/driving_adapters/matter/window_covering_cluster",
+    "//src/driving_adapters/mobilus/device_events",
+    "//src/driving_adapters/mobilus/device_init",
+    "//third_party/mobilus_gtw_client",
+  ]
+
+  include_dirs = [
+    "include",
+    "src",
+  ]
+
+  configs += [
+    ":app_config",
+  ]
+
+  cflags = [ "-Wconversion" ]
+
+  output_dir = root_out_dir
+}
+
+group("default") {
+  deps = [
+    ":matter-bridge",
+  ]
+}

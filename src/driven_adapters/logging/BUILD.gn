@@ -1,0 +1,15 @@
+source_set("logging") {
+  sources = [
+    "LoggingDomainEventSubscriber.cpp",
+  ]
+
+  public = [
+    "LoggingDomainEventSubscriber.h",
+  ]
+
+  deps = [
+    "//src/application"
+  ]
+
+  configs += ["//:includes"]
+}

@@ -1,0 +1,20 @@
+source_set("device_init") {
+  sources = [
+    "MobilusCoverInitHandler.cpp",
+    "MqttMobilusDeviceInitializer.cpp",
+  ]
+
+  public = [
+    "MobilusDeviceInitHandler.h",
+    "MobilusCoverInitHandler.h",
+    "MqttMobilusDeviceInitializer.h",
+  ]
+
+  deps = [
+    "//src/driving_adapters/mobilus:common",
+    "//src/application",
+    "//third_party/mobilus_gtw_client",
+  ]
+  
+  configs += ["//:includes"]
+}

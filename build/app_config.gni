@@ -1,0 +1,13 @@
+declare_args() {
+  # config
+  config_ini_file = ""
+
+  # db
+  database_file = "/tmp/matter-bridge.db"
+  database_pragma_sql = ""
+
+  # mobilus
+  mobilus_host = "127.0.0.1"
+  mobilus_port = 8883
+  mobilus_ca_file = ""
+}

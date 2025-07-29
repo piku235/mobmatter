@@ -1,0 +1,31 @@
+#include "MqttMobilusDeviceStateSyncer.h"
+#include "jungi/mobilus_gtw_client/proto/CurrentStateRequest.pb.h"
+#include "jungi/mobilus_gtw_client/proto/CurrentStateResponse.pb.h"
+
+using namespace jungi::mobilus_gtw_client;
+
+namespace mmbridge::driving_adapters::mobilus::device_events {
+
+MqttMobilusDeviceStateSyncer::MqttMobilusDeviceStateSyncer(MqttMobilusGtwClient& mobilusGtwClient, MobilusEventHandler& eventHandler, logging::Logger& logger)
+    : mMobilusGtwClient(mobilusGtwClient)
+    , mEventHandler(eventHandler)
+    , mLogger(logger)
+{
+}
+
+void MqttMobilusDeviceStateSyncer::run()
+{
+    proto::CurrentStateResponse response;
+
+    mLogger.notice("MQTT syncing device states");
+
+    if (!mMobilusGtwClient.sendRequest(proto::CurrentStateRequest(), response)) {
+        return;
+    }
+
+    for (int i = 0; i < response.events_size(); i++) {
+        mEventHandler.handle(response.events(i));
+    }
+}
+
+}

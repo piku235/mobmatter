@@ -1,0 +1,23 @@
+source_set("device_events") {
+  sources = [
+    "MobilusCoverEventHandler.cpp",
+    "MqttMobilusDeviceStateSyncer.cpp",
+    "MqttMobilusEventSubscriber.cpp",
+  ]
+
+  public = [
+    "MobilusEventHandler.h",
+    "MobilusCoverEventHandler.h",
+    "MqttMobilusDeviceStateSyncer.h",
+    "MqttMobilusEventSubscriber.h",
+  ]
+
+  deps = [
+    "//src/driving_adapters/mobilus:common",
+    "//src/application",
+    "//src/matter",
+    "//third_party/mobilus_gtw_client",
+  ]
+  
+  configs += ["//:includes"]
+}

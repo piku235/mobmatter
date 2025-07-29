@@ -1,0 +1,46 @@
+source_set("logging") {
+  sources = [
+    "Logger.cpp",
+  ]
+
+  public = [
+    "Logger.h",
+    "LogHandler.h",
+    "LogLevel.h",
+    "handlers/NoopLogHandler.h",
+  ]
+
+  configs += ["//:includes"]
+}
+
+source_set("syslog") {
+  sources = [
+    "handlers/SyslogHandler.cpp",
+  ]
+
+  public = [
+    "handlers/SyslogHandler.h",
+  ]
+
+  deps = [
+    ":logging"
+  ]
+
+  configs += ["//:includes"]
+}
+
+source_set("stdio") {
+  sources = [
+    "handlers/StdioLogHandler.cpp",
+  ]
+
+  public = [
+    "handlers/StdioLogHandler.h",
+  ]
+
+  deps = [
+    ":logging"
+  ]
+
+  configs += ["//:includes"]
+}

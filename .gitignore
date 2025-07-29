@@ -1,0 +1,3 @@
+out/
+build/local.gni
+third_party/protobuf/bin

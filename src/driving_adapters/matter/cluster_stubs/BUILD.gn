@@ -1,0 +1,21 @@
+import("//build_overrides/chip.gni")
+
+source_set("cluster_stubs") {
+  sources = [
+    "IdentifyAttributeAccessStub.cpp",
+    "ClusterStubsAdapter.cpp",
+  ]
+
+  public = [
+    "IdentifyAttributeAccessStub.h",
+    "IdentifyCommandHandlerStub.h",
+    "ClusterStubsAdapter.h",
+  ]
+
+  deps = [
+    "${chip_root}/src/app",
+    "//src/application",
+  ]
+  
+  configs += ["//:includes"]
+}

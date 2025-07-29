@@ -1,0 +1,21 @@
+import("//build_overrides/chip.gni")
+
+source_set("event_loop") {
+  sources = [
+    "DomainEventPublisherAdapter.cpp",
+    "MqttMobilusGtwClientAdapter.cpp",
+  ]
+
+  public = [
+    "DomainEventPublisherAdapter.h",
+    "MqttMobilusGtwClientAdapter.h",
+  ]
+
+  deps = [
+    "${chip_root}/src/lib",
+    "//src/common/domain",
+    "//third_party/mobilus_gtw_client",
+  ]
+
+  configs += ["//:includes"]
+}

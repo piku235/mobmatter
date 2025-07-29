@@ -1,0 +1,13 @@
+source_set("zcl_cover_endpoint") {
+  sources = [
+    "ZclCoverEndpointService.cpp",
+  ]
+
+  public = [
+    "ZclCoverEndpointService.h",
+  ]
+
+  include_dirs = ["//src"]
+
+  deps = ["//src/driven_adapters/matter/zcl_endpoint:common"]
+}

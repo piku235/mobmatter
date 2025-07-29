@@ -1,0 +1,9 @@
+[submodule "third_party/protobuf/repo"]
+	path = third_party/protobuf/repo
+	url = https://github.com/protocolbuffers/protobuf.git
+[submodule "third_party/connectedhomeip"]
+	path = third_party/connectedhomeip
+	url = https://github.com/project-chip/connectedhomeip.git
+[submodule "third_party/mobilus_gtw_client/repo"]
+	path = third_party/mobilus_gtw_client/repo
+	url = https://github.com/piku235/mobilus_gtw_client.git

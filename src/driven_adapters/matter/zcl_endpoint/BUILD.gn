@@ -1,0 +1,13 @@
+source_set("common") {
+  sources = [
+    "ZclDeviceEndpoint.cpp",
+    "ZclDeviceEndpoint.h",
+  ]
+
+  public_deps = [
+    "//:mmbridge-zap",
+    "//src/application",
+  ]
+  
+  public_configs = ["//:includes"]
+}
