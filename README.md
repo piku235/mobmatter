@@ -1,4 +1,4 @@
-# <img src="assets/smart-home.svg" width="24" /> Matter Bridge for Mobilus Cosmo GTW
+# 🏠 Matter Bridge for Mobilus Cosmo GTW
 
 An **uncertified** matter bridge built on the official [Matter SDK](https://github.com/project-chip/connectedhomeip), designed to connect, control and subscribe to events from devices connected to **Mobilus Cosmo GTW** via the Matter protocol.
 
