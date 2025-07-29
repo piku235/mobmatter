@@ -1,10 +1,10 @@
 # Matter Bridge for Mobilus Cosmo GTW
 
-An **uncertified** matter bridge based on the official [Matter SDK](https://github.com/project-chip/connectedhomeip), designed to connect, control and subscribe to events of **Mobilus Cosmo GTW** devices via the Matter protocol.
+An **uncertified** matter bridge built on the official [Matter SDK](https://github.com/project-chip/connectedhomeip), designed to connect, control and subscribe to events from devices connected to **Mobilus Cosmo GTW** via the Matter protocol.
 
 ## Overview
 
-This application acts as a **bridge** between the Matter ecosystem and Mobilus Cosmo GTW devices, enabling integration of window coverings (e.g., blinds, shutters) into Matter-compatible smart home platforms such as Apple HomeKit, Google Home, and Home Assistant. 
+This application acts as a **bridge** between the Matter ecosystem and Mobilus Cosmo GTW, enabling integration of window coverings (blinds, shutters) into Matter-compatible smart home platforms such as Apple HomeKit, Home Assistant and Google Home.
 
 It is a native application targeted to run on the Cosmo GTW itself, which runs OpenWRT 15.05.1 as its underlying operating system.
 
@@ -17,11 +17,12 @@ It is a native application targeted to run on the Cosmo GTW itself, which runs O
 ## Requirements
 
 For full compatibility, your Cosmo GTW device should be running the firmware version **0.1.7.8** or higher.
+
 This application assumes your Cosmo GTW is fully setup and configured.
 
 **Supported devices**
 
-* Senso - eg. ERS actuator
+* Senso - eg ERS actuator
 * Cosmo
 * C-MR
 
@@ -33,10 +34,9 @@ This project uses **GN (Generate Ninja)** as its build system, provided by the M
 
 For building project on your host you need to install all required libs and tools, follow the official [Matter SDK Prerequisites](https://project-chip.github.io/connectedhomeip-doc/guides/BUILDING.html#prerequisites).
 
-To build the project for Cosmo GTW, you need to pull and build [OpenWRT](https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem).  
-The Cosmo GTW uses the Hi-Link HLK-7668A module, so configure OpenWRT for the target platform `ramips` and subtarget `mt76x8`.
+To build the project for Cosmo GTW, you need to pull and build [OpenWRT](https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem).
 
-### Host Build
+The Cosmo GTW uses the Hi-Link HLK-7668A module, so configure OpenWRT for the target platform `ramips` and subtarget `mt76x8`.
 
 Clone the project with its submodules:
 
@@ -44,6 +44,8 @@ Clone the project with its submodules:
 git clone https://github.com/piku235/matter-mobilus-bridge.git
 git submodule update --init
 ```
+
+### Host Build
 
 For first-time setup:
 
