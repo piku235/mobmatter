@@ -1,3 +1,10 @@
+import("//build_overrides/build.gni")
+import("${build_root}/config/linux/pkg_config.gni")
+
+pkg_config("openssl_config") {
+  packages = [ "openssl" ]
+}
+
 static_library("application") {
   output_name = "libapp"
 
@@ -47,7 +54,10 @@ static_library("application") {
     "//src/common/domain",
   ]
 
-  configs += ["//:includes"]
+  configs += [
+    "//:includes",
+    ":openssl_config"
+  ]
 
   cflags = [ "-Wconversion" ]
 }
