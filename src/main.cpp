@@ -226,7 +226,7 @@ size_t loadDevices(CoverRepository& coverRepository, CoverEndpointService& cover
 
 void showVersion()
 {
-    printf("matter-bridge %s\n", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
+    printf("matter-bridge v%s\n", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
 }
 
 int main(int argc, char* argv[])
