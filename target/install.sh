@@ -5,6 +5,11 @@ PACKAGE_NAME="matter_bridge_gtw.tar.gz"
 PACKAGE_URL="https://github.com/$REPO/releases/latest/download/$PACKAGE_NAME"
 CONF_FILE="matter-bridge.conf"
 
+if [ ! -f "/mobilus/mobilus" ]; then
+  echo "mobilus is not present, aborting"
+  exit 1
+fi
+
 if [ -d "/opt/matter" ]; then
   echo "matter bridge is already installed"
   exit 1
