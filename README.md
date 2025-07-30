@@ -28,6 +28,18 @@ For full compatibility, your Cosmo GTW device should be running the firmware ver
 
 This application assumes your Cosmo GTW is fully setup and configured.
 
+## Installation
+
+Installation is performed on the Cosmo GTW via SSH and the installation script.
+
+*Note: Instructions on how to enable SSH access to Cosmo GTW will be provided in a separate document/thread (TODO).*
+
+Once connected via SSH, run the following command to start the installation:
+
+```bash
+wget --no-check-certificate -qO- https://raw.githubusercontent.com/piku235/matter-mobilus-bridge/main/target/install.sh | sh
+```
+
 ## Build
 
 This project uses **GN (Generate Ninja)** as its build system, provided by the Matter SDK.
