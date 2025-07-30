@@ -14,7 +14,7 @@ BIN_VERSION=$("$MATTER_BRIDGE_BIN" --version | awk '{print $2}')
 LATEST_VERSION=$(wget --no-check-certificate -qO- https://api.github.com/repos/$REPO/releases/latest | grep '"tag_name":' | sed -E 's/^[[:space:]]*"tag_name": *"([^"]+)",?/\1/')
 
 if [ "$BIN_VERSION" = "$LATEST_VERSION" ]; then
-  echo "matter bridge is already at the latest version: $BIN_VERSION"
+  echo "matter bridge is already at the latest $BIN_VERSION"
   exit 1
 fi
 
