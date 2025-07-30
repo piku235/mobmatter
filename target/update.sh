@@ -43,6 +43,9 @@ fi
 
 cd mmbridge
 
+echo "Stopping matter bridge"
+/etc/init.d/matter-bridge stop
+
 echo "Looking for outdated files"
 
 if ! cmp -s etc/init.d/matter-bridge /etc/init.d/matter-bridge; then

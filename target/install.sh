@@ -38,14 +38,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Killing mobilus process"
-pkill mobilus
-
-if [ $? -ne 0 ]; then
-  echo "Couldnt kill mobilus process"
-  exit 1
-fi
-
 cd mmbridge
 mkdir -p /opt/matter/etc
 mkdir -p /opt/matter/var
@@ -65,6 +57,9 @@ EOF
 echo "Copying files to storage, may take a while ..."
 cp /etc/rc.local /etc/rc.local.old # backup
 cp -a . /
+
+echo "Killing mobilus process"
+pkill mobilus
 
 echo "Enabling and starting services"
 /etc/init.d/mobilus enable
