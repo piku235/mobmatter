@@ -72,13 +72,13 @@ echo "Enabling and starting services"
 /etc/init.d/mobilus start
 /etc/init.d/matter-bridge start
 
-echo "COMPLETE!"
-
 if ps | grep -q [m]atter-bridge && ps | grep -q [m]obilus; then
+  echo "SUCCESS!"
   echo "mobilus and matter-bridge are running!"
   echo "Now matter-bridge is in the commissioning mode"
   echo "Scan QR code or type manual code to pair it"
 else
+  echo "FAILED"
   echo "It seems matter-bridge is not running"
   echo "Are you sure you typed correct username and password?"
   echo "Verify by running vi /opt/matter/etc/$CONF_FILE"

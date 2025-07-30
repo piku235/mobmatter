@@ -1,4 +1,5 @@
 #include "AppConfig.h"
+#include "CHIPProjectAppConfig.h"
 #include "SqliteDatabaseSchema.h"
 #include "application/subscribers/ChipCoverEndpointSubscriber.h"
 #include "application/subscribers/MobilusCoverControlSubscriber.h"
@@ -30,6 +31,7 @@
 
 #include <platform/CHIPDeviceLayer.h>
 
+#include <cstdio>
 #include <csignal>
 #include <cstdlib>
 #include <cstring>
@@ -222,8 +224,18 @@ size_t loadDevices(CoverRepository& coverRepository, CoverEndpointService& cover
     return covers.size();
 }
 
+void showVersion()
+{
+    printf("matter-bridge %s\n", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
+}
+
 int main(int argc, char* argv[])
 {
+    if (argc > 1 && !strcmp("--version", argv[1])) {
+        showVersion();
+        return 0;
+    }
+
     // must outlive the main()
     static Logger logger(createLogHandler());
     static auto db = openSqliteDb(logger);

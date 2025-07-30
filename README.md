@@ -42,14 +42,20 @@ chmod a+x install.sh
 ./install.sh
 ```
 
-### Remove
+### Update
 
-To remove and rollback changes made by matter bridge run
+To update matter bridge to the latest version, run:
 
 ```bash
-cd /tmp && wget --no-check-certificate https://raw.githubusercontent.com/piku235/matter-mobilus-bridge/main/target/remove.sh
-chmod a+x remove.sh
-./remove.sh
+wget --no-check-certificate -qO- https://raw.githubusercontent.com/piku235/matter-mobilus-bridge/main/target/update.sh | sh
+```
+
+### Remove
+
+To remove and rollback changes made by matter bridge run:
+
+```bash
+wget --no-check-certificate -qO- https://raw.githubusercontent.com/piku235/matter-mobilus-bridge/main/target/remove.sh | sh
 ```
 
 ## Build
