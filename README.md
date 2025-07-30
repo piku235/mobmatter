@@ -8,6 +8,14 @@ This application acts as a **bridge** between the Matter ecosystem and Mobilus C
 
 It is a native application targeted to run on the Cosmo GTW itself, which runs OpenWRT 15.05.1 as its underlying operating system.
 
+**Supported devices:**
+
+* Senso - eg. ERS actuator
+* Cosmo
+* C-MR
+
+Devices supported by the Cosmo GTW but not listed here will be added in future releases.
+
 ## Features
 
 - Bridges Mobilus Cosmo GTW-controlled devices into the Matter ecosystem
@@ -19,12 +27,6 @@ It is a native application targeted to run on the Cosmo GTW itself, which runs O
 For full compatibility, your Cosmo GTW device should be running the firmware version **0.1.7.8** or higher.
 
 This application assumes your Cosmo GTW is fully setup and configured.
-
-**Supported devices**
-
-* Senso - eg ERS actuator
-* Cosmo
-* C-MR
 
 ## Build
 
