@@ -64,13 +64,15 @@ EOF
 
 echo "Copying files to storage, may take a while ..."
 cp /etc/rc.local /etc/rc.local.old # backup
-cp -r . /
+cp -a . /
 
 echo "Enabling and starting services"
 /etc/init.d/mobilus enable
 /etc/init.d/matter-bridge enable
 /etc/init.d/mobilus start
 /etc/init.d/matter-bridge start
+
+sleep 5 # wait a little to be sure
 
 if ps | grep -q [m]atter-bridge && ps | grep -q [m]obilus; then
   echo "SUCCESS!"

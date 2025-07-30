@@ -57,10 +57,10 @@ for sourcefile in opt/matter/lib/*; do
 
   if [ ! -f "$destfile" ]; then
     echo "Copying new $destfile"
-    cp "$sourcefile" "$destfile"
+    cp -a "$sourcefile" "$destfile"
   elif ! cmp -s "$sourcefile" "$destfile"; then
     echo "Updating $filename"
-    cp "$sourcefile" "$destfile"
+    cp -a "$sourcefile" "$destfile"
   fi
 done
 
@@ -80,6 +80,8 @@ cp opt/matter/bin/matter-bridge /opt/matter/bin/matter-bridge
 
 echo "Starting matter bridge"
 /etc/init.d/matter-bridge start
+
+sleep 5 # wait a little to be sure
 
 if ps | grep -q [m]atter-bridge; then
   echo "SUCCESS!"
