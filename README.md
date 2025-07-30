@@ -37,7 +37,7 @@ Installation is performed on the Cosmo GTW via SSH and the installation script.
 Once connected via SSH, run the following command to start the installation:
 
 ```bash
-cd /tmp && wget --no-check-certificate -qO- https://raw.githubusercontent.com/piku235/matter-mobilus-bridge/main/target/install.sh
+cd /tmp && wget --no-check-certificate https://raw.githubusercontent.com/piku235/matter-mobilus-bridge/main/target/install.sh
 chmod a+x install.sh
 ./install.sh
 ```
@@ -47,7 +47,7 @@ chmod a+x install.sh
 To remove and rollback changes made by matter bridge run
 
 ```bash
-cd /tmp && wget --no-check-certificate -qO- https://raw.githubusercontent.com/piku235/matter-mobilus-bridge/main/target/remove.sh
+cd /tmp && wget --no-check-certificate https://raw.githubusercontent.com/piku235/matter-mobilus-bridge/main/target/remove.sh
 chmod a+x remove.sh
 ./remove.sh
 ```

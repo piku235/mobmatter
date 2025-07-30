@@ -63,9 +63,8 @@ password=$mobilus_password
 EOF
 
 echo "Copying files to storage, may take a while ..."
+cp /etc/rc.local /etc/rc.local.old # backup
 cp -r . /
-
-cp /etc/rc.local /etc/rc.local.old
 
 echo "Enabling and starting services"
 /etc/init.d/mobilus enable
