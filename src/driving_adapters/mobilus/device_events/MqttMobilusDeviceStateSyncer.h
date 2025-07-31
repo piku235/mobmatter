@@ -3,16 +3,15 @@
 #include "MobilusEventHandler.h"
 #include "common/logging/Logger.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
-#include "matter/AppComponent.h"
 
 namespace mmbridge::driving_adapters::mobilus::device_events {
 
 namespace logging = mmbridge::common::logging;
 
-class MqttMobilusDeviceStateSyncer final : public mmbridge::matter::AppComponent {
+class MqttMobilusDeviceStateSyncer final {
 public:
     MqttMobilusDeviceStateSyncer(jungi::mobilus_gtw_client::MqttMobilusGtwClient& mobilusGtwClient, MobilusEventHandler& eventHandler, logging::Logger& logger);
-    void run() override;
+    void run();
 
 private:
     jungi::mobilus_gtw_client::MqttMobilusGtwClient& mMobilusGtwClient;

@@ -193,26 +193,7 @@ std::optional<MobilusDeviceId> getTestDeviceIdEnv()
     return static_cast<MobilusDeviceId>(atoi(env));
 }
 
-bool initDevices(MqttMobilusGtwClient& mobilusGtwClient, CoverRepository& coverRepository, EndpointIdGenerator& endpointIdGenerator, Logger& logger)
-{
-    MqttMobilusDeviceInitializer mobilusDeviceInitializer(mobilusGtwClient, logger);
-    auto testDeviceId = getTestDeviceIdEnv();
-
-    if (testDeviceId) {
-        mobilusDeviceInitializer.useTestDeviceOnly(*testDeviceId);
-    }
-
-    mobilusDeviceInitializer.registerHandler(std::make_unique<MobilusCoverInitHandler>(coverRepository, endpointIdGenerator, logger));
-
-    if (!mobilusDeviceInitializer.run()) {
-        logger.critical("Failed to initialize devices");
-        return false;
-    }
-
-    return true;
-}
-
-size_t loadDevices(CoverRepository& coverRepository, CoverEndpointService& coverEndpointService, Logger& logger)
+bool setupDevices(MqttMobilusGtwClient& mobilusGtwClient, CoverRepository& coverRepository, CoverEndpointService& coverEndpointService, EndpointIdGenerator& endpointIdGenerator, Logger& logger)
 {
     auto covers = coverRepository.all();
 
@@ -221,7 +202,31 @@ size_t loadDevices(CoverRepository& coverRepository, CoverEndpointService& cover
         logger.notice("Loaded cover at endpoint: %u", cover.endpointId());
     }
 
-    return covers.size();
+    if (covers.size()) {
+        return true;
+    }
+
+    // initiate if there are no persisted devices
+    MqttMobilusDeviceInitializer mobilusDeviceInitializer(mobilusGtwClient, logger);
+    mobilusDeviceInitializer.registerHandler(std::make_unique<MobilusCoverInitHandler>(coverRepository, endpointIdGenerator, logger));
+
+    auto testDeviceId = getTestDeviceIdEnv();
+    if (testDeviceId) {
+        mobilusDeviceInitializer.useTestDeviceOnly(*testDeviceId);
+    }
+
+    if (!mobilusDeviceInitializer.run()) {
+        logger.critical("Failed to initiate devices");
+        return false;
+    }
+
+    return true;
+}
+
+void syncDeviceStates(MqttMobilusGtwClient& mobilusGtwClient, MobilusCoverEventHandler& mobilusCoverEventHandler, Logger& logger)
+{
+    MqttMobilusDeviceStateSyncer mobilusDeviceStateSyncer(mobilusGtwClient, mobilusCoverEventHandler, logger);
+    mobilusDeviceStateSyncer.run();
 }
 
 void showVersion()
@@ -270,7 +275,6 @@ int main(int argc, char* argv[])
     // driving
     MobilusCoverEventHandler mobilusCoverEventHandler(coverRepository, logger);
     MqttMobilusEventSubscriber mobilusEventSubscriber(*mobilusGtwClient, mobilusCoverEventHandler);
-    MqttMobilusDeviceStateSyncer mobilusDeviceStateSyncer(*mobilusGtwClient, mobilusCoverEventHandler, logger);
     WindowCoveringClusterAdapter windowCoveringClusterAdapter(coverRepository, logger);
     ClusterStubsAdapter clusterStubsAdapter;
 
@@ -287,7 +291,6 @@ int main(int argc, char* argv[])
     sChipApp.registerComponent(windowCoveringClusterAdapter);
     sChipApp.registerComponent(clusterStubsAdapter);
     sChipApp.registerComponent(mobilusEventSubscriber);
-    sChipApp.registerComponent(mobilusDeviceStateSyncer);
 
     int rc = sChipApp.boot(logger, *mobilusGtwClient, persistentStorageDelegate);
     if (rc) {
@@ -295,10 +298,11 @@ int main(int argc, char* argv[])
     }
 
     // after ZAP boot
-    if (!loadDevices(coverRepository, coverEndpointService, logger)
-        && !initDevices(*mobilusGtwClient, coverRepository, endpointIdGenerator, logger)) {
+    if (!setupDevices(*mobilusGtwClient, coverRepository, coverEndpointService, endpointIdGenerator, logger)) {
         return 1;
     }
+
+    syncDeviceStates(*mobilusGtwClient, mobilusCoverEventHandler, logger);
 
     sChipApp.run();
 
