@@ -10,11 +10,11 @@ It is a native application targeted to run on the Cosmo GTW itself, which runs O
 
 **Supported devices:**
 
-* Senso - eg. ERS actuator
+* Senso - e.g., ERS actuator
 * Cosmo
 * C-MR
 
-Devices supported by the Cosmo GTW but not listed here will be added in future releases.
+For devices supported by the Cosmo GTW but not listed above, feel free to request support by [opening an issue](https://github.com/piku235/matter-mobilus-bridge/issues/new).
 
 ## Features
 
