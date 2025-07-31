@@ -53,28 +53,37 @@ if ! cmp -s etc/init.d/matter-bridge /etc/init.d/matter-bridge; then
   cp etc/init.d/matter-bridge /etc/init.d/matter-bridge
 fi
 
-# copy new or update
+echo "Checking files"
+
+# new or existing
 for sourcefile in opt/matter/lib/*; do
   filename=$(basename "$sourcefile")
   destfile="/opt/matter/lib/$filename"
 
+  echo -n "$destfile: "
+
   if [ ! -f "$destfile" ]; then
-    echo "Copying new $destfile"
     cp -a "$sourcefile" "$destfile"
+    echo "ADDED"
   elif ! cmp -s "$sourcefile" "$destfile"; then
-    echo "Updating $filename"
     cp -a "$sourcefile" "$destfile"
+    echo "UPDATED"
+  else
+    cp -a "$sourcefile" "$destfile"
+    echo "OK"
   fi
 done
 
-# remove obsolete
+# obsolete
 for sourcefile in /opt/matter/lib/*; do
   filename=$(basename "$sourcefile")
   destfile="opt/matter/lib/$filename"
 
+  echo -n "$sourcefile: "
+
   if [ ! -f "$destfile" ]; then
-    echo "Removing $sourcefile"
     rm -f "$sourcefile"
+    echo "REMOVED"
   fi
 done
 
