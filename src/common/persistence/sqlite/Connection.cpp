@@ -35,7 +35,7 @@ Statement Connection::prepare(const std::string& sql)
     sqlite3_stmt* stmt;
 
     // todo: error
-    sqlite3_prepare_v2(mDb, sql.c_str(), sql.length(), &stmt, nullptr);
+    sqlite3_prepare_v2(mDb, sql.c_str(), static_cast<int>(sql.length()), &stmt, nullptr);
 
     return Statement(stmt);
 }

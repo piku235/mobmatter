@@ -72,12 +72,12 @@ bool Statement::columnAsBool(const int index) const
 
 int8_t Statement::columnAsInt8(const int index) const
 {
-    return sqlite3_column_int(mStmt, index);
+    return static_cast<int8_t>(sqlite3_column_int(mStmt, index));
 }
 
 int16_t Statement::columnAsInt16(const int index) const
 {
-    return sqlite3_column_int(mStmt, index);
+    return static_cast<int16_t>(sqlite3_column_int(mStmt, index));
 }
 
 int32_t Statement::columnAsInt32(const int index) const

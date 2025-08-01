@@ -11,6 +11,8 @@ source_set("logging") {
   ]
 
   configs += ["//:includes"]
+
+  cflags_cc = ["-Wno-format-nonliteral"]
 }
 
 source_set("syslog") {
