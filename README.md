@@ -66,6 +66,8 @@ This project uses **GN (Generate Ninja)** as its build system, provided by the M
 
 ### Prerequisites
 
+This project targets Linux environments; attempts to build it on non-Linux platforms are likely to fail.
+
 For building project on your host you need to install all required libs and tools, follow the official [Matter SDK Prerequisites](https://project-chip.github.io/connectedhomeip-doc/guides/BUILDING.html#prerequisites).
 
 To build the project for Cosmo GTW, you need to pull and build [OpenWRT](https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem).
