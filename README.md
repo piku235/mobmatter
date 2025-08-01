@@ -20,15 +20,17 @@ For devices supported by the Cosmo GTW but not listed above, feel free to reques
 
 ## Features
 
-- Bridges Mobilus Cosmo GTW-controlled devices into the Matter ecosystem
-- Supports window covering devices
 - Built on top of the official Matter SDK (CHIP)
+- Bridges Cosmo GTW connected devices into the Matter ecosystem
+- Supports window covering devices
+- Real-time updates of the connected devices
+- Runs natively on Cosmo GTW
 
 ## Requirements
 
-For full compatibility, your Cosmo GTW device should be running the firmware version **0.1.7.8** or higher.
+For full compatibility, your Cosmo GTW should be running the firmware version **0.1.7.8** or higher.
 
-This application assumes your Cosmo GTW is fully setup and configured.
+Before installation, it is assumed that your Cosmo GTW is fully set up and configured.
 
 ## Installation
 
