@@ -46,7 +46,7 @@ read mobilus_username
 echo -n "Provide the mobilus password: "
 read mobilus_password
 
-cat <<EOF > "/opt/matter/etc/$CONF_FILE"
+cat <<EOF > "opt/matter/etc/$CONF_FILE"
 [mobilus]
 username=$mobilus_username
 password=$mobilus_password
