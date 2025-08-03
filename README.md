@@ -36,7 +36,7 @@ Before installation, it is assumed that your Cosmo GTW is fully set up and confi
 
 Installation is performed on the Cosmo GTW via SSH and the installation script.
 
-*Note: Instructions on how to enable SSH access to Cosmo GTW will be provided in a separate document/thread (TODO).*
+How to enable SSH access, you'll find [here](https://forum.arturhome.pl/t/aktywacja-ssh-dla-mobilus-cosmo-gtw/15325).
 
 Once connected via SSH, run the following command to start the installation:
 
@@ -45,6 +45,16 @@ cd /tmp && wget --no-check-certificate https://raw.githubusercontent.com/piku235
 chmod a+x install.sh
 ./install.sh
 ```
+
+After successful installation, you can inspect the Matter bridge logs by running:
+
+```bash
+logread -e matter
+```
+
+On first run, the **matter bridge** enters commissioning mode and remains in it until successfully paired.
+
+You can use the QR code above in this README, or pair manually using this code: `21693312337`.
 
 ### Update
 
