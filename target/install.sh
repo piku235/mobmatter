@@ -39,8 +39,6 @@ if [ $? -ne 0 ]; then
 fi
 
 cd mmbridge
-mkdir -p /opt/matter/etc
-mkdir -p /opt/matter/var
 
 echo -n "Provide the mobilus username: "
 read mobilus_username
@@ -58,7 +56,7 @@ echo "Copying files to storage, may take a while ..."
 cp /etc/rc.local /etc/rc.local.old # backup
 cp -a . /
 
-echo "Killing mobilus process"
+echo "Stopping mobilus process"
 pkill mobilus
 
 echo "Enabling and starting services"
@@ -78,6 +76,6 @@ else
   echo "FAILED"
   echo "It seems matter-bridge is not running"
   echo "Are you sure you typed correct username and password?"
-  echo "Verify by running vi /opt/matter/etc/$CONF_FILE"
+  echo "Verify by running vim /opt/matter/etc/$CONF_FILE"
   exit 1
 fi
