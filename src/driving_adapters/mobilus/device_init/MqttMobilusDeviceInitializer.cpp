@@ -33,13 +33,15 @@ bool MqttMobilusDeviceInitializer::run()
 {
     proto::DevicesListResponse deviceList;
 
-    if (!mMobilusGtwClient.sendRequest(proto::DevicesListRequest(), deviceList)) {
+    if (auto e = mMobilusGtwClient.sendRequest(proto::DevicesListRequest(), deviceList); !e) {
+        mLogger.error("Failed to get device list from mobilus: %s", e.error().message.c_str());
         return false;
     }
 
     proto::CurrentStateResponse currentStateResponse;
 
-    if (!mMobilusGtwClient.sendRequest(proto::CurrentStateRequest(), currentStateResponse)) {
+    if (auto e = mMobilusGtwClient.sendRequest(proto::CurrentStateRequest(), currentStateResponse); !e) {
+        mLogger.error("Failed to get current state from mobilus: %s", e.error().message.c_str());
         return false;
     }
 

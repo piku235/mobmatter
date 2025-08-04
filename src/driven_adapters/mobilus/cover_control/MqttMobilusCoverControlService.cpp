@@ -19,14 +19,26 @@ MqttMobilusCoverControlService::MqttMobilusCoverControlService(MqttMobilusGtwCli
 
 void MqttMobilusCoverControlService::liftCover(MobilusDeviceId mobilusDeviceId, Position position)
 {
-    mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, convertLiftPosition(position)));
-    mLogger.info("MQTT lift command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
+    auto e = mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, convertLiftPosition(position)));
+    
+    if (e) {
+        mLogger.info("MQTT lift command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
+        return;
+    }
+    
+    mLogger.error("MQTT lift command failed for cover: %s [md=%" PRId64 "]", e.error().message.c_str(), mobilusDeviceId);
 }
 
 void MqttMobilusCoverControlService::stopCoverMotion(MobilusDeviceId mobilusDeviceId)
 {
-    mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, "STOP"));
-    mLogger.info("MQTT stop motion command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
+    auto e = mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, "STOP"));
+    
+    if (e) {
+        mLogger.info("MQTT stop motion command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
+        return;
+    }
+
+    mLogger.error("MQTT stop motion command failed for cover: %s [md=%" PRId64 "]", e.error().message.c_str(), mobilusDeviceId);
 }
 
 proto::CallEvents MqttMobilusCoverControlService::callEventsFor(MobilusDeviceId mobilusDeviceId, const std::string& eventValue) const
