@@ -1,0 +1,8 @@
+config("includes") {
+  include_dirs = ["repo/include"]
+}
+
+source_set("tl_expected") {
+  public = ["repo/include/tl/expected.hpp"]
+  public_configs = [":includes"]
+}

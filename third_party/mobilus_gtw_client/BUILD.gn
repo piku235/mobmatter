@@ -118,6 +118,7 @@ static_library("mobilus_gtw_client") {
 
   sources = [
     "repo/src/ClientId.cpp",
+    "repo/src/ClientId.h",
     "repo/src/Envelope.cpp",
     "repo/src/ExponentialBackoff.h",
     "repo/src/ExponentialBackoff.cpp",
@@ -131,12 +132,10 @@ static_library("mobilus_gtw_client") {
 
   public = [
     "repo/include/jungi/mobilus_gtw_client/Action.h",
-    "repo/include/jungi/mobilus_gtw_client/ClientId.h",
     "repo/include/jungi/mobilus_gtw_client/EventNumber.h",
     "repo/include/jungi/mobilus_gtw_client/Envelope.h",
     "repo/include/jungi/mobilus_gtw_client/MessageType.h",
     "repo/include/jungi/mobilus_gtw_client/MessageBus.h",
-    "repo/include/jungi/mobilus_gtw_client/MobilusClient.h",
     "repo/include/jungi/mobilus_gtw_client/MqttMobilusGtwClient.h",
     "repo/include/jungi/mobilus_gtw_client/MqttMobilusGtwClientConfig.h",
     "repo/include/jungi/mobilus_gtw_client/Platform.h",
@@ -159,6 +158,7 @@ static_library("mobilus_gtw_client") {
   ]
 
   public_deps = [
+    "//third_party/tl_expected",
     ":proto",
   ]
 

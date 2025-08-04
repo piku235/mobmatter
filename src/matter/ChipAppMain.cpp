@@ -29,9 +29,15 @@
 #include <crypto/PersistentStorageOperationalKeystore.h>
 #include <data-model-providers/codegen/Instance.h>
 #include <lib/core/CHIPError.h>
-#include <lib/support/CodeUtils.h>
 #include <protocols/secure_channel/SimpleSessionResumptionStorage.h>
 #include <system/SystemLayer.h>
+
+#define RETURN_CHIP_ERROR_ON_FAILURE(err)     \
+    do {                                      \
+        if (CHIP_NO_ERROR != err) {           \
+            return err.AsInteger();           \
+        }                                     \
+    } while (0)
 
 using namespace mmbridge::common::logging;
 using namespace mmbridge::matter::logging;
@@ -63,34 +69,34 @@ int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, ch
     CHIP_ERROR err;
 
     err = chip::Platform::MemoryInit();
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = chip::DeviceLayer::PlatformMgr().InitChipStack();
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = sCommissionableDataProvider.Init();
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = sAttributePersistenceProvider.Init(&persistentStorageDelegate);
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = sOperationalKeystore.Init(&persistentStorageDelegate);
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = sOperationalCertStore.Init(&persistentStorageDelegate);
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = sSessionResumptionStorage.Init(&persistentStorageDelegate);
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = sSubscriptionResumptionStorage.Init(&persistentStorageDelegate);
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     sGroupDataProvider.SetStorageDelegate(&persistentStorageDelegate);
     sGroupDataProvider.SetSessionKeystore(&sSessionKeystore);
     
     err = sGroupDataProvider.Init();
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     chip::DeviceLayer::SetDeviceInfoProvider(&sDeviceInfoProvider);
     chip::DeviceLayer::SetDeviceInstanceInfoProvider(&sDeviceInstanceInfoProvider);
@@ -98,8 +104,8 @@ int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, ch
     chip::Credentials::SetDeviceAttestationCredentialsProvider(&sDacProvider);
     chip::app::SetAttributePersistenceProvider(&sAttributePersistenceProvider);
 
-    if (!mobilusGtwClient.connect()) {
-        logger.critical("Could not connect to mobilus");
+    if (auto e = mobilusGtwClient.connect(); !e) {
+        logger.critical("Could not connect to mobilus: %s", e.error().message.c_str());
         return 1;
     }
 
@@ -119,21 +125,16 @@ int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, ch
 
     // runs server and loads ZAP
     err = chip::Server::GetInstance().Init(sServerInitParams);
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     chip::DeviceLayer::ConfigurationMgr().LogDeviceConfig();
 
     err = sEthernetNetworkCommissioningInstance.Init();
-    SuccessOrExit(err);
+    RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     // boot components
     for (auto component : mComponents) {
         component->boot();
-    }
-
-exit:
-    if (CHIP_NO_ERROR != err) {
-        return err.AsInteger();
     }
 
     return 0;
