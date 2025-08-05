@@ -64,10 +64,21 @@ using namespace mmbridge::driving_adapters::matter::cluster_stubs;
 using namespace mmbridge::matter;
 using namespace mmbridge::matter::event_loop;
 using namespace mmbridge::matter::persistence;
-using namespace jungi::mobilus_gtw_client;
 using mmbridge::application::model::MobilusDeviceId;
+namespace mobgtw = jungi::mobilus_gtw_client;
 
 static ChipAppMain sChipApp;
+
+class MqttMobilusGtwClientLoggerAdapter : public mobgtw::logging::Logger {
+public:
+    MqttMobilusGtwClientLoggerAdapter(::Logger& logger): mLogger(logger) {}
+    
+    void info(const std::string& message) override { mLogger.info("%s", message.c_str()); }
+    void error(const std::string& message) override { mLogger.error("%s", message.c_str()); }
+
+private:
+    ::Logger& mLogger;
+};
 
 void handleSignal(int signal)
 {
@@ -132,14 +143,15 @@ AppConfig loadAppConfig()
     return config;
 }
 
-std::unique_ptr<MqttMobilusGtwClient> createMobilusGtwClient(const AppConfig& appConfig, MqttMobilusGtwClientAdapter* clientAdapter)
+std::unique_ptr<mobgtw::MqttMobilusGtwClient> createMobilusGtwClient(const AppConfig& appConfig, MqttMobilusGtwClientAdapter* clientAdapter, mobgtw::logging::Logger* logger)
 {
-    MqttMobilusGtwClientConfig clientConfig(MOBILUS_HOST, MOBILUS_PORT, appConfig.mobilusUsername, appConfig.mobilusPassword, MOBILUS_CA_FILE);
+    mobgtw::MqttMobilusGtwClientConfig clientConfig(MOBILUS_HOST, MOBILUS_PORT, appConfig.mobilusUsername, appConfig.mobilusPassword, MOBILUS_CA_FILE);
 
     clientConfig.keepAliveMessage = std::make_unique<proto::DeviceSettingsRequest>();
     clientConfig.clientWatcher = clientAdapter;
+    clientConfig.logger = logger;
 
-    return MqttMobilusGtwClient::with(std::move(clientConfig));
+    return mobgtw::MqttMobilusGtwClient::with(std::move(clientConfig));
 }
 
 std::optional<sqlite::Connection> openSqliteDb(Logger& logger)
@@ -193,7 +205,7 @@ std::optional<MobilusDeviceId> getTestDeviceIdEnv()
     return static_cast<MobilusDeviceId>(atoi(env));
 }
 
-bool setupDevices(MqttMobilusGtwClient& mobilusGtwClient, CoverRepository& coverRepository, CoverEndpointService& coverEndpointService, EndpointIdGenerator& endpointIdGenerator, Logger& logger)
+bool setupDevices(mobgtw::MqttMobilusGtwClient& mobilusGtwClient, CoverRepository& coverRepository, CoverEndpointService& coverEndpointService, EndpointIdGenerator& endpointIdGenerator, Logger& logger)
 {
     auto covers = coverRepository.all();
 
@@ -223,7 +235,7 @@ bool setupDevices(MqttMobilusGtwClient& mobilusGtwClient, CoverRepository& cover
     return true;
 }
 
-void syncDeviceStates(MqttMobilusGtwClient& mobilusGtwClient, MobilusCoverEventHandler& mobilusCoverEventHandler, Logger& logger)
+void syncDeviceStates(mobgtw::MqttMobilusGtwClient& mobilusGtwClient, MobilusCoverEventHandler& mobilusCoverEventHandler, Logger& logger)
 {
     MqttMobilusDeviceStateSyncer mobilusDeviceStateSyncer(mobilusGtwClient, mobilusCoverEventHandler, logger);
     mobilusDeviceStateSyncer.run();
@@ -252,7 +264,8 @@ int main(int argc, char* argv[])
     auto appConfig = loadAppConfig();
     auto& chipSystemLayer = static_cast<chip::System::LayerSocketsLoop&>(chip::DeviceLayer::SystemLayer());
     MqttMobilusGtwClientAdapter mobilusGtwClientAdapter(chipSystemLayer);
-    auto mobilusGtwClient = createMobilusGtwClient(appConfig, &mobilusGtwClientAdapter);
+    MqttMobilusGtwClientLoggerAdapter mobilusLoggerAdapter(logger);
+    auto mobilusGtwClient = createMobilusGtwClient(appConfig, &mobilusGtwClientAdapter, &mobilusLoggerAdapter);
 
     // chip
     static SqlitePersistentStorageDelegate persistentStorageDelegate;

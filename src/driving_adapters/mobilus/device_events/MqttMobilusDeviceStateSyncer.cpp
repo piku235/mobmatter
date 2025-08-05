@@ -19,8 +19,8 @@ void MqttMobilusDeviceStateSyncer::run()
 
     mLogger.notice("Syncing device states with mobilus");
 
-    if (auto e = mMobilusGtwClient.sendRequest(proto::CurrentStateRequest(), response); !e) {
-        mLogger.error("Failed to sync device states with mobilus: %s", e.error().message.c_str());
+    if (!mMobilusGtwClient.sendRequest(proto::CurrentStateRequest(), response)) {
+        mLogger.error("Failed to sync device states with mobilus");
         return;
     }
 

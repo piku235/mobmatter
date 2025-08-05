@@ -105,11 +105,9 @@ int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, ch
     chip::app::SetAttributePersistenceProvider(&sAttributePersistenceProvider);
 
     if (auto e = mobilusGtwClient.connect(); !e) {
-        logger.critical("Could not connect to mobilus: %s", e.error().message.c_str());
-        return 1;
+        return static_cast<int>(e.error().code());
     }
 
-    logger.info("Connected to mobilus");
     sDeviceInstanceInfoProvider.SetSerialNumber(mobilusGtwClient.sessionInfo()->serialNumber);
 
     sServerInitParams.persistentStorageDelegate = &persistentStorageDelegate;
