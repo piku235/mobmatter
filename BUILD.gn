@@ -53,8 +53,7 @@ executable("matter-bridge") {
     "//src/driven_adapters/matter/zcl_cover_endpoint",
     "//src/driving_adapters/matter/cluster_stubs",
     "//src/driving_adapters/matter/window_covering_cluster",
-    "//src/driving_adapters/mobilus/device_events",
-    "//src/driving_adapters/mobilus/device_init",
+    "//src/driving_adapters/mobilus/cover",
     "//third_party/mobilus_gtw_client",
   ]
 

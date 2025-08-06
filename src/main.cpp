@@ -17,11 +17,11 @@
 #include "driven_adapters/persistence/sqlite/SqliteEndpointIdGenerator.h"
 #include "driving_adapters/matter/cluster_stubs/ClusterStubsAdapter.h"
 #include "driving_adapters/matter/window_covering_cluster/WindowCoveringClusterAdapter.h"
-#include "driving_adapters/mobilus/device_events/MobilusCoverEventHandler.h"
-#include "driving_adapters/mobilus/device_events/MqttMobilusDeviceStateSyncer.h"
-#include "driving_adapters/mobilus/device_events/MqttMobilusEventSubscriber.h"
-#include "driving_adapters/mobilus/device_init/MobilusCoverInitHandler.h"
-#include "driving_adapters/mobilus/device_init/MqttMobilusDeviceInitializer.h"
+#include "driving_adapters/mobilus/cover/MobilusCoverEventHandler.h"
+#include "driving_adapters/mobilus/cover/MobilusCoverInitHandler.h"
+#include "driving_adapters/mobilus/MqttMobilusDeviceStateSyncer.h"
+#include "driving_adapters/mobilus/MqttMobilusEventSubscriber.h"
+#include "driving_adapters/mobilus/MqttMobilusDeviceInitializer.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 #include "jungi/mobilus_gtw_client/proto/DeviceSettingsRequest.pb.h"
 #include "matter/ChipAppMain.h"
@@ -57,8 +57,8 @@ using namespace mmbridge::driven_adapters::mobilus::cover_control;
 using namespace mmbridge::driven_adapters::matter::zcl_cover_endpoint;
 using namespace mmbridge::driven_adapters::matter::window_covering_reporting;
 using namespace mmbridge::driven_adapters::logging;
-using namespace mmbridge::driving_adapters::mobilus::device_events;
-using namespace mmbridge::driving_adapters::mobilus::device_init;
+using namespace mmbridge::driving_adapters::mobilus;
+using namespace mmbridge::driving_adapters::mobilus::cover;
 using namespace mmbridge::driving_adapters::matter::window_covering_cluster;
 using namespace mmbridge::driving_adapters::matter::cluster_stubs;
 using namespace mmbridge::matter;

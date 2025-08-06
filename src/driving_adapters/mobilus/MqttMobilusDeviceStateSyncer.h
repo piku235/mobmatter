@@ -4,7 +4,7 @@
 #include "common/logging/Logger.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 
-namespace mmbridge::driving_adapters::mobilus::device_events {
+namespace mmbridge::driving_adapters::mobilus {
 
 namespace logging = mmbridge::common::logging;
 

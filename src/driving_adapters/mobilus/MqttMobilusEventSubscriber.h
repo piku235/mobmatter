@@ -5,7 +5,7 @@
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
 #include "matter/AppComponent.h"
 
-namespace mmbridge::driving_adapters::mobilus::device_events {
+namespace mmbridge::driving_adapters::mobilus {
 
 namespace proto = jungi::mobilus_gtw_client::proto;
 

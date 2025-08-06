@@ -6,7 +6,7 @@
 using namespace jungi::mobilus_gtw_client;
 using mmbridge::application::driven_ports::CoverRepository;
 
-namespace mmbridge::driving_adapters::mobilus::device_events {
+namespace mmbridge::driving_adapters::mobilus::cover {
 
 MobilusCoverEventHandler::MobilusCoverEventHandler(CoverRepository& coverRepository, logging::Logger& logger)
     : mCoverRepository(coverRepository)

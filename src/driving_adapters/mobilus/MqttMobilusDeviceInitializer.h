@@ -10,7 +10,7 @@
 #include <optional>
 #include <vector>
 
-namespace mmbridge::driving_adapters::mobilus::device_init {
+namespace mmbridge::driving_adapters::mobilus {
 
 namespace model = mmbridge::application::model;
 namespace logging = mmbridge::common::logging;

@@ -1,11 +1,11 @@
+#include "Log.h"
 #include "MqttMobilusDeviceStateSyncer.h"
-#include "driving_adapters/mobilus/Log.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateRequest.pb.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateResponse.pb.h"
 
 using namespace jungi::mobilus_gtw_client;
 
-namespace mmbridge::driving_adapters::mobilus::device_events {
+namespace mmbridge::driving_adapters::mobilus {
 
 MqttMobilusDeviceStateSyncer::MqttMobilusDeviceStateSyncer(MqttMobilusGtwClient& mobilusGtwClient, MobilusEventHandler& eventHandler, logging::Logger& logger)
     : mMobilusGtwClient(mobilusGtwClient)

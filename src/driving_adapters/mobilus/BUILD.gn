@@ -1,12 +1,24 @@
-source_set("common") {
+source_set("base") {
   sources = [
     "ConversionUtils.cpp",
     "ConversionUtils.h",
     "Log.h",
+    "MqttMobilusDeviceInitializer.cpp",
+    "MqttMobilusDeviceStateSyncer.cpp",
+    "MqttMobilusEventSubscriber.cpp",
+  ]
+
+  public = [
+    "MobilusDeviceInitHandler.h",
+    "MobilusEventHandler.h",
+    "MqttMobilusDeviceInitializer.h",
+    "MqttMobilusDeviceStateSyncer.h",
+    "MqttMobilusEventSubscriber.h",
   ]
 
   deps = [
     "//src/application",
+    "//third_party/mobilus_gtw_client",
   ]
 
   configs += ["//:includes"]

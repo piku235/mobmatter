@@ -1,17 +1,17 @@
 #pragma once
 
-#include "MobilusEventHandler.h"
+#include "driving_adapters/mobilus/MobilusEventHandler.h"
 #include "application/driven_ports/CoverRepository.h"
 #include "common/logging/Logger.h"
 
-namespace mmbridge::driving_adapters::mobilus::device_events {
+namespace mmbridge::driving_adapters::mobilus::cover {
 
 namespace driven_ports = mmbridge::application::driven_ports;
 namespace logging = mmbridge::common::logging;
 
 class MobilusCoverEventHandler : public MobilusEventHandler {
 public:
-    explicit MobilusCoverEventHandler(driven_ports::CoverRepository& coverRepository, logging::Logger& logger);
+    MobilusCoverEventHandler(driven_ports::CoverRepository& coverRepository, logging::Logger& logger);
     Result handle(const proto::Event& event) override;
 
 private:

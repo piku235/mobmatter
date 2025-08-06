@@ -3,7 +3,7 @@
 
 using namespace jungi::mobilus_gtw_client;
 
-namespace mmbridge::driving_adapters::mobilus::device_events {
+namespace mmbridge::driving_adapters::mobilus {
 
 MqttMobilusEventSubscriber::MqttMobilusEventSubscriber(MqttMobilusGtwClient& mobilusGtwClient, MobilusEventHandler& eventHandler)
     : mMobilusGtwClient(mobilusGtwClient)

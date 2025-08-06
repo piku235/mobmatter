@@ -1,3 +1,4 @@
+#include "Log.h"
 #include "MqttMobilusDeviceInitializer.h"
 #include "application/model/MobilusDeviceType.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateRequest.pb.h"
@@ -5,15 +6,12 @@
 #include "jungi/mobilus_gtw_client/proto/DevicesListRequest.pb.h"
 #include "jungi/mobilus_gtw_client/proto/DevicesListResponse.pb.h"
 
-#include <cinttypes>
 #include <unordered_map>
-
-#define LOG_TAG "GTW: "
 
 using namespace jungi::mobilus_gtw_client;
 using namespace mmbridge::application::model;
 
-namespace mmbridge::driving_adapters::mobilus::device_init {
+namespace mmbridge::driving_adapters::mobilus {
 
 MqttMobilusDeviceInitializer::MqttMobilusDeviceInitializer(MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger)
     : mMobilusGtwClient(mobilusGtwClient)
