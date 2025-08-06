@@ -44,14 +44,16 @@ void WindowCoveringCommandHandler::InvokeCommand(HandlerContext& handlerContext)
         mCoverRepository.save(*cover);
 
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
+
         break;
     case DownOrClose::Id:
         mLogger.notice("DownOrClose command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
 
         cover->requestClose();
         mCoverRepository.save(*cover);
-
+        
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
+
         break;
     case StopMotion::Id:
         mLogger.notice("StopMotion command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
@@ -60,6 +62,7 @@ void WindowCoveringCommandHandler::InvokeCommand(HandlerContext& handlerContext)
         mCoverRepository.save(*cover);
 
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
+
         break;
     case GoToLiftPercentage::Id: {
         GoToLiftPercentage::DecodableType data;
@@ -78,10 +81,15 @@ void WindowCoveringCommandHandler::InvokeCommand(HandlerContext& handlerContext)
             break;
         }
 
-        cover->requestLiftTo(Position::closed(*percent));
-        mCoverRepository.save(*cover);
+        if (auto e = cover->requestLiftTo(Position::closed(*percent)); !e) {
+            mLogger.error("GoToLiftPercentage command for endpoint: %u failed: %s", handlerContext.mRequestPath.mEndpointId, e.error().message().c_str());
+            handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Failure);
+            break;
+        }
 
+        mCoverRepository.save(*cover);
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
+
         break;
     }
     default:

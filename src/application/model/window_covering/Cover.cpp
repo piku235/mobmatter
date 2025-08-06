@@ -10,6 +10,8 @@
 #include "CoverRemoved.h"
 #include "CoverStopMotionRequested.h"
 
+using namespace mmbridge::common::domain;
+
 namespace mmbridge::application::model::window_covering {
 
 Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, PositionState liftState, CoverSpecification specification)
@@ -51,56 +53,59 @@ Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId un
 {
 }
 
+Cover::Result<> Cover::requestLiftTo(Position position)
+{
+    if (auto e = assertLiftIsAvailable(); !e) {
+        return e;
+    }
+    if (position == mLiftState.targetPosition()) {
+        return {};
+    }
+
+    replaceLiftState(mLiftState.requestMoveTo(position));
+    raise(std::make_unique<CoverLiftRequested>(mEndpointId, mMobilusDeviceId, position));
+
+    return {};
+}
+
 void Cover::requestOpen()
 {
-    requestLiftTo(Position::fullyOpen());
+    (void) requestLiftTo(Position::fullyOpen());
 }
 
 void Cover::requestClose()
 {
-    requestLiftTo(Position::fullyClosed());
+    (void) requestLiftTo(Position::fullyClosed());
 }
 
-void Cover::requestLiftTo(Position position)
+Cover::Result<> Cover::startLiftTo(Position position)
 {
-    if (PositionStatus::Unavailable == mLiftState.status()) {
-        return;
-    }
-    if (position == mLiftState.targetPosition()) {
-        return;
-    }
-
-    replaceLiftState(mLiftState.requestMoveTo(position));
-
-    raise(std::make_unique<CoverLiftRequested>(mEndpointId, mMobilusDeviceId, position));
-}
-
-void Cover::startLiftTo(Position position)
-{
-    if (PositionStatus::Unavailable == mLiftState.status()) {
-        return;
+    if (auto e = assertLiftIsAvailable(); !e) {
+        return e;
     }
     if (position == mLiftState.targetPosition() && PositionStatus::Moving == mLiftState.status()) {
-        return;
+        return {};
     }
 
     replaceLiftState(mLiftState.movingTo(position));
+    return {};
 }
 
-void Cover::changeLiftPosition(Position position)
+Cover::Result<> Cover::changeLiftPosition(Position position)
 {
-    if (PositionStatus::Unavailable == mLiftState.status()) {
-        return;
+    if (auto e = assertLiftIsAvailable(); !e) {
+        return e;
     }
 
     // no other feedback once device becomes reachable again
     markAsReachable();
 
     if (PositionStatus::Idle == mLiftState.status() && position == mLiftState.currentPosition()) {
-        return;
+        return {};
     }
 
     replaceLiftState(PositionState::at(position));
+    return {};
 }
 
 void Cover::requestStopMotion()
@@ -214,6 +219,15 @@ void Cover::markAsReachable()
 
     mReachable = true;
     raise(std::make_unique<CoverMarkedAsReachable>(mEndpointId, mMobilusDeviceId));
+}
+
+Cover::Result<> Cover::assertLiftIsAvailable()
+{
+    if (PositionStatus::Unavailable == mLiftState.status()) {
+        return tl::unexpected(DomainError(ErrorCode::LiftUnavailable, "Lift is not available for this cover"));
+    }
+
+    return {};
 }
 
 }
