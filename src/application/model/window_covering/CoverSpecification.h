@@ -10,7 +10,7 @@
 
 namespace mmbridge::application::model::window_covering {
 
-struct CoverSpecification final {
+class CoverSpecification final {
 public:
     static std::optional<CoverSpecification> findFor(MobilusDeviceType mobilusDeviceType);
     static CoverSpecification Senso();
