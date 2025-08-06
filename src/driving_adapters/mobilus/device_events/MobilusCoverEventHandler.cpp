@@ -1,5 +1,6 @@
 #include "MobilusCoverEventHandler.h"
 #include "driving_adapters/mobilus/ConversionUtils.h"
+#include "driving_adapters/mobilus/Log.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 
 using namespace jungi::mobilus_gtw_client;
@@ -44,7 +45,7 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
                 break;
             }
 
-            mLogger.error("MQTT invalid cover lift position: %s", event.value().c_str());
+            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, event.value().c_str(), cover->endpointId(), cover->mobilusDeviceId());
             break;
         }
 
@@ -57,17 +58,21 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
         auto position = ConversionUtils::convertLiftPosition(event.value());
 
         if (!position) {
-            mLogger.error("MQTT invalid cover lift position: %s", event.value().c_str());
+            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, event.value().c_str(), cover->endpointId(), cover->mobilusDeviceId());
             break;
         }
 
-        cover->changeLiftPosition(*position);
+        if (auto e = cover->changeLiftPosition(*position); !e) {
+            mLogger.error(LOG_TAG "Failed to change lift position: %s" LOG_SUFFIX, event.value().c_str(), cover->endpointId(), cover->mobilusDeviceId());
+            break;
+        }
+
         mCoverRepository.save(*cover);
 
         break;
     }
     case EventNumber::Error:
-        mLogger.notice("MQTT device error: %s", event.value().c_str());
+        mLogger.notice(LOG_TAG "Device error: %s" LOG_SUFFIX, event.value().c_str(), cover->endpointId(), cover->mobilusDeviceId());
 
         if (!event.value().compare("NO_CONNECTION")) {
             cover->markAsUnreachable();
@@ -81,7 +86,7 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
 
         break;
     default:
-        mLogger.notice("MQTT unknown event number");
+        mLogger.notice(LOG_TAG "Unknown event number");
     }
 
     return Result::Handled;

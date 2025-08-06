@@ -2,6 +2,7 @@ source_set("common") {
   sources = [
     "ConversionUtils.cpp",
     "ConversionUtils.h",
+    "Log.h",
   ]
 
   deps = [

@@ -73,10 +73,11 @@ class MqttMobilusGtwClientLoggerAdapter : public mobgtw::logging::Logger {
 public:
     MqttMobilusGtwClientLoggerAdapter(::Logger& logger): mLogger(logger) {}
     
-    void info(const std::string& message) override { mLogger.info("%s", message.c_str()); }
-    void error(const std::string& message) override { mLogger.error("%s", message.c_str()); }
+    void info(const std::string& message) override { mLogger.info(kFormat, message.c_str()); }
+    void error(const std::string& message) override { mLogger.error(kFormat, message.c_str()); }
 
 private:
+    static constexpr char kFormat[] = "GTW: %s";
     ::Logger& mLogger;
 };
 

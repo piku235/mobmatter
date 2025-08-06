@@ -5,6 +5,8 @@
 
 #include <cinttypes>
 
+#define LOG_TAG "GTW: "
+
 using namespace jungi::mobilus_gtw_client;
 using namespace mmbridge::application::model;
 using namespace mmbridge::application::model::window_covering;
@@ -20,21 +22,21 @@ MqttMobilusCoverControlService::MqttMobilusCoverControlService(MqttMobilusGtwCli
 void MqttMobilusCoverControlService::liftCover(MobilusDeviceId mobilusDeviceId, Position position)
 {
     if (mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, convertLiftPosition(position)))) {
-        mLogger.info("MQTT lift command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
+        mLogger.info(LOG_TAG "Lift command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
         return;
     }
     
-    mLogger.error("MQTT lift command failed for cover [md=%" PRId64 "]", mobilusDeviceId);
+    mLogger.error(LOG_TAG "Lift command failed for cover [md=%" PRId64 "]", mobilusDeviceId);
 }
 
 void MqttMobilusCoverControlService::stopCoverMotion(MobilusDeviceId mobilusDeviceId)
 {
     if (mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, "STOP"))) {
-        mLogger.info("MQTT stop motion command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
+        mLogger.info(LOG_TAG "Stop motion command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
         return;
     }
 
-    mLogger.error("MQTT stop motion command failed for cover [md=%" PRId64 "]", mobilusDeviceId);
+    mLogger.error(LOG_TAG "Stop motion command failed for cover [md=%" PRId64 "]", mobilusDeviceId);
 }
 
 proto::CallEvents MqttMobilusCoverControlService::callEventsFor(MobilusDeviceId mobilusDeviceId, const std::string& eventValue) const

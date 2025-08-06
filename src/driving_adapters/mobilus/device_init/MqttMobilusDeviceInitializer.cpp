@@ -8,6 +8,8 @@
 #include <cinttypes>
 #include <unordered_map>
 
+#define LOG_TAG "GTW: "
+
 using namespace jungi::mobilus_gtw_client;
 using namespace mmbridge::application::model;
 
@@ -34,14 +36,14 @@ bool MqttMobilusDeviceInitializer::run()
     proto::DevicesListResponse deviceList;
 
     if (!mMobilusGtwClient.sendRequest(proto::DevicesListRequest(), deviceList)) {
-        mLogger.error("Failed to get device list from mobilus");
+        mLogger.error(LOG_TAG "Failed to get device list from mobilus");
         return false;
     }
 
     proto::CurrentStateResponse currentStateResponse;
 
     if (!mMobilusGtwClient.sendRequest(proto::CurrentStateRequest(), currentStateResponse)) {
-        mLogger.error("Failed to get current state from mobilus");
+        mLogger.error(LOG_TAG "Failed to get current state from mobilus");
         return false;
     }
 
@@ -74,14 +76,14 @@ bool MqttMobilusDeviceInitializer::run()
         auto handler = handlerFor(deviceType);
 
         if (nullptr == handler) {
-            mLogger.notice("Device: %s is not supported [md=%" PRId64 "]", device.name().c_str(), device.id());
+            mLogger.notice(LOG_TAG "Device: %s is not supported [md=%" PRId64 "]", device.name().c_str(), device.id());
             continue;
         }
 
         auto it = currentStateMap.find(device.id());
 
         if (it == currentStateMap.end()) {
-            mLogger.notice("Device: %s is missing current state, skipping [md=%" PRId64 "]", device.name().c_str(), device.id());
+            mLogger.notice(LOG_TAG "Device: %s is missing current state, skipping [md=%" PRId64 "]", device.name().c_str(), device.id());
             continue;
         }
 

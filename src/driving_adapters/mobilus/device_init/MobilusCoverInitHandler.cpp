@@ -35,7 +35,7 @@ void MobilusCoverInitHandler::initDevice(const proto::Device& device, const prot
         liftPosition = ConversionUtils::convertLiftPosition(currentState.value());
 
         if (!liftPosition) {
-            mLogger.error("Invalid cover lift position: %s [md=%" PRId64 "]", currentState.value().c_str(), device.id());
+            mLogger.error("GTW: Invalid cover lift position: %s [md=%" PRId64 "]", currentState.value().c_str(), device.id());
         }
     }
 

@@ -1,4 +1,5 @@
 #include "MqttMobilusDeviceStateSyncer.h"
+#include "driving_adapters/mobilus/Log.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateRequest.pb.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateResponse.pb.h"
 
@@ -17,10 +18,10 @@ void MqttMobilusDeviceStateSyncer::run()
 {
     proto::CurrentStateResponse response;
 
-    mLogger.notice("Syncing device states with mobilus");
+    mLogger.notice(LOG_TAG "Syncing device states with mobilus");
 
     if (!mMobilusGtwClient.sendRequest(proto::CurrentStateRequest(), response)) {
-        mLogger.error("Failed to sync device states with mobilus");
+        mLogger.error(LOG_TAG "Failed to sync device states with mobilus");
         return;
     }
 
