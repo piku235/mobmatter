@@ -132,6 +132,8 @@ static_library("mobilus_gtw_client") {
 
   public = [
     "repo/include/jungi/mobilus_gtw_client/Action.h",
+    "repo/include/jungi/mobilus_gtw_client/Error.h",
+    "repo/include/jungi/mobilus_gtw_client/ErrorCode.h",
     "repo/include/jungi/mobilus_gtw_client/EventNumber.h",
     "repo/include/jungi/mobilus_gtw_client/Envelope.h",
     "repo/include/jungi/mobilus_gtw_client/MessageType.h",
