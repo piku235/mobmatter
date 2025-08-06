@@ -51,7 +51,7 @@ void WindowCoveringCommandHandler::InvokeCommand(HandlerContext& handlerContext)
 
         cover->requestClose();
         mCoverRepository.save(*cover);
-        
+
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
 
         break;

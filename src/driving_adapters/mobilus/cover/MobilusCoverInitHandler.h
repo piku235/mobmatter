@@ -1,9 +1,9 @@
 #pragma once
 
-#include "driving_adapters/mobilus/MobilusDeviceInitHandler.h"
 #include "application/driven_ports/CoverRepository.h"
 #include "application/driven_ports/EndpointIdGenerator.h"
 #include "common/logging/Logger.h"
+#include "driving_adapters/mobilus/MobilusDeviceInitHandler.h"
 
 namespace mmbridge::driving_adapters::mobilus::cover {
 

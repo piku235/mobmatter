@@ -29,7 +29,7 @@ public:
 
     // EventLoopHandler
     chip::System::Clock::Timestamp PrepareEvents(chip::System::Clock::Timestamp now) override;
-    void HandleEvents() override {};
+    void HandleEvents() override { };
 
 private:
     mobio::TimerEventHandler* mTimerEventHandler = nullptr;

@@ -7,8 +7,8 @@
 #include "application/model/EndpointId.h"
 #include "application/model/MobilusDeviceId.h"
 #include "application/model/UniqueId.h"
-#include "common/domain/Entity.h"
 #include "common/domain/DomainError.h"
+#include "common/domain/Entity.h"
 
 #include <tl/expected.hpp>
 

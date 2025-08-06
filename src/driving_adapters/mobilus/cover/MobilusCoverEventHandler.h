@@ -1,8 +1,8 @@
 #pragma once
 
-#include "driving_adapters/mobilus/MobilusEventHandler.h"
 #include "application/driven_ports/CoverRepository.h"
 #include "common/logging/Logger.h"
+#include "driving_adapters/mobilus/MobilusEventHandler.h"
 
 namespace mmbridge::driving_adapters::mobilus::cover {
 

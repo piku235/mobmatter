@@ -70,12 +70,12 @@ Cover::Result<> Cover::requestLiftTo(Position position)
 
 void Cover::requestOpen()
 {
-    (void) requestLiftTo(Position::fullyOpen());
+    (void)requestLiftTo(Position::fullyOpen());
 }
 
 void Cover::requestClose()
 {
-    (void) requestLiftTo(Position::fullyClosed());
+    (void)requestLiftTo(Position::fullyClosed());
 }
 
 Cover::Result<> Cover::startLiftTo(Position position)

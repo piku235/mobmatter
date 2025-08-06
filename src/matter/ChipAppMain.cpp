@@ -32,11 +32,11 @@
 #include <protocols/secure_channel/SimpleSessionResumptionStorage.h>
 #include <system/SystemLayer.h>
 
-#define RETURN_CHIP_ERROR_ON_FAILURE(err)     \
-    do {                                      \
-        if (CHIP_NO_ERROR != err) {           \
-            return err.AsInteger();           \
-        }                                     \
+#define RETURN_CHIP_ERROR_ON_FAILURE(err) \
+    do {                                  \
+        if (CHIP_NO_ERROR != err) {       \
+            return err.AsInteger();       \
+        }                                 \
     } while (0)
 
 using namespace mmbridge::common::logging;
@@ -94,7 +94,7 @@ int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, ch
 
     sGroupDataProvider.SetStorageDelegate(&persistentStorageDelegate);
     sGroupDataProvider.SetSessionKeystore(&sSessionKeystore);
-    
+
     err = sGroupDataProvider.Init();
     RETURN_CHIP_ERROR_ON_FAILURE(err);
 

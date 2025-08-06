@@ -1,8 +1,8 @@
 #include "UniqueId.h"
 
 #include <cstdint>
-#include <openssl/rand.h>
 #include <openssl/crypto.h>
+#include <openssl/rand.h>
 
 namespace mmbridge::application::model {
 

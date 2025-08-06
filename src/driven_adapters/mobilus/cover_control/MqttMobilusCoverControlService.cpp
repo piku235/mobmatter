@@ -25,7 +25,7 @@ void MqttMobilusCoverControlService::liftCover(MobilusDeviceId mobilusDeviceId, 
         mLogger.info(LOG_TAG "Lift command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
         return;
     }
-    
+
     mLogger.error(LOG_TAG "Lift command failed for cover [md=%" PRId64 "]", mobilusDeviceId);
 }
 

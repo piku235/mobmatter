@@ -17,11 +17,11 @@
 #include "driven_adapters/persistence/sqlite/SqliteEndpointIdGenerator.h"
 #include "driving_adapters/matter/cluster_stubs/ClusterStubsAdapter.h"
 #include "driving_adapters/matter/window_covering_cluster/WindowCoveringClusterAdapter.h"
-#include "driving_adapters/mobilus/cover/MobilusCoverEventHandler.h"
-#include "driving_adapters/mobilus/cover/MobilusCoverInitHandler.h"
+#include "driving_adapters/mobilus/MqttMobilusDeviceInitializer.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceStateSyncer.h"
 #include "driving_adapters/mobilus/MqttMobilusEventSubscriber.h"
-#include "driving_adapters/mobilus/MqttMobilusDeviceInitializer.h"
+#include "driving_adapters/mobilus/cover/MobilusCoverEventHandler.h"
+#include "driving_adapters/mobilus/cover/MobilusCoverInitHandler.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 #include "jungi/mobilus_gtw_client/proto/DeviceSettingsRequest.pb.h"
 #include "matter/ChipAppMain.h"
@@ -31,8 +31,8 @@
 
 #include <platform/CHIPDeviceLayer.h>
 
-#include <cstdio>
 #include <csignal>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
@@ -71,8 +71,10 @@ static ChipAppMain sChipApp;
 
 class MqttMobilusGtwClientLoggerAdapter : public mobgtw::logging::Logger {
 public:
+    // clang-format off
     MqttMobilusGtwClientLoggerAdapter(::Logger& logger): mLogger(logger) {}
-    
+    // clang-format on
+
     void info(const std::string& message) override { mLogger.info(kFormat, message.c_str()); }
     void error(const std::string& message) override { mLogger.error(kFormat, message.c_str()); }
 
