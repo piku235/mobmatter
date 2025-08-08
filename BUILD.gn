@@ -13,7 +13,7 @@ chip_data_model("mmbridge-zap") {
 }
 
 config("includes") {
-  include_dirs = ["//src"]
+  include_dirs = [ "//src" ]
 }
 
 config("app_config") {
@@ -26,34 +26,34 @@ config("app_config") {
   ]
 
   if (config_ini_file != "") {
-    defines += ["CONFIG_INI_FILE=\"${config_ini_file}\""]
+    defines += [ "CONFIG_INI_FILE=\"${config_ini_file}\"" ]
   }
 }
 
 executable("matter-bridge") {
   sources = [
-    "include/CHIPProjectAppConfig.h",
     "include/AppConfig.h",
+    "include/CHIPProjectAppConfig.h",
     "include/SqliteDatabaseSchema.h",
     "src/main.cpp",
   ]
 
   deps = [
-    "//src/matter",
-    "//src/matter/event_loop",
-    "//src/matter/persistence:sqlite",
-    "//src/matter/logging",
+    "//src/application",
     "//src/common/logging:stdio",
     "//src/common/logging:syslog",
-    "//src/application",
     "//src/driven_adapters/logging",
-    "//src/driven_adapters/mobilus/cover_control",
-    "//src/driven_adapters/persistence/sqlite",
     "//src/driven_adapters/matter/window_covering_reporting",
     "//src/driven_adapters/matter/zcl_cover_endpoint",
+    "//src/driven_adapters/mobilus/cover_control",
+    "//src/driven_adapters/persistence/sqlite",
     "//src/driving_adapters/matter/cluster_stubs",
     "//src/driving_adapters/matter/window_covering_cluster",
     "//src/driving_adapters/mobilus/cover",
+    "//src/matter",
+    "//src/matter/event_loop",
+    "//src/matter/logging",
+    "//src/matter/persistence:sqlite",
     "//third_party/mobilus_gtw_client",
   ]
 
@@ -62,9 +62,7 @@ executable("matter-bridge") {
     "src",
   ]
 
-  configs += [
-    ":app_config",
-  ]
+  configs += [ ":app_config" ]
 
   cflags = [ "-Wconversion" ]
 
@@ -72,7 +70,10 @@ executable("matter-bridge") {
 }
 
 group("default") {
-  deps = [
-    ":matter-bridge",
-  ]
+  deps = [ ":matter-bridge" ]
+}
+
+group("tests") {
+  testonly = true
+  deps = [ "//tests" ]
 }

@@ -1,0 +1,14 @@
+config("includes") {
+  include_dirs = [ "repo/googletest/include" ]
+}
+
+source_set("gtest") {
+  sources = [ "repo/googletest/src/gtest-all.cc" ]
+  public_configs = [ ":includes" ]
+  include_dirs = [ "repo/googletest" ]
+}
+
+source_set("gtest_main") {
+  sources = [ "repo/googletest/src/gtest_main.cc" ]
+  public_deps = [ ":gtest" ]
+}

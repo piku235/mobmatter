@@ -1,0 +1,13 @@
+executable("tests") {
+  testonly = true
+  sources = [ "application/model/PercentTest.cpp" ]
+
+  include_dirs = [ "//src" ]
+
+  deps = [
+    "//src/application",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  output_dir = root_out_dir
+}
