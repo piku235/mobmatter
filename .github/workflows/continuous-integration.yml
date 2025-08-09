@@ -17,9 +17,11 @@ jobs:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
+            is_clang: false
           - os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
+            is_clang: true
 
     steps:
     - uses: actions/checkout@v4
@@ -28,10 +30,10 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y gn ninja-build libssl-dev
 
     - name: Setup project dependencies
-      run: git submodule update --init third_party/googletest/repo third_party/tl_expected/repo
+      run: git submodule update --init
 
     - name: Configure GN
-      run: gn gen out/build --args="is_debug=false cc=\"${{ matrix.c_compiler }}\" cxx=\"${{ matrix.cpp_compiler }}\""
+      run: gn gen out/build --args="is_debug=false is_clang=${{ matrix.is_clang }} cc=\"${{ matrix.c_compiler }}\" cxx=\"${{ matrix.cpp_compiler }}\""
 
     - name: Build
       run: ninja -C out/build tests
