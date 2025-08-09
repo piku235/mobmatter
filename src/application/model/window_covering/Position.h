@@ -21,14 +21,10 @@ public:
     constexpr Percent closedPercent() const { return mClosedPercent; }
     constexpr bool isFullyOpen() const { return *this == fullyOpen(); }
     constexpr bool isFullyClosed() const { return *this == fullyClosed(); }
-    constexpr bool isOpen() const { return *this < fullyClosed(); }
+    constexpr bool isOpen() const { return *this != fullyClosed(); }
 
-    constexpr bool operator<(const Position& other) const { return mClosedPercent < other.mClosedPercent; }
-    constexpr bool operator>(const Position& other) const { return mClosedPercent > other.mClosedPercent; }
     constexpr bool operator==(const Position& other) const { return mClosedPercent == other.mClosedPercent; }
     constexpr bool operator!=(const Position& other) const { return mClosedPercent != other.mClosedPercent; }
-    constexpr bool operator>=(const Position& other) const { return mClosedPercent >= other.mClosedPercent; }
-    constexpr bool operator<=(const Position& other) const { return mClosedPercent <= other.mClosedPercent; }
 
 private:
     /* const */ Percent mClosedPercent;

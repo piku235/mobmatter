@@ -21,7 +21,7 @@ PositionState PositionState::movingTo(Position position) const
 {
     return {
         mCurrentPosition != position ? PositionStatus::Moving : PositionStatus::Idle,
-        mCurrentPosition > position ? CoverMotion::Opening : (mCurrentPosition < position ? CoverMotion::Closing : CoverMotion::NotMoving),
+        mCurrentPosition->openPercent() > position.openPercent() ? CoverMotion::Opening : (mCurrentPosition->closedPercent() < position.closedPercent() ? CoverMotion::Closing : CoverMotion::NotMoving),
         position,
         mCurrentPosition,
     };

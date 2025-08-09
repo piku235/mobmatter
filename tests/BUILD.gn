@@ -1,6 +1,9 @@
 executable("tests") {
   testonly = true
-  sources = [ "application/model/PercentTest.cpp" ]
+  sources = [ 
+    "application/model/PercentTest.cpp",
+    "application/model/window_covering/PositionTest.cpp",
+  ]
 
   include_dirs = [ "//src" ]
 
