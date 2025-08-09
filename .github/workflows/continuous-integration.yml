@@ -34,7 +34,7 @@ jobs:
 
     - name: Configure connectedhomeip
       working-directory: third_party/connectedhomeip
-      run: >
+      run: |
         scripts/checkout_submodules.py --shallow --platform linux
         scripts/bootstrap.sh
 
