@@ -3,6 +3,7 @@ executable("tests") {
   sources = [ 
     "application/model/PercentTest.cpp",
     "application/model/window_covering/PositionTest.cpp",
+    "application/model/window_covering/PositionStateTest.cpp",
   ]
 
   include_dirs = [ "//src" ]
