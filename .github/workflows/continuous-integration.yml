@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -24,26 +24,26 @@ jobs:
             is_clang: true
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install system dependencies
-      run: sudo apt-get update && sudo apt-get install -y gn ninja-build libssl-dev python3-venv python3-dev python3-pip unzip
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y gn ninja-build libssl-dev python3-venv python3-dev python3-pip unzip
 
-    - name: Setup project dependencies
-      run: git submodule update --init
+      - name: Setup project dependencies
+        run: git submodule update --init
 
-    - name: Configure connectedhomeip
-      working-directory: third_party/connectedhomeip
-      run: |
-        scripts/checkout_submodules.py --shallow --platform linux
-        scripts/bootstrap.sh
+      - name: Configure connectedhomeip
+        working-directory: third_party/connectedhomeip
+        run: |
+          scripts/checkout_submodules.py --shallow --platform linux
+          source scripts/bootstrap.sh
 
-    - name: Configure GN
-      run: gn gen out/build --args="is_debug=false is_clang=${{ matrix.is_clang }} cc=\"${{ matrix.c_compiler }}\" cxx=\"${{ matrix.cpp_compiler }}\""
+      - name: Configure GN
+        run: gn gen out/build --args="is_debug=false is_clang=${{ matrix.is_clang }} cc=\"${{ matrix.c_compiler }}\" cxx=\"${{ matrix.cpp_compiler }}\""
 
-    - name: Build
-      run: ninja -C out/build tests
+      - name: Build
+        run: ninja -C out/build tests
 
-    - name: Test
-      working-directory: out/build
-      run: ctest
+      - name: Test
+        working-directory: out/build
+        run: ctest
