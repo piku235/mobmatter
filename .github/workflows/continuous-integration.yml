@@ -45,5 +45,4 @@ jobs:
         run: ninja -C out/build tests
 
       - name: Test
-        working-directory: out/build
-        run: tests
+        run: out/build/tests
