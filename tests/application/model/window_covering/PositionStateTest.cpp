@@ -4,7 +4,8 @@
 
 using namespace mmbridge::application::model::window_covering;
 
-TEST(PositionStateTest, Unavailable) {
+TEST(PositionStateTest, Unavailable)
+{
     auto state = PositionState::unavailable();
 
     EXPECT_EQ(PositionStatus::Unavailable, state.status());
@@ -13,7 +14,8 @@ TEST(PositionStateTest, Unavailable) {
     EXPECT_FALSE(state.currentPosition().has_value());
 }
 
-TEST(PositionStateTest, AtPosition) {
+TEST(PositionStateTest, AtPosition)
+{
     auto state = PositionState::at(Position::fullyOpen());
 
     EXPECT_EQ(PositionStatus::Idle, state.status());
@@ -22,7 +24,8 @@ TEST(PositionStateTest, AtPosition) {
     EXPECT_EQ(Position::fullyOpen(), *state.currentPosition());
 }
 
-TEST(PositionStateTest, Restores) {
+TEST(PositionStateTest, Restores)
+{
     auto state = PositionState::restore(PositionStatus::Moving, CoverMotion::Opening, Position::fullyOpen(), Position::fullyClosed());
 
     EXPECT_EQ(PositionStatus::Moving, state.status());
@@ -31,9 +34,10 @@ TEST(PositionStateTest, Restores) {
     EXPECT_EQ(Position::fullyClosed(), *state.currentPosition());
 }
 
-TEST(PositionStateTest, MovesToOpeningPosition) {
+TEST(PositionStateTest, MovesToOpeningPosition)
+{
     auto state = PositionState::at(Position::fullyClosed());
-    
+
     auto newState = state.movingTo(Position::fullyOpen());
 
     EXPECT_EQ(PositionStatus::Moving, newState.status());
@@ -42,9 +46,10 @@ TEST(PositionStateTest, MovesToOpeningPosition) {
     EXPECT_EQ(Position::fullyClosed(), *newState.currentPosition());
 }
 
-TEST(PositionStateTest, MovesToClosedPosition) {
+TEST(PositionStateTest, MovesToClosedPosition)
+{
     auto state = PositionState::at(Position::fullyOpen());
-    
+
     auto newState = state.movingTo(Position::fullyClosed());
 
     EXPECT_EQ(PositionStatus::Moving, newState.status());
@@ -53,9 +58,10 @@ TEST(PositionStateTest, MovesToClosedPosition) {
     EXPECT_EQ(Position::fullyOpen(), *newState.currentPosition());
 }
 
-TEST(PositionStateTest, RequestsMoveToPosition) {
+TEST(PositionStateTest, RequestsMoveToPosition)
+{
     auto state = PositionState::at(Position::fullyOpen());
-    
+
     auto newState = state.requestMoveTo(Position::fullyClosed());
 
     EXPECT_EQ(PositionStatus::Requested, newState.status());
@@ -64,9 +70,10 @@ TEST(PositionStateTest, RequestsMoveToPosition) {
     EXPECT_EQ(Position::fullyOpen(), *newState.currentPosition());
 }
 
-TEST(PositionStateTest, StopsOpening) {
+TEST(PositionStateTest, StopsOpening)
+{
     auto state = PositionState::at(Position::fullyClosed())
-        .movingTo(Position::fullyOpen());
+                     .movingTo(Position::fullyOpen());
 
     auto newState = state.stop();
 
@@ -76,9 +83,10 @@ TEST(PositionStateTest, StopsOpening) {
     EXPECT_EQ(Position::fullyClosed(), *newState.currentPosition());
 }
 
-TEST(PositionStateTest, StopsClosing) {
+TEST(PositionStateTest, StopsClosing)
+{
     auto state = PositionState::at(Position::fullyOpen())
-        .movingTo(Position::fullyClosed());
+                     .movingTo(Position::fullyClosed());
 
     auto newState = state.stop();
 
@@ -88,9 +96,10 @@ TEST(PositionStateTest, StopsClosing) {
     EXPECT_EQ(Position::fullyOpen(), *newState.currentPosition());
 }
 
-TEST(PositionStateTest, Resets) {
+TEST(PositionStateTest, Resets)
+{
     auto state = PositionState::at(Position::fullyOpen())
-        .movingTo(Position::fullyClosed());
+                     .movingTo(Position::fullyClosed());
 
     auto newState = state.reset();
 
