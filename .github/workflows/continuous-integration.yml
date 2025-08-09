@@ -14,13 +14,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # gcc
           - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
             is_clang: false
+          # clang
           - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
             is_clang: true
 
     steps:
@@ -39,7 +37,7 @@ jobs:
           source scripts/bootstrap.sh
 
       - name: Configure GN
-        run: gn gen out/build --args="is_debug=false is_clang=${{ matrix.is_clang }} cc=\"${{ matrix.c_compiler }}\" cxx=\"${{ matrix.cpp_compiler }}\""
+        run: gn gen out/build --args="is_debug=false is_clang=${{ matrix.is_clang }}"
 
       - name: Build
         run: ninja -C out/build tests
