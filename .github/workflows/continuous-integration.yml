@@ -25,10 +25,10 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Install system dependencies
-      run: sudo apt-get update && sudo apt-get install -y libssl-dev
+      run: sudo apt-get update && sudo apt-get install -y gn ninja-build libssl-dev
 
     - name: Setup project dependencies
-      run: git submodule update --init
+      run: git submodule update --init third_party/googletest/repo third_party/tl_expected/repo
 
     - name: Configure GN
       run: gn gen out/build --args="is_debug=false cc=\"${{ matrix.c_compiler }}\" cxx=\"${{ matrix.cpp_compiler }}\""
