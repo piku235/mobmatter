@@ -4,14 +4,9 @@ namespace mmbridge::common::domain {
 
 DomainEventPublisher& DomainEventPublisher::instance()
 {
-    static DomainEventPublisher instance;
+    static DomainEventPublisher eventPublisher;
 
-    return instance;
-}
-
-void DomainEventPublisher::defer(std::unique_ptr<DomainEvent> event)
-{
-    mDeferredEvents.push(std::move(event));
+    return eventPublisher;
 }
 
 void DomainEventPublisher::publish(const DomainEvent& event)
@@ -29,10 +24,11 @@ void DomainEventPublisher::publish(const DomainEvent& event)
     }
 }
 
-void DomainEventPublisher::publishDeferred()
+void DomainEventPublisher::publish(DomainEventQueue& eventQueue)
 {
-    for (; !mDeferredEvents.empty(); mDeferredEvents.pop()) {
-        publish(*mDeferredEvents.front());
+    while (!eventQueue.empty()) {
+        auto event = eventQueue.pop();
+        publish(*event);
     }
 }
 

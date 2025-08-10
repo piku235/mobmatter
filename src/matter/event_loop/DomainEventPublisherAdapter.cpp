@@ -1,7 +1,8 @@
 #include "DomainEventPublisherAdapter.h"
 #include "common/domain/DomainEventPublisher.h"
+#include "common/domain/DomainEventQueue.h"
 
-using mmbridge::common::domain::DomainEventPublisher;
+using namespace mmbridge::common::domain;
 
 namespace mmbridge::matter::event_loop {
 
@@ -37,7 +38,7 @@ void DomainEventPublisherAdapter::shutdown()
 
 void DomainEventPublisherAdapter::HandleEvents()
 {
-    DomainEventPublisher::instance().publishDeferred();
+    DomainEventPublisher::instance().publish(DomainEventQueue::instance());
 }
 
 }

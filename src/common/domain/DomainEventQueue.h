@@ -1,0 +1,32 @@
+#pragma once
+
+#include "DomainEvent.h"
+
+#include <memory>
+#include <queue>
+
+namespace mmbridge::common::domain {
+
+class DomainEventQueue final {
+public:
+    static DomainEventQueue& instance();
+
+    DomainEventQueue(DomainEventQueue&& other) = delete;
+    DomainEventQueue& operator=(DomainEventQueue&& other) = delete;
+
+    DomainEventQueue(const DomainEventQueue& other) = delete;
+    DomainEventQueue& operator=(const DomainEventQueue& other) = delete;
+
+    void push(std::unique_ptr<DomainEvent> event);
+    std::unique_ptr<DomainEvent> pop();
+    const DomainEvent* peek() const;
+    size_t size() const;
+    bool empty() const;
+
+private:
+    std::queue<std::unique_ptr<DomainEvent>> mEvents;
+
+    DomainEventQueue() = default;
+};
+
+}

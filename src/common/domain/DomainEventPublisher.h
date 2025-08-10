@@ -1,12 +1,11 @@
 #pragma once
 
 #include "DomainEvent.h"
+#include "DomainEventQueue.h"
 #include "DomainEventSubscriber.h"
 #include "MultiDomainEventSubscriber.h"
 
 #include <functional>
-#include <memory>
-#include <queue>
 #include <string>
 #include <type_traits>
 #include <unordered_map>
@@ -18,12 +17,14 @@ class DomainEventPublisher final {
 public:
     static DomainEventPublisher& instance();
 
+    DomainEventPublisher(DomainEventPublisher&& other) = delete;
+    DomainEventPublisher& operator=(DomainEventPublisher&& other) = delete;
+
     DomainEventPublisher(const DomainEventPublisher& other) = delete;
     DomainEventPublisher& operator=(const DomainEventPublisher& other) = delete;
 
-    void defer(std::unique_ptr<DomainEvent> event);
     void publish(const DomainEvent& event);
-    void publishDeferred();
+    void publish(DomainEventQueue& eventQueue);
 
     template <class TEvent, class = std::enable_if_t<std::is_base_of_v<DomainEvent, TEvent>>>
     void subscribe(DomainEventSubscriber<TEvent>& subscriber)
@@ -44,7 +45,6 @@ public:
 private:
     using EventHandler = std::function<void(const DomainEvent&)>;
 
-    std::queue<std::unique_ptr<DomainEvent>> mDeferredEvents;
     std::unordered_map<std::string, std::vector<EventHandler>> mSubscribers;
 
     DomainEventPublisher() = default;
