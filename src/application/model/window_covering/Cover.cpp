@@ -110,6 +110,11 @@ Cover::Result<> Cover::changeLiftPosition(Position position)
 
 void Cover::requestStopMotion()
 {
+    if (PositionStatus::Requested == mLiftState.status()) {
+        replaceLiftState(mLiftState.reset());
+        return;
+    }
+
     if (PositionStatus::Moving == mLiftState.status()) {
         replaceLiftState(mLiftState.stop());
         raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
@@ -132,16 +137,14 @@ void Cover::failMotion()
 
 void Cover::markAsUnreachable()
 {
+    if (mReachable) {
+        mReachable = false;
+        raise(std::make_unique<CoverMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
+    }
+
     if (PositionStatus::Moving == mLiftState.status()) {
         replaceLiftState(mLiftState.reset());
     }
-
-    if (!mReachable) {
-        return;
-    }
-
-    mReachable = false;
-    raise(std::make_unique<CoverMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
 }
 
 void Cover::remove()
@@ -151,7 +154,7 @@ void Cover::remove()
 
 bool Cover::operator==(const Cover& other) const
 {
-    return mUniqueId == other.mUniqueId;
+    return mEndpointId == other.mEndpointId;
 }
 
 bool Cover::isReachable() const

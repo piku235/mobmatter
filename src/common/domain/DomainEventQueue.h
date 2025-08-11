@@ -20,11 +20,14 @@ public:
     void push(std::unique_ptr<DomainEvent> event);
     std::unique_ptr<DomainEvent> pop();
     const DomainEvent* peek() const;
+    void clear();
     size_t size() const;
     bool empty() const;
 
 private:
-    std::queue<std::unique_ptr<DomainEvent>> mEvents;
+    using QueuedEvents = std::queue<std::unique_ptr<DomainEvent>>;
+    
+    QueuedEvents mEvents;
 
     DomainEventQueue() = default;
 };

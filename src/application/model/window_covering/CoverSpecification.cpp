@@ -55,12 +55,30 @@ CoverSpecification CoverSpecification::Cmr()
     };
 }
 
+CoverSpecification CoverSpecification::TestCzr()
+{
+    return {
+        "Test",
+        MobilusDeviceType::CosmoCzr,
+        CoverEndProductType::RollerShutter,
+        {}
+    };
+}
+
 CoverSpecification::CoverSpecification(std::string model, MobilusDeviceType mobilusDeviceType, CoverEndProductType endProductType, Flags<CoverFeature> featureFlags)
     : mModel(std::move(model))
     , mMobilusDeviceType(mobilusDeviceType)
     , mEndProductType(endProductType)
     , mFeatureFlags(std::move(featureFlags))
 {
+}
+
+bool CoverSpecification::operator==(const CoverSpecification& other) const
+{
+    return mModel == other.mModel
+        && mMobilusDeviceType == other.mMobilusDeviceType
+        && mEndProductType == other.mEndProductType
+        && mFeatureFlags == other.mFeatureFlags;
 }
 
 }

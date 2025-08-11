@@ -35,6 +35,12 @@ const DomainEvent* DomainEventQueue::peek() const
     return mEvents.front().get();
 }
 
+void DomainEventQueue::clear()
+{
+    QueuedEvents emptyEventQueue;
+    mEvents.swap(emptyEventQueue);
+}
+
 size_t DomainEventQueue::size() const
 {
     return mEvents.size();

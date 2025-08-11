@@ -16,6 +16,8 @@ public:
     CoverMotion lift() const { return mLift; }
     CoverMotion tilt() const { return mTilt; }
 
+    bool operator==(const CoverOperationalStatus& other) const { return mLift == other.mLift && mTilt == other.mTilt; }
+
 private:
     /* const */ CoverMotion mLift;
     /* const */ CoverMotion mTilt;

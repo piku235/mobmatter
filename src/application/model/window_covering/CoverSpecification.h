@@ -16,11 +16,14 @@ public:
     static CoverSpecification Senso();
     static CoverSpecification Cosmo();
     static CoverSpecification Cmr();
+    static CoverSpecification TestCzr(); // internal
 
     const std::string& model() const { return mModel; }
     MobilusDeviceType mobilusDeviceType() const { return mMobilusDeviceType; }
     CoverEndProductType endProductType() const { return mEndProductType; }
     Flags<CoverFeature> featureFlags() const { return mFeatureFlags; }
+
+    bool operator==(const CoverSpecification& other) const;
 
 private:
     /* const */ std::string mModel;
