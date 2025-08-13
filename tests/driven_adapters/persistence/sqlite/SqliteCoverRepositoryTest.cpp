@@ -60,10 +60,11 @@ TEST_F(SqliteCoverRepositoryTest, Saves)
 TEST_F(SqliteCoverRepositoryTest, Removes)
 {
     auto cover = sensoStub();
+
     coverRepository.save(cover);
+    EXPECT_TRUE(coverRepository.find(cover.endpointId()));
 
     coverRepository.remove(cover);
-
     EXPECT_FALSE(coverRepository.find(cover.endpointId()));
 }
 
@@ -102,6 +103,6 @@ TEST_F(SqliteCoverRepositoryTest, FindsAll)
     EXPECT_EQ(2u, covers.size());
 
     for (auto cover : covers) {
-        EXPECT_THAT(expectedCovers, ::testing::Contains(cover.endpointId()));
+        EXPECT_THAT(expectedCovers, Contains(cover.endpointId()));
     }
 }
