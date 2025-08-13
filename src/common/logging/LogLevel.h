@@ -3,12 +3,12 @@
 namespace mmbridge::common::logging {
 
 enum class LogLevel {
-    Critical,
-    Error,
-    Warning,
-    Notice,
-    Info,
     Debug,
+    Info,
+    Notice,
+    Warning,
+    Error,
+    Critical,
 };
 
 }
