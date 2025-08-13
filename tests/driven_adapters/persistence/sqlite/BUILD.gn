@@ -1,0 +1,15 @@
+source_set("sqlite") {
+  sources = [ "SqliteCoverRepositoryTest.cpp" ]
+
+  include_dirs = [
+    "//include",
+    "//src",
+  ]
+
+  deps = [
+    "//src/application",
+    "//src/driven_adapters/persistence/sqlite",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest",
+  ]
+}

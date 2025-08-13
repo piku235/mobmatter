@@ -1,11 +1,24 @@
-config("includes") {
+config("gtest_includes") {
   include_dirs = [ "repo/googletest/include" ]
+}
+
+config("gmock_includes") {
+  include_dirs = [ "repo/googlemock/include" ]
 }
 
 source_set("gtest") {
   sources = [ "repo/googletest/src/gtest-all.cc" ]
-  public_configs = [ ":includes" ]
+  public_configs = [ ":gtest_includes" ]
   include_dirs = [ "repo/googletest" ]
+}
+
+source_set("gmock") {
+  sources = [ "repo/googlemock/src/gmock-all.cc" ]
+  public_configs = [ ":gmock_includes" ]
+  include_dirs = [
+    "repo/googlemock",
+    "repo/googletest/include",
+  ]
 }
 
 source_set("gtest_main") {

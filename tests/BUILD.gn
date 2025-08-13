@@ -1,15 +1,9 @@
 executable("tests") {
   testonly = true
-  sources = [
-    "application/model/PercentTest.cpp",
-    "application/model/window_covering/CoverTest.cpp",
-    "application/model/window_covering/PositionTest.cpp",
-  ]
-
-  include_dirs = [ "//src" ]
 
   deps = [
-    "//src/application",
+    "application",
+    "driven_adapters/persistence/sqlite",
     "//third_party/googletest:gtest_main",
   ]
 

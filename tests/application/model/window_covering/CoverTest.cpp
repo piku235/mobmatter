@@ -18,6 +18,8 @@ using namespace mmbridge::common::domain;
 using namespace mmbridge::application::model;
 using namespace mmbridge::application::model::window_covering;
 
+namespace {
+
 auto coverStub(Position position = Position::fullyOpen())
 {
     return Cover::add(1, 2, "foo", PositionState::at(position), CoverSpecification::Senso());
@@ -26,6 +28,8 @@ auto coverStub(Position position = Position::fullyOpen())
 auto nonLiftCoverStub()
 {
     return Cover::add(10, 20, "baz", PositionState::unavailable(), CoverSpecification::TestCzr());
+}
+
 }
 
 TEST(CoverTest, AddsNew)

@@ -15,6 +15,11 @@ std::optional<Connection> Connection::open(const std::string& filename, int flag
     return Connection(db);
 }
 
+std::optional<Connection> Connection::inMemory()
+{
+    return open(":memory:");
+}
+
 Connection::Connection(sqlite3* db)
     : mDb(db)
 {

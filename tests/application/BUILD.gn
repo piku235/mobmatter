@@ -1,0 +1,17 @@
+source_set("application") {
+  sources = [
+    "model/PercentTest.cpp",
+    "model/window_covering/CoverTest.cpp",
+    "model/window_covering/PositionTest.cpp",
+  ]
+
+  include_dirs = [
+    "//include",
+    "//src",
+  ]
+
+  deps = [
+    "//src/application",
+    "//third_party/googletest:gtest",
+  ]
+}
