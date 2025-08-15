@@ -16,9 +16,15 @@ jobs:
         include:
           # gcc
           - os: ubuntu-latest
+            cc: gcc
+            cxx: g++
             is_clang: false
+
           # clang
+          # temp fix: v21.0.0 bugged with gtest parametrized tests
           - os: ubuntu-latest
+            cc: /usr/bin/clang
+            cxx: /usr/bin/clang++
             is_clang: true
 
     steps:
@@ -37,7 +43,7 @@ jobs:
           source scripts/bootstrap.sh
 
       - name: Configure GN
-        run: gn gen out/build --args="is_debug=false is_clang=${{ matrix.is_clang }}"
+        run: gn gen out/build --args='is_debug=false custom_toolchain="custom" is_clang=${{ matrix.is_clang }} target_cc="${{ matrix.cc }}" target_cxx="${{ matrix.cxx }}" target_ar="ar"'
 
       - name: Build
         run: ninja -C out/build tests
