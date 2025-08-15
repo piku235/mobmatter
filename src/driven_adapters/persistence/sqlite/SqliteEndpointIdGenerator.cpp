@@ -25,7 +25,6 @@ EndpointId SqliteEndpointIdGenerator::next()
         insertStmt.bind(2, mInitialEndpointId);
         insertStmt.exec();
 
-        // todo: error case
         return mInitialEndpointId;
     }
 
