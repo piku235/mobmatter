@@ -10,7 +10,7 @@
 #include "common/logging/handlers/SyslogHandler.h"
 #include "common/persistence/sqlite/Connection.h"
 #include "driven_adapters/logging/LoggingDomainEventSubscriber.h"
-#include "driven_adapters/matter/window_covering_reporting/WindowCoveringReportingAdapter.h"
+#include "driven_adapters/matter/reporting/CoverReportingAdapter.h"
 #include "driven_adapters/matter/zcl/ZclCoverEndpointService.h"
 #include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
 #include "driven_adapters/persistence/sqlite/SqliteCoverRepository.h"
@@ -55,7 +55,7 @@ using namespace mmbridge::application::driven_ports;
 using namespace mmbridge::driven_adapters::persistence::sqlite;
 using namespace mmbridge::driven_adapters::mobilus;
 using namespace mmbridge::driven_adapters::matter::zcl;
-using namespace mmbridge::driven_adapters::matter::window_covering_reporting;
+using namespace mmbridge::driven_adapters::matter::reporting;
 using namespace mmbridge::driven_adapters::logging;
 using namespace mmbridge::driving_adapters::mobilus;
 using namespace mmbridge::driving_adapters::mobilus::cover;
@@ -286,7 +286,7 @@ int main(int argc, char* argv[])
     DomainEventPublisherAdapter domainEventPublisherAdapter(chipSystemLayer);
     MobilusCoverControlSubscriber mobilusCoverControlSubscriber(coverControlService);
     ChipCoverEndpointSubscriber chipCoverEndpointSubscriber(coverEndpointService);
-    WindowCoveringReportingAdapter windowCoveringReportingAdapter;
+    CoverReportingAdapter coverReportingAdapter;
 
     // driving
     MobilusCoverEventHandler mobilusCoverEventHandler(coverRepository, logger);
@@ -299,7 +299,7 @@ int main(int argc, char* argv[])
 
     domainEventPublisher.subscribe(mobilusCoverControlSubscriber);
     domainEventPublisher.subscribe(chipCoverEndpointSubscriber);
-    domainEventPublisher.subscribe(windowCoveringReportingAdapter);
+    domainEventPublisher.subscribe(coverReportingAdapter);
     domainEventPublisher.subscribe(loggingDomainEventSubscriber);
 
     sChipApp.registerComponent(mobilusGtwClientAdapter);
