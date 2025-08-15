@@ -12,7 +12,7 @@ class CallEvents;
 
 }
 
-namespace mmbridge::driven_adapters::mobilus::cover_control {
+namespace mmbridge::driven_adapters::mobilus {
 
 namespace proto = jungi::mobilus_gtw_client::proto;
 namespace model = mmbridge::application::model;

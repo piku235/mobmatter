@@ -11,7 +11,7 @@ using namespace jungi::mobilus_gtw_client;
 using namespace mmbridge::application::model;
 using namespace mmbridge::application::model::window_covering;
 
-namespace mmbridge::driven_adapters::mobilus::cover_control {
+namespace mmbridge::driven_adapters::mobilus {
 
 MqttMobilusCoverControlService::MqttMobilusCoverControlService(MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger)
     : mMobilusGtwClient(mobilusGtwClient)
