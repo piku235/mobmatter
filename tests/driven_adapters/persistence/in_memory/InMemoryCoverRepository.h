@@ -3,7 +3,7 @@
 #include "application/driven_ports/CoverRepository.h"
 #include <unordered_map>
 
-namespace mmbridge::driven_adapters::persistence::in_memory {
+namespace mmbridge::tests::driven_adapters::persistence::in_memory {
 
 namespace model = mmbridge::application::model;
 

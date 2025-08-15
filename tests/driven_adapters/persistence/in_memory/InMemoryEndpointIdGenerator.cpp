@@ -2,7 +2,7 @@
 
 using mmbridge::application::model::EndpointId;
 
-namespace mmbridge::driven_adapters::persistence::in_memory {
+namespace mmbridge::tests::driven_adapters::persistence::in_memory {
 
 InMemoryEndpointIdGenerator::InMemoryEndpointIdGenerator(EndpointId initialEndpointId)
     : mNextEndpointId(initialEndpointId)

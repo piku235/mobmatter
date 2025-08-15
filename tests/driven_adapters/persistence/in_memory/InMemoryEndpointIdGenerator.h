@@ -2,7 +2,7 @@
 
 #include "application/driven_ports/EndpointIdGenerator.h"
 
-namespace mmbridge::driven_adapters::persistence::in_memory {
+namespace mmbridge::tests::driven_adapters::persistence::in_memory {
 
 namespace model = mmbridge::application::model;
 

@@ -3,7 +3,7 @@
 using namespace mmbridge::application::model;
 using namespace mmbridge::application::model::window_covering;
 
-namespace mmbridge::driven_adapters::persistence::in_memory {
+namespace mmbridge::tests::driven_adapters::persistence::in_memory {
 
 void InMemoryCoverRepository::save(const Cover& cover)
 {
