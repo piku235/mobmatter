@@ -9,7 +9,7 @@ target_cpu = "mipsel_24kec"
 target_os = "linux"
 target_cflags = ["-I${openwrt_root}/usr/include", "-march=24kec", "-mxgot"]
 target_ldflags = ["-s", "-L${openwrt_root}/usr/lib", "-Wl,-rpath-link=${openwrt_root}/usr/lib", "-Wl,-rpath=/opt/matter/lib", "-Wl,--dynamic-linker=/opt/matter/lib/ld-musl-mipsel-sf.so.1"]
-custom_toolchain = "${build_root}/toolchain/custom:custom"
+custom_toolchain = "custom"
 _toolprefix = "mipsel-openwrt-linux-"
 target_cc = "${_toolprefix}gcc"
 target_cxx = "${_toolprefix}g++"
