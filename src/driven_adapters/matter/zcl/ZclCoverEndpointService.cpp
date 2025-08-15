@@ -1,5 +1,5 @@
 #include "ZclCoverEndpointService.h"
-#include "driven_adapters/matter/zcl_endpoint/ZclDeviceEndpoint.h"
+#include "ZclDeviceEndpoint.h"
 
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
@@ -19,7 +19,7 @@ using namespace chip;
 using namespace chip::app;
 using namespace chip::app::Clusters;
 using namespace chip::DeviceLayer;
-using namespace mmbridge::driven_adapters::matter::zcl_endpoint;
+using namespace mmbridge::driven_adapters::matter::zcl;
 using namespace mmbridge::application::model::window_covering;
 
 namespace {
@@ -103,7 +103,7 @@ const EmberAfDeviceType coverDeviceTypes[] = {
 
 }
 
-namespace mmbridge::driven_adapters::matter::zcl_cover_endpoint {
+namespace mmbridge::driven_adapters::matter::zcl {
 
 ZclCoverEndpointService::ZclCoverEndpointService(EndpointId aggregatorEndpointId)
     : mAggregatorEndpointId(aggregatorEndpointId)

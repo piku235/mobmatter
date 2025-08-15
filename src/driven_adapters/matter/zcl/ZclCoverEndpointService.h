@@ -2,7 +2,7 @@
 
 #include "application/driven_ports/CoverEndpointService.h"
 
-namespace mmbridge::driven_adapters::matter::zcl_cover_endpoint {
+namespace mmbridge::driven_adapters::matter::zcl {
 
 namespace model = mmbridge::application::model;
 namespace wc = mmbridge::application::model::window_covering;

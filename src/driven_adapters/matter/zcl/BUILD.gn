@@ -1,0 +1,20 @@
+source_set("base") {
+  sources = [
+    "ZclDeviceEndpoint.cpp",
+    "ZclDeviceEndpoint.h",
+  ]
+
+  public_deps = [ "//:mmbridge-zap" ]
+}
+
+source_set("cover_endpoint") {
+  sources = [ "ZclCoverEndpointService.cpp" ]
+  public = [ "ZclCoverEndpointService.h" ]
+
+  configs += [ "//:includes" ]
+
+  deps = [
+    ":base",
+    "//src/application",
+  ]
+}

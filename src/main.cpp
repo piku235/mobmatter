@@ -11,7 +11,7 @@
 #include "common/persistence/sqlite/Connection.h"
 #include "driven_adapters/logging/LoggingDomainEventSubscriber.h"
 #include "driven_adapters/matter/window_covering_reporting/WindowCoveringReportingAdapter.h"
-#include "driven_adapters/matter/zcl_cover_endpoint/ZclCoverEndpointService.h"
+#include "driven_adapters/matter/zcl/ZclCoverEndpointService.h"
 #include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
 #include "driven_adapters/persistence/sqlite/SqliteCoverRepository.h"
 #include "driven_adapters/persistence/sqlite/SqliteEndpointIdGenerator.h"
@@ -54,7 +54,7 @@ using namespace mmbridge::application::subscribers;
 using namespace mmbridge::application::driven_ports;
 using namespace mmbridge::driven_adapters::persistence::sqlite;
 using namespace mmbridge::driven_adapters::mobilus;
-using namespace mmbridge::driven_adapters::matter::zcl_cover_endpoint;
+using namespace mmbridge::driven_adapters::matter::zcl;
 using namespace mmbridge::driven_adapters::matter::window_covering_reporting;
 using namespace mmbridge::driven_adapters::logging;
 using namespace mmbridge::driving_adapters::mobilus;

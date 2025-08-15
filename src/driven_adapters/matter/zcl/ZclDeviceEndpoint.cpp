@@ -24,7 +24,7 @@ void releaseDynamicEndpointIndex(uint16_t index)
 
 }
 
-namespace mmbridge::driven_adapters::matter::zcl_endpoint {
+namespace mmbridge::driven_adapters::matter::zcl {
 
 void addDeviceEndpoint(EndpointId id, const EmberAfEndpointType* ep, Span<const EmberAfDeviceType> deviceTypeList, EndpointId parentEndpointId)
 {
