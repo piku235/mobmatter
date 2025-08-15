@@ -11,7 +11,7 @@ build_protoc() {
     mkdir -p "$BIN_DIR"
     
     (cd "$PROTOBUF_DIR" && autoreconf -f -i -Wall,no-obsolete)
-    (cd "$PROTOBUF_DIR" && ./configure --disable-shared --enable-static)
+    (cd "$PROTOBUF_DIR" && ./configure CXXFLAGS="-w" --disable-shared --enable-static)
     make -j$(nproc) -C "$PROTOBUF_DIR"
 
     cp $PROTOBUF_DIR/src/protoc "$BIN_DIR"
