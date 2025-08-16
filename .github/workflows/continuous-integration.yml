@@ -36,6 +36,9 @@ jobs:
       - name: Setup project dependencies
         run: git submodule update --init
 
+      - name: Setup connectedhomeip dependencies
+        run: third_party/connectedhomeip/scripts/checkout_submodules.py --shallow --platform linux
+
       - name: Cache protoc
         uses: actions/cache@v4
         with:
@@ -45,14 +48,11 @@ jobs:
       - name: Cache pigweed from connectedhomeip
         uses: actions/cache@v4
         with:
-          key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/pigweed.json') }}
+          key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/.environment/pigweed.json') }}
           path: third_party/connectedhomeip/.environment
 
-      - name: Configure connectedhomeip
-        working-directory: third_party/connectedhomeip
-        run: |
-          scripts/checkout_submodules.py --shallow --platform linux
-          source scripts/bootstrap.sh
+      - name: Bootstrap connectedhomeip
+        run: source third_party/connectedhomeip/scripts/bootstrap.sh
 
       - name: Configure GN
         run: gn gen out/build --args='is_debug=false custom_toolchain="custom" is_clang=${{ matrix.is_clang }} target_cc="${{ matrix.cc }}" target_cxx="${{ matrix.cxx }}" target_ar="ar"'
