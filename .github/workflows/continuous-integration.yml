@@ -36,7 +36,7 @@ jobs:
       - name: Setup project dependencies
         run: git submodule update --init
 
-      - name: Setup connectedhomeip dependencies
+      - name: Setup CHIP dependencies
         run: third_party/connectedhomeip/scripts/checkout_submodules.py --shallow --platform linux
 
       - name: Cache protoc
@@ -45,13 +45,18 @@ jobs:
           key: ${{ runner.os }}-build-protoc
           path: third_party/protobuf/bin/protoc
 
-      - name: Cache pigweed from connectedhomeip
+      - name: Cache CHIP pigweed
+        id: pigweed-cache
         uses: actions/cache@v4
         with:
           key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/scripts/setup/requirements*.txt', 'third_party/connectedhomeip/third_party/pigweed/repo/package-lock.json') }}
           path: third_party/connectedhomeip/.environment
 
       - name: Bootstrap connectedhomeip
+        if: ${{ steps.pigweed-cache.outputs.cache-hit != 'true' }}
+        env:
+          PW_NO_CIPD_CACHE_DIR: 1
+          PW_ENVSETUP_NO_BANNER: 1
         run: source third_party/connectedhomeip/scripts/bootstrap.sh
 
       - name: Configure GN
