@@ -44,7 +44,7 @@ void MobilusCoverInitHandler::initDevice(const proto::Device& device, const prot
         mEndpointIdGenerator.next(),
         static_cast<MobilusDeviceId>(device.id()),
         device.name(),
-        PositionState::at(liftPosition.value_or(Position::fullyOpen())),
+        PositionState::at(liftPosition.value_or(Position::fullyClosed())),
         std::move(*coverSpec));
     mCoverRepository.save(cover);
 }

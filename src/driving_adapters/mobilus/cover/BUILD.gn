@@ -5,14 +5,16 @@ source_set("cover") {
   ]
 
   public = [
-    "MobilusCoverInitHandler.h",
     "MobilusCoverEventHandler.h",
+    "MobilusCoverInitHandler.h",
   ]
 
   deps = [
-    "//src/driving_adapters/mobilus:common",
     "//src/application",
+    "//src/driving_adapters/mobilus:common",
   ]
-  
-  configs += ["//:includes"]
+
+  public_deps = [ "//third_party/mobilus_gtw_client" ]
+
+  configs += [ "//:includes" ]
 }
