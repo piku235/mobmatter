@@ -1,6 +1,7 @@
 source_set("cover") {
   sources = [
     "MobilusCoverInitHandlerTest.cpp",
+    "MobilusCoverEventHandlerTest.cpp",
   ]
 
   include_dirs = [
