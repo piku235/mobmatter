@@ -48,7 +48,7 @@ jobs:
       - name: Cache pigweed from connectedhomeip
         uses: actions/cache@v4
         with:
-          key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/.environment/pigweed.json') }}
+          key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/scripts/setup/requirements*.txt', 'third_party/connectedhomeip/third_party/pigweed/repo/package-lock.json') }}
           path: third_party/connectedhomeip/.environment
 
       - name: Bootstrap connectedhomeip
