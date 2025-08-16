@@ -1,4 +1,5 @@
 #include "driving_adapters/mobilus/MqttMobilusEventSubscriber.h"
+#include "FakeEventHandler.hpp"
 #include "driving_adapters/mobilus/MobilusEventHandler.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
@@ -15,24 +16,6 @@ using mmbridge::driving_adapters::mobilus::MqttMobilusEventSubscriber;
 using mmbridge::tests::mobilus::MockMqttMobilusGtwClient;
 
 namespace {
-
-class FakeEventHandler final : public MobilusEventHandler {
-public:
-    FakeEventHandler(std::vector<proto::Event>& handledEvents)
-        : mHandledEvents(handledEvents)
-    {
-    }
-
-    Result handle(const proto::Event& event) override
-    {
-        mHandledEvents.push_back(event);
-
-        return Result::Handled;
-    }
-
-private:
-    std::vector<proto::Event>& mHandledEvents;
-};
 
 auto callEventsStub()
 {
