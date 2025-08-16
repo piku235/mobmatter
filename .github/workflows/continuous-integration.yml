@@ -37,7 +37,8 @@ jobs:
         run: git submodule update --init
 
       - name: Setup CHIP dependencies
-        run: third_party/connectedhomeip/scripts/checkout_submodules.py --shallow --platform linux
+        working-directory: third_party/connectedhomeip
+        run: scripts/checkout_submodules.py --shallow --platform linux
 
       - name: Cache protoc
         uses: actions/cache@v4
@@ -53,10 +54,11 @@ jobs:
           path: third_party/connectedhomeip/.environment
 
       - name: Bootstrap CHIP
+        working-directory: third_party/connectedhomeip
         env:
           PW_NO_CIPD_CACHE_DIR: 1
           PW_ENVSETUP_NO_BANNER: 1
-        run: source third_party/connectedhomeip/scripts/activate.sh
+        run: source scripts/activate.sh
 
       - name: Configure GN
         run: gn gen out/build --args='is_debug=false custom_toolchain="custom" is_clang=${{ matrix.is_clang }} target_cc="${{ matrix.cc }}" target_cxx="${{ matrix.cxx }}" target_ar="ar"'
