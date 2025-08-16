@@ -36,12 +36,17 @@ jobs:
       - name: Setup project dependencies
         run: git submodule update --init
 
-      - name: Cache pigweed packages from connectedhomeip
+      - name: Cache protoc
         uses: actions/cache@v4
         with:
-          key: ${{ runner.os }}-build-cipd-${{ hashFiles('third_party/connectedhomeip/pigweed.json') }}
-          path: |
-            third_party/connectedhomeip/.environment
+          key: ${{ runner.os }}-build-protoc
+          path: third_party/protobuf/bin/protoc
+
+      - name: Cache pigweed from connectedhomeip
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/pigweed.json') }}
+          path: third_party/connectedhomeip/.environment
 
       - name: Configure connectedhomeip
         working-directory: third_party/connectedhomeip
