@@ -1,5 +1,7 @@
-source_set("mobilus") {
-  sources = [ "MqttMobilusDeviceInitializerTest.cpp" ]
+source_set("device_initializer") {
+  sources = [
+    "MqttMobilusDeviceInitializerTest.cpp",
+  ]
 
   include_dirs = [
     "//src",
@@ -9,7 +11,26 @@ source_set("mobilus") {
   deps = [
     "//src/application",
     "//src/common/logging",
-    "//src/driving_adapters/mobilus:base",
+    "//src/driving_adapters/mobilus:device_initializer",
+    "//tests/mobilus:mock_client",
+    "//third_party/googletest:gtest",
+  ]
+}
+
+source_set("event_subscriber") {
+  sources = [
+    "MqttMobilusEventSubscriberTest.cpp",
+  ]
+
+  include_dirs = [
+    "//src",
+    "//tests",
+  ]
+
+  deps = [
+    "//src/application",
+    "//src/common/logging",
+    "//src/driving_adapters/mobilus:event_subscriber",
     "//tests/mobilus:mock_client",
     "//third_party/googletest:gtest",
   ]

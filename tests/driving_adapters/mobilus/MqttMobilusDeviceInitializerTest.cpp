@@ -27,8 +27,6 @@ public:
         proto::Event currentState;
     };
 
-    std::vector<InitiatedDevice>& mInitiatedDevices;
-
     FakeDeviceInitHandler(std::vector<InitiatedDevice>& initiatedDevices)
         : mInitiatedDevices(initiatedDevices)
     {
@@ -44,6 +42,9 @@ public:
         return MobilusDeviceType::Senso == deviceType
             || MobilusDeviceType::Cmr == deviceType;
     }
+
+private:
+    std::vector<InitiatedDevice>& mInitiatedDevices;
 };
 
 void setupResponses(proto::DevicesListResponse& deviceList, proto::CurrentStateResponse& currentState)
@@ -109,13 +110,13 @@ TEST(MqttMobilusDeviceInitializerTest, Initializes)
     deviceInitializer.run();
     EXPECT_EQ(2, initiatedDevices.size());
 
-    for (auto i : {1, 2}) {
-        EXPECT_EQ(deviceList.devices(i).id(), initiatedDevices[i-1].device.id());
-        EXPECT_EQ(deviceList.devices(i).name(), initiatedDevices[i-1].device.name());
-        EXPECT_EQ(deviceList.devices(i).type(), initiatedDevices[i-1].device.type());
-        EXPECT_EQ(currentState.events(i).device_id(), initiatedDevices[i-1].currentState.device_id());
-        EXPECT_EQ(currentState.events(i).value(), initiatedDevices[i-1].currentState.value());
-        EXPECT_EQ(currentState.events(i).event_number(), initiatedDevices[i-1].currentState.event_number());
+    for (auto i : { 1, 2 }) {
+        EXPECT_EQ(deviceList.devices(i).id(), initiatedDevices[i - 1].device.id());
+        EXPECT_EQ(deviceList.devices(i).name(), initiatedDevices[i - 1].device.name());
+        EXPECT_EQ(deviceList.devices(i).type(), initiatedDevices[i - 1].device.type());
+        EXPECT_EQ(currentState.events(i).device_id(), initiatedDevices[i - 1].currentState.device_id());
+        EXPECT_EQ(currentState.events(i).value(), initiatedDevices[i - 1].currentState.value());
+        EXPECT_EQ(currentState.events(i).event_number(), initiatedDevices[i - 1].currentState.event_number());
     }
 }
 

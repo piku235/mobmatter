@@ -10,9 +10,8 @@ source_set("cover") {
   ]
 
   deps = [
-    "//src/driving_adapters/mobilus:base",
+    "//src/driving_adapters/mobilus:common",
     "//src/application",
-    "//third_party/mobilus_gtw_client",
   ]
   
   configs += ["//:includes"]
