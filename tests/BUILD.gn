@@ -5,6 +5,7 @@ executable("tests") {
     "application",
     "driven_adapters/mobilus",
     "driven_adapters/persistence/sqlite",
+    "driving_adapters/mobilus",
     "//third_party/googletest:gtest_main",
   ]
 
