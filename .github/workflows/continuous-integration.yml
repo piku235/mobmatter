@@ -52,12 +52,16 @@ jobs:
           key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/scripts/setup/requirements*.txt', 'third_party/connectedhomeip/third_party/pigweed/repo/package-lock.json') }}
           path: third_party/connectedhomeip/.environment
 
-      - name: Bootstrap connectedhomeip
-        if: ${{ steps.pigweed-cache.outputs.cache-hit != 'true' }}
+      - name: Bootstrap CHIP
         env:
           PW_NO_CIPD_CACHE_DIR: 1
           PW_ENVSETUP_NO_BANNER: 1
-        run: source third_party/connectedhomeip/scripts/bootstrap.sh
+        run: |
+          if [ "${{ steps.pigweed-cache.outputs.cache-hit }}" != "true" ]; then
+            source third_party/connectedhomeip/scripts/bootstrap.sh
+          else
+            source third_party/connectedhomeip/scripts/activate.sh
+          fi
 
       - name: Configure GN
         run: gn gen out/build --args='is_debug=false custom_toolchain="custom" is_clang=${{ matrix.is_clang }} target_cc="${{ matrix.cc }}" target_cxx="${{ matrix.cxx }}" target_ar="ar"'
