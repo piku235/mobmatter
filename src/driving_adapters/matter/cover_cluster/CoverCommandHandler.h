@@ -5,14 +5,14 @@
 
 #include <app/CommandHandlerInterface.h>
 
-namespace mmbridge::driving_adapters::matter::window_covering_cluster {
+namespace mmbridge::driving_adapters::matter::cover_cluster {
 
 namespace driven_ports = mmbridge::application::driven_ports;
 namespace logging = mmbridge::common::logging;
 
-class WindowCoveringCommandHandler final : public chip::app::CommandHandlerInterface {
+class CoverCommandHandler final : public chip::app::CommandHandlerInterface {
 public:
-    explicit WindowCoveringCommandHandler(driven_ports::CoverRepository& coverRepository, logging::Logger& logger);
+    CoverCommandHandler(driven_ports::CoverRepository& coverRepository, logging::Logger& logger);
     void InvokeCommand(HandlerContext& handlerContext) override;
 
 private:

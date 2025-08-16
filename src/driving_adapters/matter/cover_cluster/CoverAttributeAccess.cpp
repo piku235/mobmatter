@@ -1,4 +1,4 @@
-#include "WindowCoveringAttributeAccess.h"
+#include "CoverAttributeAccess.h"
 
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
@@ -20,15 +20,15 @@ constexpr uint16_t kWindowCoveringClusterRevision = 5u;
 
 }
 
-namespace mmbridge::driving_adapters::matter::window_covering_cluster {
+namespace mmbridge::driving_adapters::matter::cover_cluster {
 
-WindowCoveringAttributeAccess::WindowCoveringAttributeAccess(CoverRepository& coverRepository)
+CoverAttributeAccess::CoverAttributeAccess(CoverRepository& coverRepository)
     : AttributeAccessInterface(Optional<EndpointId>::Missing(), WindowCovering::Id)
     , mCoverRepository(coverRepository)
 {
 }
 
-CHIP_ERROR WindowCoveringAttributeAccess::Read(const ConcreteReadAttributePath& path, AttributeValueEncoder& encoder)
+CHIP_ERROR CoverAttributeAccess::Read(const ConcreteReadAttributePath& path, AttributeValueEncoder& encoder)
 {
     auto cover = mCoverRepository.find(path.mEndpointId);
 
@@ -74,7 +74,7 @@ CHIP_ERROR WindowCoveringAttributeAccess::Read(const ConcreteReadAttributePath& 
     }
 }
 
-WindowCovering::Type WindowCoveringAttributeAccess::ConvertToType(const model::window_covering::CoverEndProductType coverEndProductType)
+WindowCovering::Type CoverAttributeAccess::ConvertToType(const model::window_covering::CoverEndProductType coverEndProductType)
 {
     switch (coverEndProductType) {
     case CoverEndProductType::RollerShutter:
@@ -85,7 +85,7 @@ WindowCovering::Type WindowCoveringAttributeAccess::ConvertToType(const model::w
     }
 }
 
-WindowCovering::EndProductType WindowCoveringAttributeAccess::ConvertToEndProductType(const model::window_covering::CoverEndProductType coverEndProductType)
+WindowCovering::EndProductType CoverAttributeAccess::ConvertToEndProductType(const model::window_covering::CoverEndProductType coverEndProductType)
 {
     switch (coverEndProductType) {
     case CoverEndProductType::RollerShutter:
@@ -96,7 +96,7 @@ WindowCovering::EndProductType WindowCoveringAttributeAccess::ConvertToEndProduc
     }
 }
 
-BitMask<WindowCovering::ConfigStatus> WindowCoveringAttributeAccess::ConvertToConfigStatus(const Flags<CoverFeature>& featureFlags)
+BitMask<WindowCovering::ConfigStatus> CoverAttributeAccess::ConvertToConfigStatus(const Flags<CoverFeature>& featureFlags)
 {
     BitMask<WindowCovering::ConfigStatus> bitMask;
 
@@ -106,7 +106,7 @@ BitMask<WindowCovering::ConfigStatus> WindowCoveringAttributeAccess::ConvertToCo
     return bitMask;
 }
 
-WindowCovering::OperationalState WindowCoveringAttributeAccess::ConvertToOperationalState(CoverMotion motion)
+WindowCovering::OperationalState CoverAttributeAccess::ConvertToOperationalState(CoverMotion motion)
 {
     switch (motion) {
     case CoverMotion::Opening:
@@ -119,7 +119,7 @@ WindowCovering::OperationalState WindowCoveringAttributeAccess::ConvertToOperati
     }
 }
 
-BitMask<WindowCovering::OperationalStatus> WindowCoveringAttributeAccess::ConvertToOperationalStatus(const CoverOperationalStatus& operationalStatus)
+BitMask<WindowCovering::OperationalStatus> CoverAttributeAccess::ConvertToOperationalStatus(const CoverOperationalStatus& operationalStatus)
 {
     BitMask<WindowCovering::OperationalStatus> bitMask;
 
@@ -130,7 +130,7 @@ BitMask<WindowCovering::OperationalStatus> WindowCoveringAttributeAccess::Conver
     return bitMask;
 }
 
-BitMask<WindowCovering::Feature> WindowCoveringAttributeAccess::ConvertToFeatureMap(const Flags<CoverFeature>& featureFlags)
+BitMask<WindowCovering::Feature> CoverAttributeAccess::ConvertToFeatureMap(const Flags<CoverFeature>& featureFlags)
 {
     BitMask<WindowCovering::Feature> bitMask;
 

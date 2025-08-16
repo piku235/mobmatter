@@ -20,7 +20,7 @@ constexpr uint16_t kBridgedDeviceBasicInfoClusterRevision = 4u;
 
 }
 
-namespace mmbridge::driving_adapters::matter::window_covering_cluster {
+namespace mmbridge::driving_adapters::matter::cover_cluster {
 
 BridgedDeviceBasicInfoAttributeAccess::BridgedDeviceBasicInfoAttributeAccess(CoverRepository& coverRepository)
     : AttributeAccessInterface(Optional<EndpointId>::Missing(), BridgedDeviceBasicInformation::Id)

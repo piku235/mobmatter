@@ -4,7 +4,7 @@
 
 #include <app/AttributeAccessInterface.h>
 
-namespace mmbridge::driving_adapters::matter::window_covering_cluster {
+namespace mmbridge::driving_adapters::matter::cover_cluster {
 
 namespace driven_ports = mmbridge::application::driven_ports;
 

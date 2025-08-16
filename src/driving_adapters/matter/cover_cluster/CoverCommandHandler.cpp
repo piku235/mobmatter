@@ -1,4 +1,4 @@
-#include "WindowCoveringCommandHandler.h"
+#include "CoverCommandHandler.h"
 #include "application/model/window_covering/Position.h"
 
 #include <app-common/zap-generated/cluster-objects.h>
@@ -16,16 +16,16 @@ using AppPercent = mmbridge::application::model::Percent;
 using mmbridge::application::model::window_covering::Position;
 using Protocols::InteractionModel::Status;
 
-namespace mmbridge::driving_adapters::matter::window_covering_cluster {
+namespace mmbridge::driving_adapters::matter::cover_cluster {
 
-WindowCoveringCommandHandler::WindowCoveringCommandHandler(CoverRepository& coverRepository, logging::Logger& logger)
+CoverCommandHandler::CoverCommandHandler(CoverRepository& coverRepository, logging::Logger& logger)
     : CommandHandlerInterface(Optional<EndpointId>::Missing(), WindowCovering::Id)
     , mCoverRepository(coverRepository)
     , mLogger(logger)
 {
 }
 
-void WindowCoveringCommandHandler::InvokeCommand(HandlerContext& handlerContext)
+void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
 {
     auto cover = mCoverRepository.find(handlerContext.mRequestPath.mEndpointId);
 

@@ -9,14 +9,14 @@
 #include <app/AttributeAccessInterface.h>
 #include <app/clusters/window-covering-server/window-covering-server.h>
 
-namespace mmbridge::driving_adapters::matter::window_covering_cluster {
+namespace mmbridge::driving_adapters::matter::cover_cluster {
 
 namespace model = mmbridge::application::model;
 namespace driven_ports = mmbridge::application::driven_ports;
 
-class WindowCoveringAttributeAccess final : public chip::app::AttributeAccessInterface {
+class CoverAttributeAccess final : public chip::app::AttributeAccessInterface {
 public:
-    explicit WindowCoveringAttributeAccess(driven_ports::CoverRepository& coverRepository);
+    explicit CoverAttributeAccess(driven_ports::CoverRepository& coverRepository);
     CHIP_ERROR Read(const chip::app::ConcreteReadAttributePath& path, chip::app::AttributeValueEncoder& encoder) override;
 
     // nothing to write

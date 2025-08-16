@@ -16,7 +16,7 @@
 #include "driven_adapters/persistence/sqlite/SqliteCoverRepository.h"
 #include "driven_adapters/persistence/sqlite/SqliteEndpointIdGenerator.h"
 #include "driving_adapters/matter/cluster_stubs/ClusterStubsAdapter.h"
-#include "driving_adapters/matter/window_covering_cluster/WindowCoveringClusterAdapter.h"
+#include "driving_adapters/matter/cover_cluster/CoverClusterAdapter.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceInitializer.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceStateSyncer.h"
 #include "driving_adapters/mobilus/MqttMobilusEventSubscriber.h"
@@ -59,7 +59,7 @@ using namespace mmbridge::driven_adapters::matter::reporting;
 using namespace mmbridge::driven_adapters::logging;
 using namespace mmbridge::driving_adapters::mobilus;
 using namespace mmbridge::driving_adapters::mobilus::cover;
-using namespace mmbridge::driving_adapters::matter::window_covering_cluster;
+using namespace mmbridge::driving_adapters::matter::cover_cluster;
 using namespace mmbridge::driving_adapters::matter::cluster_stubs;
 using namespace mmbridge::matter;
 using namespace mmbridge::matter::event_loop;
@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
     // driving
     MobilusCoverEventHandler mobilusCoverEventHandler(coverRepository, logger);
     MqttMobilusEventSubscriber mobilusEventSubscriber(*mobilusGtwClient, mobilusCoverEventHandler);
-    WindowCoveringClusterAdapter windowCoveringClusterAdapter(coverRepository, logger);
+    CoverClusterAdapter coverClusterAdapter(coverRepository, logger);
     ClusterStubsAdapter clusterStubsAdapter;
 
     signal(SIGINT, handleSignal);
@@ -304,7 +304,7 @@ int main(int argc, char* argv[])
 
     sChipApp.registerComponent(mobilusGtwClientAdapter);
     sChipApp.registerComponent(domainEventPublisherAdapter);
-    sChipApp.registerComponent(windowCoveringClusterAdapter);
+    sChipApp.registerComponent(coverClusterAdapter);
     sChipApp.registerComponent(clusterStubsAdapter);
     sChipApp.registerComponent(mobilusEventSubscriber);
 
