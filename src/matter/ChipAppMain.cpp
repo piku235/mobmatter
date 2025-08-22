@@ -41,6 +41,7 @@
 
 using namespace mmbridge::common::logging;
 using namespace mmbridge::matter::logging;
+using jungi::mobilus_gtw_client::ErrorCode;
 using jungi::mobilus_gtw_client::MqttMobilusGtwClient;
 
 static mmbridge::matter::CommissionableDataProviderImpl sCommissionableDataProvider;
@@ -104,8 +105,16 @@ int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, ch
     chip::Credentials::SetDeviceAttestationCredentialsProvider(&sDacProvider);
     chip::app::SetAttributePersistenceProvider(&sAttributePersistenceProvider);
 
-    if (auto e = mobilusGtwClient.connect(); !e) {
-        return static_cast<int>(e.error().code());
+    if (auto r = mobilusGtwClient.connect(); !r) {
+        // on startup, it might be mobilus process has not yet connected to MQTT broker
+        // one more attempt before giving up
+        if (ErrorCode::LoginTimeout == r.error().code()) {
+            r = mobilusGtwClient.connect();
+        }
+
+        if (!r) {
+            return static_cast<int>(r.error().code());
+        }
     }
 
     sDeviceInstanceInfoProvider.SetSerialNumber(mobilusGtwClient.sessionInfo()->serialNumber);

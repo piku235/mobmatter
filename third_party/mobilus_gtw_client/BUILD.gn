@@ -126,6 +126,8 @@ static_library("mobilus_gtw_client") {
     "repo/src/SelectCondition.cpp",
     "repo/src/MqttMobilusGtwClient.cpp",
     "repo/src/MqttMobilusGtwClientImpl.cpp",
+    "repo/src/TimeUtils.h",
+    "repo/src/TimeUtils.cpp",
     "repo/src/ProtoUtils.cpp",
     "repo/src/io/BlockingClientWatcher.cpp",
   ]
