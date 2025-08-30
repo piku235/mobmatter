@@ -168,10 +168,10 @@ static_library("mobilus_gtw_client") {
 
   configs += [
     ":openssl_config",
+    ":mosquitto_config",
   ]
 
   public_configs = [
     ":includes",
-    ":mosquitto_config",
   ]
 }
