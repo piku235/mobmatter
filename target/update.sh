@@ -69,7 +69,6 @@ for sourcefile in opt/matter/lib/*; do
     cp -a "$sourcefile" "$destfile"
     echo "UPDATED"
   else
-    cp -a "$sourcefile" "$destfile"
     echo "OK"
   fi
 done
@@ -79,11 +78,9 @@ for sourcefile in /opt/matter/lib/*; do
   filename=$(basename "$sourcefile")
   destfile="opt/matter/lib/$filename"
 
-  echo -n "$sourcefile: "
-
   if [ ! -f "$destfile" ]; then
     rm -f "$sourcefile"
-    echo "REMOVED"
+    echo "$sourcefile: REMOVED"
   fi
 done
 
