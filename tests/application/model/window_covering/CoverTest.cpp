@@ -37,24 +37,24 @@ TEST(CoverTest, AddsNew)
     auto cover = coverStub();
     auto& events = DomainEventQueue::instance();
 
-    EXPECT_EQ(1, cover.endpointId());
-    EXPECT_EQ(2, cover.mobilusDeviceId());
-    EXPECT_TRUE(cover.isReachable());
-    EXPECT_EQ("foo", cover.name());
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), *cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), *cover.liftState().currentPosition());
-    EXPECT_EQ(CoverSpecification::Senso(), cover.specification());
+    ASSERT_EQ(1, cover.endpointId());
+    ASSERT_EQ(2, cover.mobilusDeviceId());
+    ASSERT_TRUE(cover.isReachable());
+    ASSERT_EQ("foo", cover.name());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), *cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), *cover.liftState().currentPosition());
+    ASSERT_EQ(CoverSpecification::Senso(), cover.specification());
 
-    EXPECT_EQ(1u, events.size());
-    EXPECT_STREQ(CoverAdded::kEventName, events.peek()->eventName());
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverAdded::kEventName, events.peek()->eventName());
 
     auto& event = static_cast<const CoverAdded&>(*events.peek());
 
-    EXPECT_EQ(cover.endpointId(), event.endpointId);
-    EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-    EXPECT_EQ(cover.specification(), event.specification);
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    ASSERT_EQ(cover.specification(), event.specification);
 
     (void)events.pop();
 }
@@ -64,17 +64,17 @@ TEST(CoverTest, Restores)
     auto cover = Cover::restoreFrom(1, 2, UniqueId::of("7bc1ac82347f4f64970db8228ed24290"), false, "foo", PositionState::at(Position::fullyClosed()), CoverSpecification::Cmr());
     auto& events = DomainEventQueue::instance();
 
-    EXPECT_EQ(1, cover.endpointId());
-    EXPECT_EQ(2, cover.mobilusDeviceId());
-    EXPECT_EQ("7bc1ac82347f4f64970db8228ed24290", cover.uniqueId().value());
-    EXPECT_FALSE(cover.isReachable());
-    EXPECT_EQ("foo", cover.name());
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), *cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyClosed(), *cover.liftState().currentPosition());
-    EXPECT_EQ(CoverSpecification::Cmr(), cover.specification());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_EQ(1, cover.endpointId());
+    ASSERT_EQ(2, cover.mobilusDeviceId());
+    ASSERT_EQ("7bc1ac82347f4f64970db8228ed24290", cover.uniqueId().value());
+    ASSERT_FALSE(cover.isReachable());
+    ASSERT_EQ("foo", cover.name());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), *cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), *cover.liftState().currentPosition());
+    ASSERT_EQ(CoverSpecification::Cmr(), cover.specification());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, EqualsAndDoesNotEqual)
@@ -82,8 +82,8 @@ TEST(CoverTest, EqualsAndDoesNotEqual)
     auto cover = coverStub();
     auto other = nonLiftCoverStub();
 
-    EXPECT_EQ(cover, coverStub(Position::fullyClosed()));
-    EXPECT_FALSE(cover == other);
+    ASSERT_EQ(cover, coverStub(Position::fullyClosed()));
+    ASSERT_FALSE(cover == other);
 }
 
 TEST(CoverTest, RequestsLiftToPosition)
@@ -94,40 +94,40 @@ TEST(CoverTest, RequestsLiftToPosition)
 
     auto e = cover.requestLiftTo(Position::fullyClosed());
 
-    EXPECT_TRUE(e.has_value());
-    EXPECT_EQ(PositionStatus::Requested, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_TRUE(e.has_value());
+    ASSERT_EQ(PositionStatus::Requested, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(2u, events.size());
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(2u, events.size());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftRequested::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftRequested::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftRequested&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
 
     auto otherR = cover.requestLiftTo(Position::fullyClosed());
 
-    EXPECT_TRUE(otherR.has_value());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_TRUE(otherR.has_value());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, RequestsLiftToPositionFailsForNonLiftCover)
@@ -138,10 +138,10 @@ TEST(CoverTest, RequestsLiftToPositionFailsForNonLiftCover)
 
     auto r = cover.requestLiftTo(Position::fullyClosed());
 
-    EXPECT_FALSE(r.has_value());
-    EXPECT_EQ(Cover::ErrorCode::LiftUnavailable, r.error().code());
-    EXPECT_EQ(PositionStatus::Unavailable, cover.liftState().status());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_FALSE(r.has_value());
+    ASSERT_EQ(Cover::ErrorCode::LiftUnavailable, r.error().code());
+    ASSERT_EQ(PositionStatus::Unavailable, cover.liftState().status());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, RequestsOpen)
@@ -152,37 +152,37 @@ TEST(CoverTest, RequestsOpen)
 
     cover.requestOpen();
 
-    EXPECT_EQ(PositionStatus::Requested, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
+    ASSERT_EQ(PositionStatus::Requested, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(2u, events.size());
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(2u, events.size());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftRequested::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftRequested::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftRequested&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
 
     cover.requestOpen();
-    EXPECT_EQ(0u, events.size());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, RequestsClose)
@@ -193,68 +193,68 @@ TEST(CoverTest, RequestsClose)
 
     cover.requestClose();
 
-    EXPECT_EQ(PositionStatus::Requested, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_EQ(PositionStatus::Requested, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(2u, events.size());
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(2u, events.size());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftRequested::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftRequested::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftRequested&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
 
     cover.requestClose();
-    EXPECT_EQ(0u, events.size());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, RequestsStopMotion)
 {
     auto cover = coverStub();
-    EXPECT_TRUE(cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_TRUE(cover.startLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
     cover.requestStopMotion();
 
-    EXPECT_EQ(PositionStatus::Stopping, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::Closing, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_EQ(PositionStatus::Stopping, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::Closing, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(1u, events.size());
-    EXPECT_STREQ(CoverStopMotionRequested::kEventName, events.peek()->eventName());
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverStopMotionRequested::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverStopMotionRequested&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
     }
 
     (void)events.pop();
 
     cover.requestStopMotion();
-    EXPECT_EQ(0u, events.size());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, RequestsStopMotionDoesNothingIfNotInMotion)
@@ -265,9 +265,9 @@ TEST(CoverTest, RequestsStopMotionDoesNothingIfNotInMotion)
 
     cover.requestStopMotion();
 
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, RequestStopMotionForRequestedLiftResetsLiftState)
@@ -280,19 +280,19 @@ TEST(CoverTest, RequestStopMotionForRequestedLiftResetsLiftState)
 
     cover.requestStopMotion();
 
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(1u, events.size());
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
 
-    EXPECT_EQ(cover.endpointId(), event.endpointId);
-    EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-    EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    ASSERT_EQ(cover.liftState().targetPosition(), event.position);
 
     (void)events.pop();
 }
@@ -300,18 +300,18 @@ TEST(CoverTest, RequestStopMotionForRequestedLiftResetsLiftState)
 TEST(CoverTest, InitiatesStopMotion)
 {
     auto cover = coverStub();
-    EXPECT_TRUE(cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_TRUE(cover.startLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
     cover.initiateStopMotion();
 
-    EXPECT_EQ(PositionStatus::Stopping, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::Closing, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_EQ(PositionStatus::Stopping, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::Closing, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, StartsLiftToClosePosition)
@@ -323,42 +323,42 @@ TEST(CoverTest, StartsLiftToClosePosition)
 
     auto r = cover.startLiftTo(Position::fullyClosed());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_EQ(CoverMotion::Closing, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Moving, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::Closing, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(CoverMotion::Closing, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Moving, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::Closing, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(2u, events.size());
-    EXPECT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(2u, events.size());
+    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverOperationalStatusChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.operationalStatus(), event.operationalStatus);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.operationalStatus(), event.operationalStatus);
     }
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
 
     auto otherR = cover.startLiftTo(*cover.liftState().targetPosition());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, StartsLiftToOpenPosition)
@@ -370,42 +370,42 @@ TEST(CoverTest, StartsLiftToOpenPosition)
 
     auto r = cover.startLiftTo(Position::fullyOpen());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_EQ(CoverMotion::Opening, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Moving, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::Opening, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(CoverMotion::Opening, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Moving, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::Opening, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(2u, events.size());
-    EXPECT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(2u, events.size());
+    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverOperationalStatusChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.operationalStatus(), event.operationalStatus);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.operationalStatus(), event.operationalStatus);
     }
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
 
     auto otherR = cover.startLiftTo(*cover.liftState().targetPosition());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, StartsLiftToPositionAfterRequest)
@@ -418,22 +418,22 @@ TEST(CoverTest, StartsLiftToPositionAfterRequest)
 
     auto r = cover.startLiftTo(Position::fullyClosed());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_EQ(CoverMotion::Closing, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Moving, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::Closing, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(CoverMotion::Closing, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Moving, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::Closing, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(1u, events.size());
-    EXPECT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
 
     auto& event = static_cast<const CoverOperationalStatusChanged&>(*events.peek());
 
-    EXPECT_EQ(cover.endpointId(), event.endpointId);
-    EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-    EXPECT_EQ(cover.operationalStatus(), event.operationalStatus);
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    ASSERT_EQ(cover.operationalStatus(), event.operationalStatus);
 
     (void)events.pop();
 }
@@ -447,10 +447,10 @@ TEST(CoverTest, StartLiftToPositionFailsForNonLiftCover)
 
     auto r = cover.startLiftTo(Position::fullyClosed());
 
-    EXPECT_FALSE(r.has_value());
-    EXPECT_EQ(Cover::ErrorCode::LiftUnavailable, r.error().code());
-    EXPECT_EQ(PositionStatus::Unavailable, cover.liftState().status());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_FALSE(r.has_value());
+    ASSERT_EQ(Cover::ErrorCode::LiftUnavailable, r.error().code());
+    ASSERT_EQ(PositionStatus::Unavailable, cover.liftState().status());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, SyncesLiftPosition)
@@ -461,81 +461,81 @@ TEST(CoverTest, SyncesLiftPosition)
 
     auto r = cover.changeLiftPosition(Position::fullyClosed());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(2u, events.size());
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(2u, events.size());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(*cover.liftState().targetPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(*cover.liftState().targetPosition(), event.position);
     }
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftCurrentPositionChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(*cover.liftState().currentPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(*cover.liftState().currentPosition(), event.position);
     }
 
     (void)events.pop();
 
     auto otherR = cover.changeLiftPosition(*cover.liftState().currentPosition());
-    EXPECT_TRUE(otherR.has_value());
-    EXPECT_EQ(0u, events.size());
+    ASSERT_TRUE(otherR.has_value());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, ChangesLiftPositionAfterStartedMoving)
 {
     auto cover = coverStub();
-    EXPECT_TRUE(cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_TRUE(cover.startLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
     auto r = cover.changeLiftPosition(Position::fullyClosed());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(2u, events.size());
-    EXPECT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(2u, events.size());
+    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverOperationalStatusChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(cover.operationalStatus(), event.operationalStatus);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(cover.operationalStatus(), event.operationalStatus);
     }
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
 
     {
         auto& event = static_cast<const CoverLiftCurrentPositionChanged&>(*events.peek());
 
-        EXPECT_EQ(cover.endpointId(), event.endpointId);
-        EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        EXPECT_EQ(*cover.liftState().currentPosition(), event.position);
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+        ASSERT_EQ(*cover.liftState().currentPosition(), event.position);
     }
 
     (void)events.pop();
@@ -544,29 +544,29 @@ TEST(CoverTest, ChangesLiftPositionAfterStartedMoving)
 TEST(CoverTest, ChangesLiftPositionAfterMoveRequest)
 {
     auto cover = coverStub();
-    EXPECT_TRUE(cover.requestLiftTo(Position::fullyClosed()));
+    ASSERT_TRUE(cover.requestLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
     auto r = cover.changeLiftPosition(Position::fullyClosed());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(1u, events.size());
-    EXPECT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
 
     auto& event = static_cast<const CoverLiftCurrentPositionChanged&>(*events.peek());
 
-    EXPECT_EQ(cover.endpointId(), event.endpointId);
-    EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-    EXPECT_EQ(*cover.liftState().currentPosition(), event.position);
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    ASSERT_EQ(*cover.liftState().currentPosition(), event.position);
 
     (void)events.pop();
 }
@@ -574,39 +574,39 @@ TEST(CoverTest, ChangesLiftPositionAfterMoveRequest)
 TEST(CoverTest, MarksAsUnreachable)
 {
     auto cover = coverStub();
-    EXPECT_TRUE(cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_TRUE(cover.startLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
     cover.markAsUnreachable();
 
-    EXPECT_FALSE(cover.isReachable());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_FALSE(cover.isReachable());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(3u, events.size());
-    EXPECT_STREQ(CoverMarkedAsUnreachable::kEventName, events.peek()->eventName());
+    ASSERT_EQ(3u, events.size());
+    ASSERT_STREQ(CoverMarkedAsUnreachable::kEventName, events.peek()->eventName());
 
     auto& event = static_cast<const CoverMarkedAsUnreachable&>(*events.peek());
 
-    EXPECT_EQ(cover.endpointId(), event.endpointId);
-    EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
 
     (void)events.pop();
-    EXPECT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     (void)events.pop();
 
     cover.markAsUnreachable();
-    EXPECT_EQ(0u, events.size());
+    ASSERT_EQ(0u, events.size());
 }
 
 TEST(CoverTest, MarksAsReachableAfterLiftPositionChanged)
@@ -614,35 +614,35 @@ TEST(CoverTest, MarksAsReachableAfterLiftPositionChanged)
     auto cover = coverStub();
 
     cover.markAsUnreachable();
-    EXPECT_FALSE(cover.isReachable());
+    ASSERT_FALSE(cover.isReachable());
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
     auto r = cover.changeLiftPosition(Position::fullyClosed());
 
-    EXPECT_TRUE(r.has_value());
-    EXPECT_TRUE(cover.isReachable());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
+    ASSERT_TRUE(r.has_value());
+    ASSERT_TRUE(cover.isReachable());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(3u, events.size());
-    EXPECT_STREQ(CoverMarkedAsReachable::kEventName, events.peek()->eventName());
+    ASSERT_EQ(3u, events.size());
+    ASSERT_STREQ(CoverMarkedAsReachable::kEventName, events.peek()->eventName());
 
     auto& event = static_cast<const CoverMarkedAsReachable&>(*events.peek());
 
-    EXPECT_EQ(cover.endpointId(), event.endpointId);
-    EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
 
     (void)events.pop();
 }
@@ -650,24 +650,24 @@ TEST(CoverTest, MarksAsReachableAfterLiftPositionChanged)
 TEST(CoverTest, FailMotionResetsLiftState)
 {
     auto cover = coverStub();
-    EXPECT_TRUE(cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_TRUE(cover.startLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
     cover.failMotion();
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover.liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
-    EXPECT_EQ(2u, events.size());
-    EXPECT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_EQ(2u, events.size());
+    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
 
     (void)events.pop();
-    EXPECT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
     (void)events.pop();
 }
@@ -680,13 +680,13 @@ TEST(CoverTest, Removes)
 
     cover.remove();
 
-    EXPECT_EQ(1u, events.size());
-    EXPECT_STREQ(CoverRemoved::kEventName, events.peek()->eventName());
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverRemoved::kEventName, events.peek()->eventName());
 
     auto& event = static_cast<const CoverRemoved&>(*events.peek());
 
-    EXPECT_EQ(cover.endpointId(), event.endpointId);
-    EXPECT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
 
     (void)events.pop();
 }

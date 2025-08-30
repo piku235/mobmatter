@@ -43,15 +43,15 @@ TEST(MobilusCoverInitHandlerTest, SupportsAndDoesNotSupportDeviceType)
     InMemoryEndpointIdGenerator endpointIdGenerator(1u);
     MobilusCoverInitHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
 
-    EXPECT_TRUE(handler.supports(MobilusDeviceType::Senso));
-    EXPECT_TRUE(handler.supports(MobilusDeviceType::Cosmo));
-    EXPECT_TRUE(handler.supports(MobilusDeviceType::Cmr));
-    EXPECT_FALSE(handler.supports(MobilusDeviceType::Cgr));
-    EXPECT_FALSE(handler.supports(MobilusDeviceType::Switch));
-    EXPECT_FALSE(handler.supports(MobilusDeviceType::SwitchNp));
-    EXPECT_FALSE(handler.supports(MobilusDeviceType::CosmoCzr));
-    EXPECT_FALSE(handler.supports(MobilusDeviceType::CosmoMzr));
-    EXPECT_FALSE(handler.supports(MobilusDeviceType::SensoZ));
+    ASSERT_TRUE(handler.supports(MobilusDeviceType::Senso));
+    ASSERT_TRUE(handler.supports(MobilusDeviceType::Cosmo));
+    ASSERT_TRUE(handler.supports(MobilusDeviceType::Cmr));
+    ASSERT_FALSE(handler.supports(MobilusDeviceType::Cgr));
+    ASSERT_FALSE(handler.supports(MobilusDeviceType::Switch));
+    ASSERT_FALSE(handler.supports(MobilusDeviceType::SwitchNp));
+    ASSERT_FALSE(handler.supports(MobilusDeviceType::CosmoCzr));
+    ASSERT_FALSE(handler.supports(MobilusDeviceType::CosmoMzr));
+    ASSERT_FALSE(handler.supports(MobilusDeviceType::SensoZ));
 }
 
 TEST_P(MobilusCoverInitHandlerTest, InitiatesCovers)
@@ -73,19 +73,19 @@ TEST_P(MobilusCoverInitHandlerTest, InitiatesCovers)
     handler.initDevice(device, event);
 
     auto cover = coverRepository.find(1u);
-    EXPECT_TRUE(cover.has_value());
-    EXPECT_TRUE(cover->isReachable());
-    EXPECT_EQ(device.id(), cover->mobilusDeviceId());
-    EXPECT_EQ(device.name(), cover->name());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover->liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    EXPECT_TRUE(cover->liftState().targetPosition().has_value());
-    EXPECT_EQ(GetParam().expectedLiftPosition, *cover->liftState().targetPosition());
-    EXPECT_TRUE(cover->liftState().currentPosition().has_value());
-    EXPECT_EQ(GetParam().expectedLiftPosition, *cover->liftState().currentPosition());
-    EXPECT_EQ(GetParam().expectedSpec, cover->specification());
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_TRUE(cover->isReachable());
+    ASSERT_EQ(device.id(), cover->mobilusDeviceId());
+    ASSERT_EQ(device.name(), cover->name());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_TRUE(cover->liftState().targetPosition().has_value());
+    ASSERT_EQ(GetParam().expectedLiftPosition, *cover->liftState().targetPosition());
+    ASSERT_TRUE(cover->liftState().currentPosition().has_value());
+    ASSERT_EQ(GetParam().expectedLiftPosition, *cover->liftState().currentPosition());
+    ASSERT_EQ(GetParam().expectedSpec, cover->specification());
 }
 
 // clang-format off

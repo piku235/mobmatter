@@ -43,13 +43,13 @@ TEST(MobilusCoverEventHandlerTest, HandlesStartedCoverLift)
     handler.handle(event);
     auto cover = coverRepository.find(1u);
 
-    EXPECT_TRUE(cover.has_value());
-    EXPECT_EQ(CoverMotion::Closing, cover->operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Moving, cover->liftState().status());
-    EXPECT_EQ(CoverMotion::Closing, cover->liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(CoverMotion::Closing, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Moving, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::Closing, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverEventHandlerTest, HandlesCoverReachedPosition)
@@ -72,13 +72,13 @@ TEST(MobilusCoverEventHandlerTest, HandlesCoverReachedPosition)
     handler.handle(event);
     auto cover = coverRepository.find(1u);
 
-    EXPECT_TRUE(cover.has_value());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover->liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
-    EXPECT_EQ(Position::fullyClosed(), *cover->liftState().currentPosition());
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), *cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverEventHandlerTest, HandlesStop)
@@ -101,13 +101,13 @@ TEST(MobilusCoverEventHandlerTest, HandlesStop)
     handler.handle(event);
     auto cover = coverRepository.find(1u);
 
-    EXPECT_TRUE(cover.has_value());
-    EXPECT_EQ(CoverMotion::Closing, cover->operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Stopping, cover->liftState().status());
-    EXPECT_EQ(CoverMotion::Closing, cover->liftState().motion());
-    EXPECT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(CoverMotion::Closing, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Stopping, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::Closing, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverEventHandlerTest, HandlesCoverFailure)
@@ -130,13 +130,13 @@ TEST(MobilusCoverEventHandlerTest, HandlesCoverFailure)
     handler.handle(event);
     auto cover = coverRepository.find(1u);
 
-    EXPECT_TRUE(cover.has_value());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover->liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverEventHandlerTest, HandlesNoConnection)
@@ -159,14 +159,14 @@ TEST(MobilusCoverEventHandlerTest, HandlesNoConnection)
     handler.handle(event);
     auto cover = coverRepository.find(1u);
 
-    EXPECT_TRUE(cover.has_value());
-    EXPECT_FALSE(cover->isReachable());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover->liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_FALSE(cover->isReachable());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverEventHandlerTest, HandlesRemovedCover)
@@ -189,7 +189,7 @@ TEST(MobilusCoverEventHandlerTest, HandlesRemovedCover)
     handler.handle(event);
     auto cover = coverRepository.find(1u);
 
-    EXPECT_FALSE(cover.has_value());
+    ASSERT_FALSE(cover.has_value());
 }
 
 TEST(MobilusCoverEventHandlerTest, IgnoresInvalidSentPosition)
@@ -206,13 +206,13 @@ TEST(MobilusCoverEventHandlerTest, IgnoresInvalidSentPosition)
     handler.handle(event);
     auto cover = coverRepository.find(1u);
 
-    EXPECT_TRUE(cover.has_value());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover->liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverEventHandlerTest, IgnoresInvalidReachedPosition)
@@ -229,13 +229,13 @@ TEST(MobilusCoverEventHandlerTest, IgnoresInvalidReachedPosition)
     handler.handle(event);
     auto cover = coverRepository.find(1u);
 
-    EXPECT_TRUE(cover.has_value());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
-    EXPECT_EQ(PositionStatus::Idle, cover->liftState().status());
-    EXPECT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
-    EXPECT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverEventHandlerTest, IgnoresUnsupportedEvent)

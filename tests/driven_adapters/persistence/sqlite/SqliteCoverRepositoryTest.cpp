@@ -3,8 +3,8 @@
 #include "application/model/window_covering/Cover.h"
 #include "common/persistence/sqlite/Connection.h"
 
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 using namespace mmbridge::application::model;
 using namespace mmbridge::application::model::window_covering;
@@ -45,16 +45,16 @@ TEST_F(SqliteCoverRepositoryTest, Saves)
     coverRepository.save(cover);
     auto savedCover = coverRepository.find(cover.endpointId());
 
-    EXPECT_TRUE(savedCover.has_value());
-    EXPECT_EQ(cover.endpointId(), savedCover->endpointId());
-    EXPECT_EQ(cover.mobilusDeviceId(), savedCover->mobilusDeviceId());
-    EXPECT_EQ(cover.isReachable(), savedCover->isReachable());
-    EXPECT_EQ(cover.name(), savedCover->name());
-    EXPECT_EQ(cover.liftState().status(), savedCover->liftState().status());
-    EXPECT_EQ(cover.liftState().motion(), savedCover->liftState().motion());
-    EXPECT_EQ(cover.liftState().targetPosition(), savedCover->liftState().targetPosition());
-    EXPECT_EQ(cover.liftState().currentPosition(), savedCover->liftState().currentPosition());
-    EXPECT_EQ(cover.specification(), savedCover->specification());
+    ASSERT_TRUE(savedCover.has_value());
+    ASSERT_EQ(cover.endpointId(), savedCover->endpointId());
+    ASSERT_EQ(cover.mobilusDeviceId(), savedCover->mobilusDeviceId());
+    ASSERT_EQ(cover.isReachable(), savedCover->isReachable());
+    ASSERT_EQ(cover.name(), savedCover->name());
+    ASSERT_EQ(cover.liftState().status(), savedCover->liftState().status());
+    ASSERT_EQ(cover.liftState().motion(), savedCover->liftState().motion());
+    ASSERT_EQ(cover.liftState().targetPosition(), savedCover->liftState().targetPosition());
+    ASSERT_EQ(cover.liftState().currentPosition(), savedCover->liftState().currentPosition());
+    ASSERT_EQ(cover.specification(), savedCover->specification());
 }
 
 TEST_F(SqliteCoverRepositoryTest, Removes)
@@ -62,10 +62,10 @@ TEST_F(SqliteCoverRepositoryTest, Removes)
     auto cover = sensoStub();
 
     coverRepository.save(cover);
-    EXPECT_TRUE(coverRepository.find(cover.endpointId()));
+    ASSERT_TRUE(coverRepository.find(cover.endpointId()));
 
     coverRepository.remove(cover);
-    EXPECT_FALSE(coverRepository.find(cover.endpointId()));
+    ASSERT_FALSE(coverRepository.find(cover.endpointId()));
 }
 
 TEST_F(SqliteCoverRepositoryTest, DoesNotFind)
@@ -75,7 +75,7 @@ TEST_F(SqliteCoverRepositoryTest, DoesNotFind)
 
     auto foundCover = coverRepository.find(11);
 
-    EXPECT_FALSE(foundCover.has_value());
+    ASSERT_FALSE(foundCover.has_value());
 }
 
 TEST_F(SqliteCoverRepositoryTest, FindsAndDoesNotFindOfMobilusDeviceId)
@@ -85,10 +85,10 @@ TEST_F(SqliteCoverRepositoryTest, FindsAndDoesNotFindOfMobilusDeviceId)
 
     auto foundCover = coverRepository.findOfMobilusDeviceId(cover.mobilusDeviceId());
 
-    EXPECT_TRUE(foundCover.has_value());
-    EXPECT_EQ(cover, foundCover);
+    ASSERT_TRUE(foundCover.has_value());
+    ASSERT_EQ(cover, foundCover);
 
-    EXPECT_FALSE(coverRepository.findOfMobilusDeviceId(12));
+    ASSERT_FALSE(coverRepository.findOfMobilusDeviceId(12));
 }
 
 TEST_F(SqliteCoverRepositoryTest, FindsAll)
@@ -100,9 +100,9 @@ TEST_F(SqliteCoverRepositoryTest, FindsAll)
 
     auto covers = coverRepository.all();
 
-    EXPECT_EQ(2u, covers.size());
+    ASSERT_EQ(2u, covers.size());
 
     for (auto cover : covers) {
-        EXPECT_THAT(expectedCovers, Contains(cover.endpointId()));
+        ASSERT_THAT(expectedCovers, Contains(cover.endpointId()));
     }
 }

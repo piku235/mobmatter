@@ -23,7 +23,7 @@ protected:
 
 TEST_F(SqliteEndpointIdGeneratorTest, GeneratesNextEndpointId)
 {
-    EXPECT_EQ(10u, endpointIdGenerator.next());
-    EXPECT_EQ(11u, endpointIdGenerator.next());
-    EXPECT_EQ(12u, endpointIdGenerator.next());
+    ASSERT_EQ(10u, endpointIdGenerator.next());
+    ASSERT_EQ(11u, endpointIdGenerator.next());
+    ASSERT_EQ(12u, endpointIdGenerator.next());
 }

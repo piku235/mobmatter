@@ -99,24 +99,24 @@ TEST(MqttMobilusDeviceInitializerTest, Initializes)
     setupResponses(deviceList, currentState);
 
     deviceInitializer.run();
-    EXPECT_EQ(0, initiatedDevices.size());
+    ASSERT_EQ(0, initiatedDevices.size());
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceList));
     deviceInitializer.run();
-    EXPECT_EQ(0, initiatedDevices.size());
+    ASSERT_EQ(0, initiatedDevices.size());
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceList));
     client.mockResponse(std::make_unique<proto::CurrentStateResponse>(currentState));
     deviceInitializer.run();
-    EXPECT_EQ(2, initiatedDevices.size());
+    ASSERT_EQ(2, initiatedDevices.size());
 
     for (auto i : { 1, 2 }) {
-        EXPECT_EQ(deviceList.devices(i).id(), initiatedDevices[i - 1].device.id());
-        EXPECT_EQ(deviceList.devices(i).name(), initiatedDevices[i - 1].device.name());
-        EXPECT_EQ(deviceList.devices(i).type(), initiatedDevices[i - 1].device.type());
-        EXPECT_EQ(currentState.events(i).device_id(), initiatedDevices[i - 1].currentState.device_id());
-        EXPECT_EQ(currentState.events(i).value(), initiatedDevices[i - 1].currentState.value());
-        EXPECT_EQ(currentState.events(i).event_number(), initiatedDevices[i - 1].currentState.event_number());
+        ASSERT_EQ(deviceList.devices(i).id(), initiatedDevices[i - 1].device.id());
+        ASSERT_EQ(deviceList.devices(i).name(), initiatedDevices[i - 1].device.name());
+        ASSERT_EQ(deviceList.devices(i).type(), initiatedDevices[i - 1].device.type());
+        ASSERT_EQ(currentState.events(i).device_id(), initiatedDevices[i - 1].currentState.device_id());
+        ASSERT_EQ(currentState.events(i).value(), initiatedDevices[i - 1].currentState.value());
+        ASSERT_EQ(currentState.events(i).event_number(), initiatedDevices[i - 1].currentState.event_number());
     }
 }
 
@@ -133,5 +133,5 @@ TEST(MqttMobilusDeviceInitializerTest, InitializesNone)
 
     deviceInitializer.run();
 
-    EXPECT_EQ(0, initiatedDevices.size());
+    ASSERT_EQ(0, initiatedDevices.size());
 }

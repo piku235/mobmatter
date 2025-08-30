@@ -32,19 +32,19 @@ TEST_P(MqttMobilusCoverControlServiceTest, LiftsCover)
 
     coverControlService.liftCover(23, Position::open(*Percent::from100ths(position)));
 
-    EXPECT_EQ(1, client.sentMessages().size());
-    EXPECT_EQ(MessageType::CallEvents, ProtoUtils::messageTypeFor(*client.sentMessages()[0]));
+    ASSERT_EQ(1, client.sentMessages().size());
+    ASSERT_EQ(MessageType::CallEvents, ProtoUtils::messageTypeFor(*client.sentMessages()[0]));
 
     auto& callEvents = static_cast<const proto::CallEvents&>(*client.sentMessages()[0]);
 
-    EXPECT_EQ(1, callEvents.events_size());
-    EXPECT_EQ(23, callEvents.events(0).device_id());
-    EXPECT_EQ(expectedEventValue, callEvents.events(0).value());
-    EXPECT_EQ(EventNumber::Triggered, callEvents.events(0).event_number());
-    EXPECT_EQ(Platform::Web, callEvents.events(0).platform());
-    EXPECT_FALSE(callEvents.events(0).has_id());
-    EXPECT_FALSE(callEvents.events(0).has_user());
-    EXPECT_FALSE(callEvents.events(0).has_inserttime());
+    ASSERT_EQ(1, callEvents.events_size());
+    ASSERT_EQ(23, callEvents.events(0).device_id());
+    ASSERT_EQ(expectedEventValue, callEvents.events(0).value());
+    ASSERT_EQ(EventNumber::Triggered, callEvents.events(0).event_number());
+    ASSERT_EQ(Platform::Web, callEvents.events(0).platform());
+    ASSERT_FALSE(callEvents.events(0).has_id());
+    ASSERT_FALSE(callEvents.events(0).has_user());
+    ASSERT_FALSE(callEvents.events(0).has_inserttime());
 }
 
 TEST(MqttMobilusCoverControlServiceTest, StopsCoverMotion)
@@ -54,19 +54,19 @@ TEST(MqttMobilusCoverControlServiceTest, StopsCoverMotion)
 
     coverControlService.stopCoverMotion(23);
 
-    EXPECT_EQ(1, client.sentMessages().size());
-    EXPECT_EQ(MessageType::CallEvents, ProtoUtils::messageTypeFor(*client.sentMessages()[0]));
+    ASSERT_EQ(1, client.sentMessages().size());
+    ASSERT_EQ(MessageType::CallEvents, ProtoUtils::messageTypeFor(*client.sentMessages()[0]));
 
     auto& callEvents = static_cast<const proto::CallEvents&>(*client.sentMessages()[0]);
 
-    EXPECT_EQ(1, callEvents.events_size());
-    EXPECT_EQ(23, callEvents.events(0).device_id());
-    EXPECT_EQ("STOP", callEvents.events(0).value());
-    EXPECT_EQ(EventNumber::Triggered, callEvents.events(0).event_number());
-    EXPECT_EQ(Platform::Web, callEvents.events(0).platform());
-    EXPECT_FALSE(callEvents.events(0).has_id());
-    EXPECT_FALSE(callEvents.events(0).has_user());
-    EXPECT_FALSE(callEvents.events(0).has_inserttime());
+    ASSERT_EQ(1, callEvents.events_size());
+    ASSERT_EQ(23, callEvents.events(0).device_id());
+    ASSERT_EQ("STOP", callEvents.events(0).value());
+    ASSERT_EQ(EventNumber::Triggered, callEvents.events(0).event_number());
+    ASSERT_EQ(Platform::Web, callEvents.events(0).platform());
+    ASSERT_FALSE(callEvents.events(0).has_id());
+    ASSERT_FALSE(callEvents.events(0).has_user());
+    ASSERT_FALSE(callEvents.events(0).has_inserttime());
 }
 
 // clang-format off

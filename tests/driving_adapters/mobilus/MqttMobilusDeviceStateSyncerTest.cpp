@@ -1,7 +1,7 @@
 #include "driving_adapters/mobilus/MqttMobilusDeviceStateSyncer.h"
 #include "FakeEventHandler.hpp"
-#include "driving_adapters/mobilus/MobilusEventHandler.h"
 #include "common/logging/Logger.h"
+#include "driving_adapters/mobilus/MobilusEventHandler.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateResponse.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
@@ -50,10 +50,10 @@ TEST(MqttMobilusDeviceStateSyncerTest, Runs)
 
     eventSubscriber.run();
 
-    EXPECT_EQ(2, handledEvents.size());
+    ASSERT_EQ(2, handledEvents.size());
     for (int i = 0; i < 2; i++) {
-        EXPECT_EQ(currentState.events(i).device_id(), handledEvents[i].device_id());
-        EXPECT_EQ(currentState.events(i).value(), handledEvents[i].value());
-        EXPECT_EQ(currentState.events(i).event_number(), handledEvents[i].event_number());
+        ASSERT_EQ(currentState.events(i).device_id(), handledEvents[i].device_id());
+        ASSERT_EQ(currentState.events(i).value(), handledEvents[i].value());
+        ASSERT_EQ(currentState.events(i).event_number(), handledEvents[i].event_number());
     }
 }

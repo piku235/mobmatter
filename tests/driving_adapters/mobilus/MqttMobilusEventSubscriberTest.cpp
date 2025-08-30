@@ -47,10 +47,10 @@ TEST(MqttMobilusEventSubscriberTest, DelegatesEventsToEventHandler)
     auto callEvents = callEventsStub();
     client.messageBus().dispatch(callEvents);
 
-    EXPECT_EQ(2, handledEvents.size());
+    ASSERT_EQ(2, handledEvents.size());
     for (int i = 0; i < 2; i++) {
-        EXPECT_EQ(callEvents.events(i).device_id(), handledEvents[i].device_id());
-        EXPECT_EQ(callEvents.events(i).value(), handledEvents[i].value());
-        EXPECT_EQ(callEvents.events(i).event_number(), handledEvents[i].event_number());
+        ASSERT_EQ(callEvents.events(i).device_id(), handledEvents[i].device_id());
+        ASSERT_EQ(callEvents.events(i).value(), handledEvents[i].value());
+        ASSERT_EQ(callEvents.events(i).event_number(), handledEvents[i].event_number());
     }
 }

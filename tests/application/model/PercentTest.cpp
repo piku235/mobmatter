@@ -8,48 +8,48 @@ TEST(PercentTest, Max)
 {
     auto percent = Percent::max();
 
-    EXPECT_EQ(10000, percent.value100ths());
-    EXPECT_EQ(100, percent.value());
+    ASSERT_EQ(10000, percent.value100ths());
+    ASSERT_EQ(100, percent.value());
 }
 
 TEST(PercentTest, Min)
 {
     auto percent = Percent::min();
 
-    EXPECT_EQ(0, percent.value100ths());
-    EXPECT_EQ(0, percent.value());
+    ASSERT_EQ(0, percent.value100ths());
+    ASSERT_EQ(0, percent.value());
 }
 
 TEST(PercentTest, ConstructsFromValue)
 {
     auto percent = Percent::from(23);
 
-    EXPECT_TRUE(percent.has_value());
-    EXPECT_EQ(2300, percent->value100ths());
-    EXPECT_EQ(23, percent->value());
+    ASSERT_TRUE(percent.has_value());
+    ASSERT_EQ(2300, percent->value100ths());
+    ASSERT_EQ(23, percent->value());
 }
 
 TEST(PercentTest, ConstructFailsFromValue)
 {
     auto percent = Percent::from(101);
 
-    EXPECT_FALSE(percent.has_value());
+    ASSERT_FALSE(percent.has_value());
 }
 
 TEST(PercentTest, ConstructsFromValue100ths)
 {
     auto percent = Percent::from100ths(2345);
 
-    EXPECT_TRUE(percent.has_value());
-    EXPECT_EQ(2345, percent->value100ths());
-    EXPECT_EQ(23, percent->value());
+    ASSERT_TRUE(percent.has_value());
+    ASSERT_EQ(2345, percent->value100ths());
+    ASSERT_EQ(23, percent->value());
 }
 
 TEST(PercentTest, ConstructFailsFromValue100ths)
 {
     auto percent = Percent::from100ths(10100);
 
-    EXPECT_FALSE(percent.has_value());
+    ASSERT_FALSE(percent.has_value());
 }
 
 TEST(PercentTest, AddsAnother)
@@ -59,8 +59,8 @@ TEST(PercentTest, AddsAnother)
 
     auto actual = *percent + *other;
 
-    EXPECT_EQ(2234, actual.value100ths());
-    EXPECT_EQ(22, actual.value());
+    ASSERT_EQ(2234, actual.value100ths());
+    ASSERT_EQ(22, actual.value());
 }
 
 TEST(PercentTest, AddOverflow)
@@ -70,8 +70,8 @@ TEST(PercentTest, AddOverflow)
 
     auto actual = *percent + *other;
 
-    EXPECT_EQ(10000, actual.value100ths());
-    EXPECT_EQ(100, actual.value());
+    ASSERT_EQ(10000, actual.value100ths());
+    ASSERT_EQ(100, actual.value());
 }
 
 TEST(PercentTest, SubsAnother)
@@ -81,8 +81,8 @@ TEST(PercentTest, SubsAnother)
 
     auto actual = *percent - *other;
 
-    EXPECT_EQ(234, actual.value100ths());
-    EXPECT_EQ(2, actual.value());
+    ASSERT_EQ(234, actual.value100ths());
+    ASSERT_EQ(2, actual.value());
 }
 
 TEST(PercentTest, SubsOverflow)
@@ -92,17 +92,17 @@ TEST(PercentTest, SubsOverflow)
 
     auto actual = *percent - *other;
 
-    EXPECT_EQ(0, actual.value100ths());
-    EXPECT_EQ(0, actual.value());
+    ASSERT_EQ(0, actual.value100ths());
+    ASSERT_EQ(0, actual.value());
 }
 
 TEST(PercentTest, Compare)
 {
-    EXPECT_EQ(Percent::from(10), Percent::from(10));
-    EXPECT_EQ(Percent::from(10), Percent::from100ths(1000));
-    EXPECT_NE(Percent::from(10), Percent::from100ths(1001));
-    EXPECT_LT(Percent::from(10), Percent::from100ths(1001));
-    EXPECT_LE(Percent::from(10), Percent::from100ths(1000));
-    EXPECT_GT(Percent::from100ths(1001), Percent::from(10));
-    EXPECT_GE(Percent::from100ths(1000), Percent::from(10));
+    ASSERT_EQ(Percent::from(10), Percent::from(10));
+    ASSERT_EQ(Percent::from(10), Percent::from100ths(1000));
+    ASSERT_NE(Percent::from(10), Percent::from100ths(1001));
+    ASSERT_LT(Percent::from(10), Percent::from100ths(1001));
+    ASSERT_LE(Percent::from(10), Percent::from100ths(1000));
+    ASSERT_GT(Percent::from100ths(1001), Percent::from(10));
+    ASSERT_GE(Percent::from100ths(1000), Percent::from(10));
 }
