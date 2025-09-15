@@ -26,7 +26,7 @@
 #include "jungi/mobilus_gtw_client/proto/DeviceSettingsRequest.pb.h"
 #include "matter/ChipAppMain.h"
 #include "matter/event_loop/DomainEventPublisherAdapter.h"
-#include "matter/event_loop/MqttMobilusGtwClientAdapter.h"
+#include "matter/event_loop/MobilusGtwEventLoopAdapter.h"
 #include "matter/persistence/SqlitePersistentStorageDelegate.h"
 
 #include <platform/CHIPDeviceLayer.h>
@@ -146,15 +146,15 @@ AppConfig loadAppConfig()
     return config;
 }
 
-std::unique_ptr<mobgtw::MqttMobilusGtwClient> createMobilusGtwClient(const AppConfig& appConfig, MqttMobilusGtwClientAdapter* clientAdapter, mobgtw::logging::Logger* logger)
+std::unique_ptr<mobgtw::MqttMobilusGtwClient> createMobilusGtwClient(const AppConfig& appConfig, mobgtw::io::EventLoop* loop, mobgtw::logging::Logger* logger)
 {
-    mobgtw::MqttMobilusGtwClientConfig clientConfig(MOBILUS_HOST, MOBILUS_PORT, appConfig.mobilusUsername, appConfig.mobilusPassword, MOBILUS_CA_FILE);
-
-    clientConfig.keepAliveMessage = std::make_unique<proto::DeviceSettingsRequest>();
-    clientConfig.clientWatcher = clientAdapter;
-    clientConfig.logger = logger;
-
-    return mobgtw::MqttMobilusGtwClient::with(std::move(clientConfig));
+    return mobgtw::MqttMobilusGtwClient::builder()
+        .dsn({ true, std::nullopt, std::nullopt, MOBILUS_HOST, MOBILUS_PORT, MOBILUS_CA_FILE })
+        .login({ appConfig.mobilusUsername, appConfig.mobilusPassword })
+        .useKeepAliveMessage(std::make_unique<proto::DeviceSettingsRequest>())
+        .useLogger(logger)
+        .attachTo(loop)
+        .build();
 }
 
 std::optional<sqlite::Connection> openSqliteDb(Logger& logger)
@@ -266,9 +266,9 @@ int main(int argc, char* argv[])
 
     auto appConfig = loadAppConfig();
     auto& chipSystemLayer = static_cast<chip::System::LayerSocketsLoop&>(chip::DeviceLayer::SystemLayer());
-    MqttMobilusGtwClientAdapter mobilusGtwClientAdapter(chipSystemLayer);
+    MobilusGtwEventLoopAdapter mobilusGtwEventLoopAdapter(chipSystemLayer);
     MqttMobilusGtwClientLoggerAdapter mobilusLoggerAdapter(logger);
-    auto mobilusGtwClient = createMobilusGtwClient(appConfig, &mobilusGtwClientAdapter, &mobilusLoggerAdapter);
+    auto mobilusGtwClient = createMobilusGtwClient(appConfig, &mobilusGtwEventLoopAdapter, &mobilusLoggerAdapter);
 
     // chip
     static SqlitePersistentStorageDelegate persistentStorageDelegate;
@@ -302,7 +302,7 @@ int main(int argc, char* argv[])
     domainEventPublisher.subscribe(coverReportingAdapter);
     domainEventPublisher.subscribe(loggingDomainEventSubscriber);
 
-    sChipApp.registerComponent(mobilusGtwClientAdapter);
+    sChipApp.registerComponent(mobilusGtwEventLoopAdapter);
     sChipApp.registerComponent(domainEventPublisherAdapter);
     sChipApp.registerComponent(coverClusterAdapter);
     sChipApp.registerComponent(clusterStubsAdapter);

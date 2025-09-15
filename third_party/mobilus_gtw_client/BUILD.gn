@@ -124,12 +124,13 @@ static_library("mobilus_gtw_client") {
     "repo/src/ExponentialBackoff.cpp",
     "repo/src/SelectCondition.h",
     "repo/src/SelectCondition.cpp",
+    "repo/src/MqttDsn.cpp",
     "repo/src/MqttMobilusGtwClient.cpp",
     "repo/src/MqttMobilusGtwClientImpl.cpp",
     "repo/src/TimeUtils.h",
     "repo/src/TimeUtils.cpp",
     "repo/src/ProtoUtils.cpp",
-    "repo/src/io/BlockingClientWatcher.cpp",
+    "repo/src/io/SelectEventLoop.cpp",
   ]
 
   public = [
@@ -140,17 +141,17 @@ static_library("mobilus_gtw_client") {
     "repo/include/jungi/mobilus_gtw_client/Envelope.h",
     "repo/include/jungi/mobilus_gtw_client/MessageType.h",
     "repo/include/jungi/mobilus_gtw_client/MessageBus.h",
+    "repo/include/jungi/mobilus_gtw_client/MqttDsn.h",
+    "repo/include/jungi/mobilus_gtw_client/MobilusCredentials.h",
     "repo/include/jungi/mobilus_gtw_client/MqttMobilusGtwClient.h",
-    "repo/include/jungi/mobilus_gtw_client/MqttMobilusGtwClientConfig.h",
     "repo/include/jungi/mobilus_gtw_client/Platform.h",
     "repo/include/jungi/mobilus_gtw_client/ProtoUtils.h",
     "repo/include/jungi/mobilus_gtw_client/SessionInformation.h",
     "repo/include/jungi/mobilus_gtw_client/io/SocketEventHandler.h",
-    "repo/include/jungi/mobilus_gtw_client/io/TimerEventHandler.h",
     "repo/include/jungi/mobilus_gtw_client/io/SocketEvents.h",
-    "repo/include/jungi/mobilus_gtw_client/io/ClientWatcher.h",
-    "repo/include/jungi/mobilus_gtw_client/io/BlockingClientWatcher.h",
-    "repo/include/jungi/mobilus_gtw_client/io/NullClientWatcher.h",
+    "repo/include/jungi/mobilus_gtw_client/io/EventLoop.h",
+    "repo/include/jungi/mobilus_gtw_client/io/SelectEventLoop.h",
+    "repo/include/jungi/mobilus_gtw_client/io/NullEventLoop.h",
   ]
 
   include_dirs = [
