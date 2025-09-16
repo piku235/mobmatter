@@ -20,9 +20,7 @@ config("app_config") {
   defines = [
     "DATABASE_FILE=\"${database_file}\"",
     "DATABASE_PRAGMA_SQL=\"${database_pragma_sql}\"",
-    "MOBILUS_HOST=\"${mobilus_host}\"",
-    "MOBILUS_PORT=${mobilus_port}",
-    "MOBILUS_CA_FILE=\"${mobilus_ca_file}\"",
+    "MOBILUS_DSN=\"${mobilus_dsn}\"",
   ]
 
   if (config_ini_file != "") {

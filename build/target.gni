@@ -29,7 +29,7 @@ target_ar = "${_toolprefix}ar"
 config_ini_file = "/opt/jungi/etc/mobmatter.conf"
 database_file = "/opt/jungi/var/mobmatter.db"
 database_pragma_sql = "PRAGMA journal_mode=MEMORY; PRAGMA synchronous=NORMAL; PRAGMA page_size=4096;"
-mobilus_ca_file = "/etc/ssl/certs/mobilelabs_mobilus_ca.crt"
+mobilus_dsn = "mqtts://127.0.0.1:8883?cacert=/etc/ssl/certs/mobilelabs_mobilus_ca.crt"
 
 libprotobuf_static = false
 is_debug = false

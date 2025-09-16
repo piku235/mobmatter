@@ -16,16 +16,8 @@
 #endif
 
 // Mobilus
-#ifndef MOBILUS_HOST
-#define MOBILUS_HOST "127.0.0.1"
-#endif
-
-#ifndef MOBILUS_PORT
-#define MOBILUS_PORT 8883
-#endif
-
-#ifndef MOBILUS_CA_FILE
-#define MOBILUS_CA_FILE ""
+#ifndef MOBILUS_DSN
+#define MOBILUS_DSN "mqtt://127.0.0.1:1883"
 #endif
 
 #include <string>

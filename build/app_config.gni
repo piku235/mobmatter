@@ -7,7 +7,5 @@ declare_args() {
   database_pragma_sql = ""
 
   # mobilus
-  mobilus_host = "127.0.0.1"
-  mobilus_port = 8883
-  mobilus_ca_file = ""
+  mobilus_dsn = "mqtt://127.0.0.1:1883"
 }

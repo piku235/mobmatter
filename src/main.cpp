@@ -22,6 +22,7 @@
 #include "driving_adapters/mobilus/MqttMobilusEventSubscriber.h"
 #include "driving_adapters/mobilus/cover/MobilusCoverEventHandler.h"
 #include "driving_adapters/mobilus/cover/MobilusCoverInitHandler.h"
+#include "jungi/mobilus_gtw_client/MqttDsn.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 #include "jungi/mobilus_gtw_client/proto/DeviceSettingsRequest.pb.h"
 #include "matter/ChipAppMain.h"
@@ -149,7 +150,7 @@ AppConfig loadAppConfig()
 std::unique_ptr<mobgtw::MqttMobilusGtwClient> createMobilusGtwClient(const AppConfig& appConfig, mobgtw::io::EventLoop* loop, mobgtw::logging::Logger* logger)
 {
     return mobgtw::MqttMobilusGtwClient::builder()
-        .dsn({ true, std::nullopt, std::nullopt, MOBILUS_HOST, MOBILUS_PORT, MOBILUS_CA_FILE })
+        .dsn(mobgtw::MqttDsn::from(MOBILUS_DSN).value())
         .login({ appConfig.mobilusUsername, appConfig.mobilusPassword })
         .useKeepAliveMessage(std::make_unique<proto::DeviceSettingsRequest>())
         .useLogger(logger)
