@@ -4,9 +4,9 @@
 #include "IdentifyCommandHandlerStub.h"
 #include "matter/AppComponent.h"
 
-namespace mmbridge::driving_adapters::matter::cluster_stubs {
+namespace mobmatter::driving_adapters::matter::cluster_stubs {
 
-class ClusterStubsAdapter final : public mmbridge::matter::AppComponent {
+class ClusterStubsAdapter final : public mobmatter::matter::AppComponent {
 public:
     ~ClusterStubsAdapter();
     void boot() override;

@@ -4,9 +4,9 @@
 
 #include <lib/core/CHIPPersistentStorageDelegate.h>
 
-namespace mmbridge::matter::persistence {
+namespace mobmatter::matter::persistence {
 
-namespace sqlite = mmbridge::common::persistence::sqlite;
+namespace sqlite = mobmatter::common::persistence::sqlite;
 
 class SqlitePersistentStorageDelegate final : public chip::PersistentStorageDelegate {
 public:

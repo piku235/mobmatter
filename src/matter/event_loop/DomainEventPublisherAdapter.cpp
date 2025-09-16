@@ -2,9 +2,9 @@
 #include "common/domain/DomainEventPublisher.h"
 #include "common/domain/DomainEventQueue.h"
 
-using namespace mmbridge::common::domain;
+using namespace mobmatter::common::domain;
 
-namespace mmbridge::matter::event_loop {
+namespace mobmatter::matter::event_loop {
 
 DomainEventPublisherAdapter::DomainEventPublisherAdapter(chip::System::LayerSocketsLoop& systemLayer)
     : mSystemLayer(systemLayer)

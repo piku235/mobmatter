@@ -7,11 +7,11 @@
 #include "application/model/window_covering/CoverOperationalStatusChanged.h"
 #include "common/domain/MultiDomainEventSubscriber.h"
 
-namespace mmbridge::driven_adapters::matter::reporting {
+namespace mobmatter::driven_adapters::matter::reporting {
 
-namespace wc = mmbridge::application::model::window_covering;
+namespace wc = mobmatter::application::model::window_covering;
 
-class CoverReportingAdapter final : public mmbridge::common::domain::MultiDomainEventSubscriber<wc::CoverLiftCurrentPositionChanged, wc::CoverLiftTargetPositionChanged, wc::CoverMarkedAsReachable, wc::CoverMarkedAsUnreachable, wc::CoverOperationalStatusChanged> {
+class CoverReportingAdapter final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverLiftCurrentPositionChanged, wc::CoverLiftTargetPositionChanged, wc::CoverMarkedAsReachable, wc::CoverMarkedAsUnreachable, wc::CoverOperationalStatusChanged> {
 public:
     void handle(const wc::CoverLiftCurrentPositionChanged& event) override;
     void handle(const wc::CoverLiftTargetPositionChanged& event) override;

@@ -4,7 +4,7 @@
 #include <app-common/zap-generated/ids/Commands.h>
 #include <app/CommandHandlerInterface.h>
 
-namespace mmbridge::driving_adapters::matter::cluster_stubs {
+namespace mobmatter::driving_adapters::matter::cluster_stubs {
 
 class IdentifyCommandHandlerStub final : public chip::app::CommandHandlerInterface {
 public:

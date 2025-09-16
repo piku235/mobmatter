@@ -2,7 +2,7 @@
 
 #include <app/AttributeAccessInterface.h>
 
-namespace mmbridge::driving_adapters::matter::cluster_stubs {
+namespace mobmatter::driving_adapters::matter::cluster_stubs {
 
 class IdentifyAttributeAccessStub final : public chip::app::AttributeAccessInterface {
 public:

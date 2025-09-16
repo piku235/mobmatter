@@ -2,7 +2,7 @@
 
 #include "DomainEventSubscriber.h"
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 template <class... TEvents>
 class MultiDomainEventSubscriber : public DomainEventSubscriber<TEvents>... {

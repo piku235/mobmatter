@@ -5,7 +5,7 @@
 #include <memory>
 #include <queue>
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 class DomainEventQueue final {
 public:
@@ -26,7 +26,7 @@ public:
 
 private:
     using QueuedEvents = std::queue<std::unique_ptr<DomainEvent>>;
-    
+
     QueuedEvents mEvents;
 
     DomainEventQueue() = default;

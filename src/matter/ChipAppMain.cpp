@@ -39,15 +39,15 @@
         }                                 \
     } while (0)
 
-using namespace mmbridge::common::logging;
-using namespace mmbridge::matter::logging;
+using namespace mobmatter::common::logging;
+using namespace mobmatter::matter::logging;
 using jungi::mobilus_gtw_client::ErrorCode;
 using jungi::mobilus_gtw_client::MqttMobilusGtwClient;
 
-static mmbridge::matter::CommissionableDataProviderImpl sCommissionableDataProvider;
-static mmbridge::matter::DeviceInfoProviderImpl sDeviceInfoProvider;
-static mmbridge::matter::DeviceInstanceInfoProviderImpl sDeviceInstanceInfoProvider;
-static mmbridge::matter::DacProviderImpl sDacProvider;
+static mobmatter::matter::CommissionableDataProviderImpl sCommissionableDataProvider;
+static mobmatter::matter::DeviceInfoProviderImpl sDeviceInfoProvider;
+static mobmatter::matter::DeviceInstanceInfoProviderImpl sDeviceInstanceInfoProvider;
+static mobmatter::matter::DacProviderImpl sDacProvider;
 static chip::ServerInitParams sServerInitParams;
 static chip::PersistentStorageOperationalKeystore sOperationalKeystore;
 static chip::Credentials::PersistentStorageOpCertStore sOperationalCertStore;
@@ -62,7 +62,7 @@ static chip::DeviceLayer::NetworkCommissioning::LinuxEthernetDriver sEthernetDri
 static chip::app::DefaultAttributePersistenceProvider sAttributePersistenceProvider;
 static chip::app::Clusters::NetworkCommissioning::Instance sEthernetNetworkCommissioningInstance(chip::kRootEndpointId, &sEthernetDriver);
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, chip::PersistentStorageDelegate& persistentStorageDelegate)
 {

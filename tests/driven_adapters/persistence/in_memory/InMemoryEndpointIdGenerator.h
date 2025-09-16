@@ -2,11 +2,11 @@
 
 #include "application/driven_ports/EndpointIdGenerator.h"
 
-namespace mmbridge::tests::driven_adapters::persistence::in_memory {
+namespace mobmatter::tests::driven_adapters::persistence::in_memory {
 
-namespace model = mmbridge::application::model;
+namespace model = mobmatter::application::model;
 
-class InMemoryEndpointIdGenerator final : public mmbridge::application::driven_ports::EndpointIdGenerator {
+class InMemoryEndpointIdGenerator final : public mobmatter::application::driven_ports::EndpointIdGenerator {
 public:
     InMemoryEndpointIdGenerator(model::EndpointId initialEndpointId);
     model::EndpointId next() override;

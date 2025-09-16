@@ -9,10 +9,10 @@
 #include <cinttypes>
 
 using namespace jungi::mobilus_gtw_client;
-using namespace mmbridge::application::model;
-using namespace mmbridge::application::model::window_covering;
+using namespace mobmatter::application::model;
+using namespace mobmatter::application::model::window_covering;
 
-namespace mmbridge::driving_adapters::mobilus::cover {
+namespace mobmatter::driving_adapters::mobilus::cover {
 
 MobilusCoverInitHandler::MobilusCoverInitHandler(driven_ports::CoverRepository& coverRepository, driven_ports::EndpointIdGenerator& endpointIdGenerator, logging::Logger& logger)
     : mCoverRepository(coverRepository)

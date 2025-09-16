@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 template <class TEvent>
 class DomainEventSubscriber {

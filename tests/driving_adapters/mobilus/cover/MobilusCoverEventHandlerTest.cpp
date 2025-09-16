@@ -14,11 +14,11 @@
 #include <string>
 
 using namespace jungi::mobilus_gtw_client;
-using namespace mmbridge::application::model;
-using namespace mmbridge::application::model::window_covering;
-using mmbridge::common::logging::Logger;
-using mmbridge::driving_adapters::mobilus::cover::MobilusCoverEventHandler;
-using mmbridge::tests::driven_adapters::persistence::in_memory::InMemoryCoverRepository;
+using namespace mobmatter::application::model;
+using namespace mobmatter::application::model::window_covering;
+using mobmatter::common::logging::Logger;
+using mobmatter::driving_adapters::mobilus::cover::MobilusCoverEventHandler;
+using mobmatter::tests::driven_adapters::persistence::in_memory::InMemoryCoverRepository;
 
 namespace {
 

@@ -4,7 +4,7 @@
 #include <openssl/crypto.h>
 #include <openssl/rand.h>
 
-namespace mmbridge::application::model {
+namespace mobmatter::application::model {
 
 UniqueId UniqueId::random()
 {

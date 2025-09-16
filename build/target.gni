@@ -7,8 +7,18 @@ assert(openwrt_root != "", "Must specify OPENWRT_TARGET_DIR")
 # toolchain
 target_cpu = "mipsel_24kec"
 target_os = "linux"
-target_cflags = ["-I${openwrt_root}/usr/include", "-march=24kec", "-mxgot"]
-target_ldflags = ["-s", "-L${openwrt_root}/usr/lib", "-Wl,-rpath-link=${openwrt_root}/usr/lib", "-Wl,-rpath=/opt/matter/lib", "-Wl,--dynamic-linker=/opt/matter/lib/ld-musl-mipsel-sf.so.1"]
+target_cflags = [
+  "-I${openwrt_root}/usr/include",
+  "-march=24kec",
+  "-mxgot",
+]
+target_ldflags = [
+  "-s",
+  "-L${openwrt_root}/usr/lib",
+  "-Wl,-rpath-link=${openwrt_root}/usr/lib",
+  "-Wl,-rpath=/opt/jungi/lib",
+  "-Wl,--dynamic-linker=/opt/jungi/lib/ld-musl-mipsel-sf.so.1",
+]
 custom_toolchain = "custom"
 _toolprefix = "mipsel-openwrt-linux-"
 target_cc = "${_toolprefix}gcc"
@@ -16,8 +26,8 @@ target_cxx = "${_toolprefix}g++"
 target_ar = "${_toolprefix}ar"
 
 # config
-config_ini_file = "/opt/matter/etc/matter-bridge.conf"
-database_file = "/opt/matter/var/matter-bridge.db"
+config_ini_file = "/opt/jungi/etc/mobmatter.conf"
+database_file = "/opt/jungi/var/mobmatter.db"
 database_pragma_sql = "PRAGMA journal_mode=MEMORY; PRAGMA synchronous=NORMAL; PRAGMA page_size=4096;"
 mobilus_ca_file = "/etc/ssl/certs/mobilelabs_mobilus_ca.crt"
 

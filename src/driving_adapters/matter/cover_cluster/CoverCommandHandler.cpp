@@ -11,12 +11,12 @@ using namespace chip;
 using namespace chip::app;
 using namespace chip::app::Clusters;
 using namespace chip::app::Clusters::WindowCovering::Commands;
-using mmbridge::application::driven_ports::CoverRepository;
-using AppPercent = mmbridge::application::model::Percent;
-using mmbridge::application::model::window_covering::Position;
+using mobmatter::application::driven_ports::CoverRepository;
+using AppPercent = mobmatter::application::model::Percent;
+using mobmatter::application::model::window_covering::Position;
 using Protocols::InteractionModel::Status;
 
-namespace mmbridge::driving_adapters::matter::cover_cluster {
+namespace mobmatter::driving_adapters::matter::cover_cluster {
 
 CoverCommandHandler::CoverCommandHandler(CoverRepository& coverRepository, logging::Logger& logger)
     : CommandHandlerInterface(Optional<EndpointId>::Missing(), WindowCovering::Id)

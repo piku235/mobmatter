@@ -1,9 +1,9 @@
 #include "MobilusCoverControlSubscriber.h"
 
-using namespace mmbridge::application::model::window_covering;
-using mmbridge::application::driven_ports::MobilusCoverControlService;
+using namespace mobmatter::application::model::window_covering;
+using mobmatter::application::driven_ports::MobilusCoverControlService;
 
-namespace mmbridge::application::subscribers {
+namespace mobmatter::application::subscribers {
 
 MobilusCoverControlSubscriber::MobilusCoverControlSubscriber(MobilusCoverControlService& coverControlService)
     : mCoverControlService(coverControlService)

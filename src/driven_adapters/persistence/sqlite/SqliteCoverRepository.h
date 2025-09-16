@@ -3,14 +3,14 @@
 #include "application/driven_ports/CoverRepository.h"
 #include "common/persistence/sqlite/Connection.h"
 
-namespace mmbridge::driven_adapters::persistence::sqlite {
+namespace mobmatter::driven_adapters::persistence::sqlite {
 
-namespace model = mmbridge::application::model;
-namespace sqlite = mmbridge::common::persistence::sqlite;
+namespace model = mobmatter::application::model;
+namespace sqlite = mobmatter::common::persistence::sqlite;
 
-class SqliteCoverRepository final : public mmbridge::application::driven_ports::CoverRepository {
+class SqliteCoverRepository final : public mobmatter::application::driven_ports::CoverRepository {
 public:
-    SqliteCoverRepository(mmbridge::common::persistence::sqlite::Connection& conn);
+    SqliteCoverRepository(mobmatter::common::persistence::sqlite::Connection& conn);
     void save(const model::window_covering::Cover& cover) override;
     void remove(const model::window_covering::Cover& cover) override;
     std::optional<model::window_covering::Cover> findOfMobilusDeviceId(model::MobilusDeviceId deviceId) const override;

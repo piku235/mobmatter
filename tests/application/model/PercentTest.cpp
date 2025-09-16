@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-using mmbridge::application::model::Percent;
+using mobmatter::application::model::Percent;
 
 TEST(PercentTest, Max)
 {

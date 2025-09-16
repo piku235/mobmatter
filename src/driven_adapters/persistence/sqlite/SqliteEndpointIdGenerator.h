@@ -3,12 +3,12 @@
 #include "application/driven_ports/EndpointIdGenerator.h"
 #include "common/persistence/sqlite/Connection.h"
 
-namespace mmbridge::driven_adapters::persistence::sqlite {
+namespace mobmatter::driven_adapters::persistence::sqlite {
 
-namespace model = mmbridge::application::model;
-namespace sqlite = mmbridge::common::persistence::sqlite;
+namespace model = mobmatter::application::model;
+namespace sqlite = mobmatter::common::persistence::sqlite;
 
-class SqliteEndpointIdGenerator final : public mmbridge::application::driven_ports::EndpointIdGenerator {
+class SqliteEndpointIdGenerator final : public mobmatter::application::driven_ports::EndpointIdGenerator {
 public:
     SqliteEndpointIdGenerator(model::EndpointId initialEndpointId, sqlite::Connection& conn);
     model::EndpointId next() override;

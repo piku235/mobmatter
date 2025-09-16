@@ -6,9 +6,9 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-using namespace mmbridge::application::model;
-using namespace mmbridge::application::model::window_covering;
-using namespace mmbridge::driven_adapters::persistence::sqlite;
+using namespace mobmatter::application::model;
+using namespace mobmatter::application::model::window_covering;
+using namespace mobmatter::driven_adapters::persistence::sqlite;
 using testing::Contains;
 
 namespace {

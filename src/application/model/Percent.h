@@ -7,7 +7,7 @@
 static constexpr uint8_t kPercentMax = 100;
 static constexpr uint16_t kPercent100thsMax = 10000;
 
-namespace mmbridge::application::model {
+namespace mobmatter::application::model {
 
 class Percent final {
 public:

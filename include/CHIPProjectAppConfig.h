@@ -35,7 +35,7 @@
 #define CHIP_DEVICE_CONFIG_DEVICE_SETUP_DISCRIMINATOR 2332
 
 #ifdef __mips__
-#define CHIP_STORAGE_DIR "/opt/matter/var"
+#define CHIP_STORAGE_DIR "/opt/jungi/var"
 #else
 #define CHIP_STORAGE_DIR "/tmp"
 #endif

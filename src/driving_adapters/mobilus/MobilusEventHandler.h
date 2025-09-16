@@ -2,7 +2,7 @@
 
 #include "jungi/mobilus_gtw_client/proto/Event.pb.h"
 
-namespace mmbridge::driving_adapters::mobilus {
+namespace mobmatter::driving_adapters::mobilus {
 
 namespace proto = jungi::mobilus_gtw_client::proto;
 

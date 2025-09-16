@@ -19,7 +19,7 @@ constexpr uint8_t kIdentifyClusterRevision = 5u;
 
 }
 
-namespace mmbridge::driving_adapters::matter::cluster_stubs {
+namespace mobmatter::driving_adapters::matter::cluster_stubs {
 
 IdentifyAttributeAccessStub::IdentifyAttributeAccessStub()
     : AttributeAccessInterface(Optional<EndpointId>::Missing(), Identify::Id)

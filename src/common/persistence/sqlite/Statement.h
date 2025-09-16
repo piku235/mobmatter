@@ -5,7 +5,7 @@
 #include <sqlite3.h>
 #include <string>
 
-namespace mmbridge::common::persistence::sqlite {
+namespace mobmatter::common::persistence::sqlite {
 
 class Connection;
 

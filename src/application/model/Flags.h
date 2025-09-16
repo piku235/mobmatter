@@ -4,7 +4,7 @@
 #include <initializer_list>
 #include <type_traits>
 
-namespace mmbridge::application::model {
+namespace mobmatter::application::model {
 
 template <typename T, typename = std::enable_if_t<std::is_enum<T>::value>>
 class Flags final {

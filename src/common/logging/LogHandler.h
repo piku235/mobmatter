@@ -2,7 +2,7 @@
 
 #include "LogLevel.h"
 
-namespace mmbridge::common::logging {
+namespace mobmatter::common::logging {
 
 class LogHandler {
 public:

@@ -7,9 +7,9 @@
 #include <optional>
 #include <vector>
 
-namespace mmbridge::application::driven_ports {
+namespace mobmatter::application::driven_ports {
 
-namespace model = mmbridge::application::model;
+namespace model = mobmatter::application::model;
 
 class CoverRepository {
 public:

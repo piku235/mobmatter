@@ -9,9 +9,9 @@ using namespace chip;
 using namespace chip::app;
 using namespace chip::app::Clusters;
 using namespace chip::app::Clusters::WindowCovering::Attributes;
-using namespace mmbridge::application::model::window_covering;
-using mmbridge::application::driven_ports::CoverRepository;
-using mmbridge::application::model::Flags;
+using namespace mobmatter::application::model::window_covering;
+using mobmatter::application::driven_ports::CoverRepository;
+using mobmatter::application::model::Flags;
 
 namespace {
 
@@ -20,7 +20,7 @@ constexpr uint16_t kWindowCoveringClusterRevision = 5u;
 
 }
 
-namespace mmbridge::driving_adapters::matter::cover_cluster {
+namespace mobmatter::driving_adapters::matter::cover_cluster {
 
 CoverAttributeAccess::CoverAttributeAccess(CoverRepository& coverRepository)
     : AttributeAccessInterface(Optional<EndpointId>::Missing(), WindowCovering::Id)

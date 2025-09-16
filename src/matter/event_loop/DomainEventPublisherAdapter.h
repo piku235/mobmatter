@@ -3,9 +3,9 @@
 #include "matter/AppComponent.h"
 #include <system/SystemLayer.h>
 
-namespace mmbridge::matter::event_loop {
+namespace mobmatter::matter::event_loop {
 
-class DomainEventPublisherAdapter final : public mmbridge::matter::AppComponent,
+class DomainEventPublisherAdapter final : public mobmatter::matter::AppComponent,
                                           public chip::System::EventLoopHandler {
 public:
     DomainEventPublisherAdapter(chip::System::LayerSocketsLoop& systemLayer);

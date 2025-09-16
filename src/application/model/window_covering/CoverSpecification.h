@@ -8,7 +8,7 @@
 #include <optional>
 #include <string>
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
 class CoverSpecification final {
 public:

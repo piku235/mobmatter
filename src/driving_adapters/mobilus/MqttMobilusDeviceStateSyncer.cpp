@@ -5,7 +5,7 @@
 
 using namespace jungi::mobilus_gtw_client;
 
-namespace mmbridge::driving_adapters::mobilus {
+namespace mobmatter::driving_adapters::mobilus {
 
 MqttMobilusDeviceStateSyncer::MqttMobilusDeviceStateSyncer(MqttMobilusGtwClient& mobilusGtwClient, MobilusEventHandler& eventHandler, logging::Logger& logger)
     : mMobilusGtwClient(mobilusGtwClient)

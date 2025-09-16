@@ -3,7 +3,7 @@
 #include <platform/DeviceInstanceInfoProvider.h>
 #include <string>
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 class DeviceInstanceInfoProviderImpl final : public chip::DeviceLayer::DeviceInstanceInfoProvider {
 public:

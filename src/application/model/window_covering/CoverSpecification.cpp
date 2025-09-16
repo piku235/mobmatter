@@ -1,6 +1,6 @@
 #include "CoverSpecification.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
 std::optional<CoverSpecification> CoverSpecification::findFor(MobilusDeviceType mobilusDeviceType)
 {

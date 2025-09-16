@@ -141,7 +141,7 @@ CHIP_ERROR loadKeypair(Crypto::P256Keypair& keypair)
 
 }
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 CHIP_ERROR DacProviderImpl::GetDeviceAttestationCert(MutableByteSpan& out_dac_buffer)
 {

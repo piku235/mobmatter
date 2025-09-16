@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <vector>
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 class CommissionableDataProviderImpl : public chip::DeviceLayer::CommissionableDataProvider {
 public:

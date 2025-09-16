@@ -12,13 +12,13 @@ class CallEvents;
 
 }
 
-namespace mmbridge::driven_adapters::mobilus {
+namespace mobmatter::driven_adapters::mobilus {
 
 namespace proto = jungi::mobilus_gtw_client::proto;
-namespace model = mmbridge::application::model;
-namespace logging = mmbridge::common::logging;
+namespace model = mobmatter::application::model;
+namespace logging = mobmatter::common::logging;
 
-class MqttMobilusCoverControlService : public mmbridge::application::driven_ports::MobilusCoverControlService {
+class MqttMobilusCoverControlService : public mobmatter::application::driven_ports::MobilusCoverControlService {
 public:
     MqttMobilusCoverControlService(jungi::mobilus_gtw_client::MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger);
     void liftCover(model::MobilusDeviceId mobilusDeviceId, model::window_covering::Position position) override;

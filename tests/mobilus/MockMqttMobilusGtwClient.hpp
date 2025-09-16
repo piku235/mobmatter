@@ -9,7 +9,7 @@
 #include <queue>
 #include <vector>
 
-namespace mmbridge::tests::mobilus {
+namespace mobmatter::tests::mobilus {
 
 namespace mobgtw = jungi::mobilus_gtw_client;
 
@@ -40,7 +40,7 @@ public:
         if (response.GetTypeName() == mMockResponses.front()->GetTypeName()) {
             response.CheckTypeAndMergeFrom(*mMockResponses.front());
         }
-        
+
         mMockResponses.pop();
 
         return {};

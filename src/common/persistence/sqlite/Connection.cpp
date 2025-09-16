@@ -1,7 +1,7 @@
 #include "Connection.h"
 #include <utility>
 
-namespace mmbridge::common::persistence::sqlite {
+namespace mobmatter::common::persistence::sqlite {
 
 std::optional<Connection> Connection::open(const std::string& filename, int flags)
 {

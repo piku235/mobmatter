@@ -6,7 +6,7 @@
 
 #include <optional>
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
 struct PositionState final {
 public:

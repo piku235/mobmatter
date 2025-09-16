@@ -4,11 +4,11 @@
 
 #define ZCL_INITIAL_DYNAMIC_ENDPOINT_ID 2u
 
-#define LOG_IDENT "matter-bridge"
+#define LOG_IDENT "mobmatter"
 
 // Database
 #ifndef DATABASE_FILE
-#define DATABASE_FILE "/tmp/matter-bridge.db"
+#define DATABASE_FILE "/tmp/mobmatter.db"
 #endif
 
 #ifndef DATABASE_PRAGMA_SQL

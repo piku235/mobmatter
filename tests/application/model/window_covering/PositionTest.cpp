@@ -2,8 +2,8 @@
 
 #include <gtest/gtest.h>
 
-using mmbridge::application::model::Percent;
-using mmbridge::application::model::window_covering::Position;
+using mobmatter::application::model::Percent;
+using mobmatter::application::model::window_covering::Position;
 
 TEST(PositionTest, FullyOpen)
 {

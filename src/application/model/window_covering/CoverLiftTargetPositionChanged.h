@@ -6,9 +6,9 @@
 #include "application/model/MobilusDeviceId.h"
 #include "common/domain/DomainEvent.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
-struct CoverLiftTargetPositionChanged : public mmbridge::common::domain::DomainEvent {
+struct CoverLiftTargetPositionChanged : public mobmatter::common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_lift_target_position_changed";
 
     const EndpointId endpointId;

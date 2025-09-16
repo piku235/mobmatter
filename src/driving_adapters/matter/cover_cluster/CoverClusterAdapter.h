@@ -7,12 +7,12 @@
 #include "common/logging/Logger.h"
 #include "matter/AppComponent.h"
 
-namespace mmbridge::driving_adapters::matter::cover_cluster {
+namespace mobmatter::driving_adapters::matter::cover_cluster {
 
-namespace driven_ports = mmbridge::application::driven_ports;
-namespace logging = mmbridge::common::logging;
+namespace driven_ports = mobmatter::application::driven_ports;
+namespace logging = mobmatter::common::logging;
 
-class CoverClusterAdapter final : public mmbridge::matter::AppComponent {
+class CoverClusterAdapter final : public mobmatter::matter::AppComponent {
 public:
     CoverClusterAdapter(driven_ports::CoverRepository& coverRepository, logging::Logger& logger);
     ~CoverClusterAdapter();

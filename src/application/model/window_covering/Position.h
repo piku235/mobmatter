@@ -2,7 +2,7 @@
 
 #include "application/model/Percent.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
 /**
  * Chip uses the closed interpretation where closed = 100, open = 0

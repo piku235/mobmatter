@@ -1,7 +1,7 @@
 #include "SyslogHandler.h"
 #include <syslog.h>
 
-namespace mmbridge::common::logging::handlers {
+namespace mobmatter::common::logging::handlers {
 
 SyslogHandler::SyslogHandler(const char* ident)
 {

@@ -3,11 +3,11 @@
 #include "application/driven_ports/CoverRepository.h"
 #include <unordered_map>
 
-namespace mmbridge::tests::driven_adapters::persistence::in_memory {
+namespace mobmatter::tests::driven_adapters::persistence::in_memory {
 
-namespace model = mmbridge::application::model;
+namespace model = mobmatter::application::model;
 
-class InMemoryCoverRepository : public mmbridge::application::driven_ports::CoverRepository {
+class InMemoryCoverRepository : public mobmatter::application::driven_ports::CoverRepository {
 public:
     void save(const model::window_covering::Cover& cover) override;
     void remove(const model::window_covering::Cover& cover) override;

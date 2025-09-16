@@ -4,9 +4,9 @@
 #include "common/logging/Logger.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 
-namespace mmbridge::driving_adapters::mobilus {
+namespace mobmatter::driving_adapters::mobilus {
 
-namespace logging = mmbridge::common::logging;
+namespace logging = mobmatter::common::logging;
 
 class MqttMobilusDeviceStateSyncer final {
 public:

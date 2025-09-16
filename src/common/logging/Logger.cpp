@@ -1,7 +1,7 @@
 #include "Logger.h"
 #include <cstdio>
 
-namespace mmbridge::common::logging {
+namespace mobmatter::common::logging {
 
 Logger& Logger::noop()
 {

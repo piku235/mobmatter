@@ -1,9 +1,9 @@
 #include "InMemoryCoverRepository.h"
 
-using namespace mmbridge::application::model;
-using namespace mmbridge::application::model::window_covering;
+using namespace mobmatter::application::model;
+using namespace mobmatter::application::model::window_covering;
 
-namespace mmbridge::tests::driven_adapters::persistence::in_memory {
+namespace mobmatter::tests::driven_adapters::persistence::in_memory {
 
 void InMemoryCoverRepository::save(const Cover& cover)
 {

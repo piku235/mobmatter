@@ -5,8 +5,8 @@ import("${chip_root}/src/app/common_flags.gni")
 import("${chip_root}/src/lib/core/core.gni")
 import("${chip_root}/src/lib/lib.gni")
 
-chip_data_model("mmbridge-zap") {
-  zap_file = "//mmbridge.zap"
+chip_data_model("mobgtw-zap") {
+  zap_file = "//mobgtw.zap"
   is_server = true
 
   cflags = [ "-DDYNAMIC_ENDPOINT_COUNT=100" ]
@@ -30,7 +30,7 @@ config("app_config") {
   }
 }
 
-executable("matter-bridge") {
+executable("mobmatter") {
   sources = [
     "include/AppConfig.h",
     "include/CHIPProjectAppConfig.h",
@@ -73,7 +73,7 @@ executable("matter-bridge") {
 }
 
 group("default") {
-  deps = [ ":matter-bridge" ]
+  deps = [ ":mobmatter" ]
 }
 
 group("tests") {

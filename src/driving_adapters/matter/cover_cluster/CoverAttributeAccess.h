@@ -9,10 +9,10 @@
 #include <app/AttributeAccessInterface.h>
 #include <app/clusters/window-covering-server/window-covering-server.h>
 
-namespace mmbridge::driving_adapters::matter::cover_cluster {
+namespace mobmatter::driving_adapters::matter::cover_cluster {
 
-namespace model = mmbridge::application::model;
-namespace driven_ports = mmbridge::application::driven_ports;
+namespace model = mobmatter::application::model;
+namespace driven_ports = mobmatter::application::driven_ports;
 
 class CoverAttributeAccess final : public chip::app::AttributeAccessInterface {
 public:

@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <sys/time.h>
 
-namespace mmbridge::common::logging::handlers {
+namespace mobmatter::common::logging::handlers {
 
 void StdioLogHandler::log(LogLevel level, const char* message)
 {

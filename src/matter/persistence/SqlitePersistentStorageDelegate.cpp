@@ -1,9 +1,9 @@
 #include "SqlitePersistentStorageDelegate.h"
 #include <cstring>
 
-namespace sqlite = mmbridge::common::persistence::sqlite;
+namespace sqlite = mobmatter::common::persistence::sqlite;
 
-namespace mmbridge::matter::persistence {
+namespace mobmatter::matter::persistence {
 
 CHIP_ERROR SqlitePersistentStorageDelegate::Init(sqlite::Connection* conn)
 {

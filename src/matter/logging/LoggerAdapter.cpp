@@ -7,10 +7,10 @@
 
 #include <cstdio>
 
-using namespace mmbridge::common::logging;
-using namespace mmbridge::matter::logging;
+using namespace mobmatter::common::logging;
+using namespace mobmatter::matter::logging;
 
-namespace mmbridge::matter::logging {
+namespace mobmatter::matter::logging {
 
 static Logger* sLogger = nullptr;
 

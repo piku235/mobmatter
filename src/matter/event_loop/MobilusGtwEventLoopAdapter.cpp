@@ -3,7 +3,7 @@
 using namespace chip::System::Clock;
 using chip::System::SocketEventFlags;
 
-namespace mmbridge::matter::event_loop {
+namespace mobmatter::matter::event_loop {
 
 MobilusGtwEventLoopAdapter::MobilusGtwEventLoopAdapter(chip::System::LayerSocketsLoop& systemLayer)
     : mSystemLayer(systemLayer)

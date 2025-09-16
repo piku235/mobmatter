@@ -45,26 +45,26 @@
 #include <inipp/inipp.h>
 #endif
 
-using namespace mmbridge::common::persistence;
-using namespace mmbridge::common::domain;
-using namespace mmbridge::common::logging;
-using namespace mmbridge::common::logging::handlers;
-using namespace mmbridge::application;
-using namespace mmbridge::application::subscribers;
-using namespace mmbridge::application::driven_ports;
-using namespace mmbridge::driven_adapters::persistence::sqlite;
-using namespace mmbridge::driven_adapters::mobilus;
-using namespace mmbridge::driven_adapters::matter::zcl;
-using namespace mmbridge::driven_adapters::matter::reporting;
-using namespace mmbridge::driven_adapters::logging;
-using namespace mmbridge::driving_adapters::mobilus;
-using namespace mmbridge::driving_adapters::mobilus::cover;
-using namespace mmbridge::driving_adapters::matter::cover_cluster;
-using namespace mmbridge::driving_adapters::matter::cluster_stubs;
-using namespace mmbridge::matter;
-using namespace mmbridge::matter::event_loop;
-using namespace mmbridge::matter::persistence;
-using mmbridge::application::model::MobilusDeviceId;
+using namespace mobmatter::common::persistence;
+using namespace mobmatter::common::domain;
+using namespace mobmatter::common::logging;
+using namespace mobmatter::common::logging::handlers;
+using namespace mobmatter::application;
+using namespace mobmatter::application::subscribers;
+using namespace mobmatter::application::driven_ports;
+using namespace mobmatter::driven_adapters::persistence::sqlite;
+using namespace mobmatter::driven_adapters::mobilus;
+using namespace mobmatter::driven_adapters::matter::zcl;
+using namespace mobmatter::driven_adapters::matter::reporting;
+using namespace mobmatter::driven_adapters::logging;
+using namespace mobmatter::driving_adapters::mobilus;
+using namespace mobmatter::driving_adapters::mobilus::cover;
+using namespace mobmatter::driving_adapters::matter::cover_cluster;
+using namespace mobmatter::driving_adapters::matter::cluster_stubs;
+using namespace mobmatter::matter;
+using namespace mobmatter::matter::event_loop;
+using namespace mobmatter::matter::persistence;
+using mobmatter::application::model::MobilusDeviceId;
 namespace mobgtw = jungi::mobilus_gtw_client;
 
 static ChipAppMain sChipApp;
@@ -246,7 +246,7 @@ void syncDeviceStates(mobgtw::MqttMobilusGtwClient& mobilusGtwClient, MobilusCov
 
 void showVersion()
 {
-    printf("matter-bridge v%s\n", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
+    printf("mobmatter v%s\n", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
 }
 
 int main(int argc, char* argv[])

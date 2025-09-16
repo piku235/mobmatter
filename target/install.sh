@@ -1,22 +1,22 @@
 #!/bin/sh
 
-REPO="piku235/matter-mobilus-bridge"
-PACKAGE_NAME="matter_bridge_gtw.tar.gz"
+REPO="piku235/mobmatter"
+PACKAGE_NAME="mobmatter-gtw.tar.gz"
 PACKAGE_URL="https://github.com/$REPO/releases/latest/download/$PACKAGE_NAME"
-CONF_FILE="matter-bridge.conf"
+CONF_FILE="mobmatter.conf"
 
 if [ ! -f "/mobilus/mobilus" ]; then
   echo "mobilus is not present, aborting"
   exit 1
 fi
 
-if [ -d "/opt/matter" ]; then
-  echo "matter bridge is already installed"
+if [ -d "/opt/jungi" ]; then
+  echo "mobmatter is already installed"
   exit 1
 fi
 
 cleanup() {
-  rm -rf /tmp/mmbridge
+  rm -rf /tmp/mobmatter
   rm -f "/tmp/$PACKAGE_NAME"
 }
 
@@ -31,14 +31,14 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Extracting the package"
-mkdir mmbridge
-gzip -dc "$PACKAGE_NAME" | tar -xf - -C mmbridge .
+mkdir mobmatter
+gzip -dc "$PACKAGE_NAME" | tar -xf - -C mobmatter .
 if [ $? -ne 0 ]; then
   echo "Failed to extract the package"
   exit 1
 fi
 
-cd mmbridge
+cd mobmatter
 
 echo -n "Provide the mobilus username: "
 read mobilus_username
@@ -46,7 +46,7 @@ read mobilus_username
 echo -n "Provide the mobilus password: "
 read mobilus_password
 
-cat <<EOF > "opt/matter/etc/$CONF_FILE"
+cat <<EOF > "opt/jungi/etc/$CONF_FILE"
 [mobilus]
 username=$mobilus_username
 password=$mobilus_password
@@ -61,21 +61,21 @@ pkill mobilus
 
 echo "Enabling and starting services"
 /etc/init.d/mobilus enable
-/etc/init.d/matter-bridge enable
+/etc/init.d/mobmatter enable
 /etc/init.d/mobilus start
-/etc/init.d/matter-bridge start
+/etc/init.d/mobmatter start
 
 sleep 5 # wait a little to be sure
 
-if ps | grep -q [m]atter-bridge && ps | grep -q [m]obilus; then
+if ps | grep -q [m]obmatter && ps | grep -q [m]obilus; then
   echo "SUCCESS!"
-  echo "mobilus and matter-bridge are running!"
-  echo "Now matter-bridge is in the commissioning mode"
+  echo "mobilus and mobmatter are running!"
+  echo "Now mobmatter is in the commissioning mode"
   echo "Scan QR code or type manual code to pair it"
 else
   echo "FAILED"
-  echo "It seems matter-bridge is not running"
+  echo "It seems mobmatter is not running"
   echo "Are you sure you typed correct username and password?"
-  echo "Verify by running vim /opt/matter/etc/$CONF_FILE"
+  echo "Verify by running vim /opt/jungi/etc/$CONF_FILE"
   exit 1
 fi

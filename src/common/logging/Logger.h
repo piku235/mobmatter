@@ -7,7 +7,7 @@
 #include <cstdarg>
 #include <memory>
 
-namespace mmbridge::common::logging {
+namespace mobmatter::common::logging {
 
 class Logger final {
 public:

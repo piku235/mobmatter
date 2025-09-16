@@ -4,9 +4,9 @@
 #include "application/model/MobilusDeviceId.h"
 #include "common/domain/DomainEvent.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
-struct CoverStopMotionRequested : public mmbridge::common::domain::DomainEvent {
+struct CoverStopMotionRequested : public mobmatter::common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_stop_motion_requested";
 
     const EndpointId endpointId;

@@ -14,9 +14,9 @@
 
 #include <gtest/gtest.h>
 
-using namespace mmbridge::common::domain;
-using namespace mmbridge::application::model;
-using namespace mmbridge::application::model::window_covering;
+using namespace mobmatter::common::domain;
+using namespace mobmatter::application::model;
+using namespace mobmatter::application::model::window_covering;
 
 namespace {
 

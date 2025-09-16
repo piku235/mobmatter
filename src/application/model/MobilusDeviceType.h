@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mmbridge::application::model {
+namespace mobmatter::application::model {
 
 enum class MobilusDeviceType {
     Senso = 1,

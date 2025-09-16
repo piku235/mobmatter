@@ -4,9 +4,9 @@
 #include "application/model/MobilusDeviceId.h"
 #include "common/domain/DomainEvent.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
-struct CoverMarkedAsReachable : public mmbridge::common::domain::DomainEvent {
+struct CoverMarkedAsReachable : public mobmatter::common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_marked_as_reachable";
 
     const EndpointId endpointId;

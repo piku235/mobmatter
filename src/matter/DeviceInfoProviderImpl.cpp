@@ -8,7 +8,7 @@
 using namespace chip;
 using namespace chip::DeviceLayer;
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 DeviceInfoProvider::SupportedLocalesIterator* DeviceInfoProviderImpl::IterateSupportedLocales()
 {

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace mmbridge::application::model {
+namespace mobmatter::application::model {
 
 using EndpointId = uint16_t;
 

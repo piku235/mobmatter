@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-namespace mmbridge::application::model {
+namespace mobmatter::application::model {
 
 static constexpr uint8_t kLength = 32;
 

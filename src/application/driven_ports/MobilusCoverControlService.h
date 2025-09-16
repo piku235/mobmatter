@@ -3,9 +3,9 @@
 #include "application/model/MobilusDeviceId.h"
 #include "application/model/window_covering/Position.h"
 
-namespace mmbridge::application::driven_ports {
+namespace mobmatter::application::driven_ports {
 
-namespace model = mmbridge::application::model;
+namespace model = mobmatter::application::model;
 
 class MobilusCoverControlService {
 public:

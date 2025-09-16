@@ -1,6 +1,6 @@
 #include "DomainEventQueue.h"
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 DomainEventQueue& DomainEventQueue::instance()
 {

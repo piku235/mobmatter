@@ -2,7 +2,7 @@
 
 #include <lib/support/CodeUtils.h>
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 void DeviceInstanceInfoProviderImpl::SetSerialNumber(const std::string& serialNumber)
 {

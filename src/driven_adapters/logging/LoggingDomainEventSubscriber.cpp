@@ -3,9 +3,9 @@
 
 #define TAG_INFO " [md=%" PRId64 ", ep=%u]"
 
-using namespace mmbridge::application::model::window_covering;
+using namespace mobmatter::application::model::window_covering;
 
-namespace mmbridge::driven_adapters::logging {
+namespace mobmatter::driven_adapters::logging {
 
 LoggingDomainEventSubscriber::LoggingDomainEventSubscriber(logging::Logger& logger)
     : mLogger(logger)

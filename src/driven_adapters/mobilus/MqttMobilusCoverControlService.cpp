@@ -8,10 +8,10 @@
 #define LOG_TAG "GTW: "
 
 using namespace jungi::mobilus_gtw_client;
-using namespace mmbridge::application::model;
-using namespace mmbridge::application::model::window_covering;
+using namespace mobmatter::application::model;
+using namespace mobmatter::application::model::window_covering;
 
-namespace mmbridge::driven_adapters::mobilus {
+namespace mobmatter::driven_adapters::mobilus {
 
 MqttMobilusCoverControlService::MqttMobilusCoverControlService(MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger)
     : mMobilusGtwClient(mobilusGtwClient)

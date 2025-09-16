@@ -1,7 +1,7 @@
 #pragma once
 
-#include "driving_adapters/mobilus/MqttMobilusDeviceStateSyncer.h"
 #include "driving_adapters/mobilus/MobilusEventHandler.h"
+#include "driving_adapters/mobilus/MqttMobilusDeviceStateSyncer.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
@@ -10,7 +10,7 @@
 
 namespace mobgtw = jungi::mobilus_gtw_client;
 
-class FakeEventHandler final : public mmbridge::driving_adapters::mobilus::MobilusEventHandler {
+class FakeEventHandler final : public mobmatter::driving_adapters::mobilus::MobilusEventHandler {
 public:
     FakeEventHandler(std::vector<mobgtw::proto::Event>& handledEvents)
         : mHandledEvents(handledEvents)

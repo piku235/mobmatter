@@ -10,9 +10,9 @@
 #include "CoverRemoved.h"
 #include "CoverStopMotionRequested.h"
 
-using namespace mmbridge::common::domain;
+using namespace mobmatter::common::domain;
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
 Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, PositionState liftState, CoverSpecification specification)
 {

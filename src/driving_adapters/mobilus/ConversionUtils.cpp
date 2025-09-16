@@ -1,9 +1,9 @@
 #include "ConversionUtils.h"
 
-using mmbridge::application::model::Percent;
-using mmbridge::application::model::window_covering::Position;
+using mobmatter::application::model::Percent;
+using mobmatter::application::model::window_covering::Position;
 
-namespace mmbridge::driving_adapters::mobilus {
+namespace mobmatter::driving_adapters::mobilus {
 
 std::optional<Position> ConversionUtils::convertLiftPosition(const std::string& value)
 {

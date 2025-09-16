@@ -3,7 +3,7 @@
 #include "common/logging/LogHandler.h"
 #include <cstdint>
 
-namespace mmbridge::common::logging::handlers {
+namespace mobmatter::common::logging::handlers {
 
 class SyslogHandler final : public LogHandler {
 public:

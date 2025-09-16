@@ -2,7 +2,7 @@
 
 #include "CoverMotion.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
 struct CoverOperationalStatus final {
 public:

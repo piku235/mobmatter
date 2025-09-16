@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 struct DomainEvent {
     static constexpr char kEventName[] = ""; // override by shadowing it

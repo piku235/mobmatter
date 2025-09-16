@@ -4,7 +4,7 @@ source_set("base") {
     "ZclDeviceEndpoint.h",
   ]
 
-  public_deps = [ "//:mmbridge-zap" ]
+  public_deps = [ "//:mobgtw-zap" ]
 }
 
 source_set("cover_endpoint") {

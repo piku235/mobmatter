@@ -5,10 +5,10 @@
 
 #include <app/CommandHandlerInterface.h>
 
-namespace mmbridge::driving_adapters::matter::cover_cluster {
+namespace mobmatter::driving_adapters::matter::cover_cluster {
 
-namespace driven_ports = mmbridge::application::driven_ports;
-namespace logging = mmbridge::common::logging;
+namespace driven_ports = mobmatter::application::driven_ports;
+namespace logging = mobmatter::common::logging;
 
 class CoverCommandHandler final : public chip::app::CommandHandlerInterface {
 public:

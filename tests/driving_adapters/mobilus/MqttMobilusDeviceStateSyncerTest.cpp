@@ -12,10 +12,10 @@
 #include <vector>
 
 using namespace jungi::mobilus_gtw_client;
-using mmbridge::common::logging::Logger;
-using mmbridge::driving_adapters::mobilus::MobilusEventHandler;
-using mmbridge::driving_adapters::mobilus::MqttMobilusDeviceStateSyncer;
-using mmbridge::tests::mobilus::MockMqttMobilusGtwClient;
+using mobmatter::common::logging::Logger;
+using mobmatter::driving_adapters::mobilus::MobilusEventHandler;
+using mobmatter::driving_adapters::mobilus::MqttMobilusDeviceStateSyncer;
+using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 
 namespace {
 

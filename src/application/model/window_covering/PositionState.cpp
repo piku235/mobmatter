@@ -1,6 +1,6 @@
 #include "PositionState.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
 PositionState PositionState::unavailable()
 {

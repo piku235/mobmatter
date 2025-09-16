@@ -5,9 +5,9 @@
 #include <app/reporting/reporting.h>
 
 using namespace chip::app::Clusters;
-using namespace mmbridge::application::model::window_covering;
+using namespace mobmatter::application::model::window_covering;
 
-namespace mmbridge::driven_adapters::matter::reporting {
+namespace mobmatter::driven_adapters::matter::reporting {
 
 void CoverReportingAdapter::handle(const CoverLiftCurrentPositionChanged& event)
 {

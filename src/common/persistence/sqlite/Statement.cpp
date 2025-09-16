@@ -1,7 +1,7 @@
 #include "Statement.h"
 #include <utility>
 
-namespace mmbridge::common::persistence::sqlite {
+namespace mobmatter::common::persistence::sqlite {
 
 Statement::Statement(sqlite3_stmt* stmt)
     : mStmt(stmt)

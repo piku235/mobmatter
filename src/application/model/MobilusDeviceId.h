@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace mmbridge::application::model {
+namespace mobmatter::application::model {
 
 using MobilusDeviceId = int64_t;
 

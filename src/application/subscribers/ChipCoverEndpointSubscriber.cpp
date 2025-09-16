@@ -1,9 +1,9 @@
 #include "ChipCoverEndpointSubscriber.h"
 
-using namespace mmbridge::application::model::window_covering;
-using mmbridge::application::driven_ports::CoverEndpointService;
+using namespace mobmatter::application::model::window_covering;
+using mobmatter::application::driven_ports::CoverEndpointService;
 
-namespace mmbridge::application::subscribers {
+namespace mobmatter::application::subscribers {
 
 ChipCoverEndpointSubscriber::ChipCoverEndpointSubscriber(CoverEndpointService& coverEndpointService)
     : mCoverEndpointService(coverEndpointService)

@@ -4,9 +4,9 @@
 #include "jungi/mobilus_gtw_client/proto/Device.pb.h"
 #include "jungi/mobilus_gtw_client/proto/Event.pb.h"
 
-namespace mmbridge::driving_adapters::mobilus {
+namespace mobmatter::driving_adapters::mobilus {
 
-namespace model = mmbridge::application::model;
+namespace model = mobmatter::application::model;
 namespace proto = jungi::mobilus_gtw_client::proto;
 
 class MobilusDeviceInitHandler {

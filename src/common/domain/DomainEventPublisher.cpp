@@ -1,6 +1,6 @@
 #include "DomainEventPublisher.h"
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 DomainEventPublisher& DomainEventPublisher::instance()
 {

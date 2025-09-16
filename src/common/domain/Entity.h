@@ -5,7 +5,7 @@
 
 #include <memory>
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 class Entity {
 protected:

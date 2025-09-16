@@ -1,6 +1,6 @@
 #pragma once
 
-namespace mmbridge::common::logging {
+namespace mobmatter::common::logging {
 
 enum class LogLevel {
     Debug,

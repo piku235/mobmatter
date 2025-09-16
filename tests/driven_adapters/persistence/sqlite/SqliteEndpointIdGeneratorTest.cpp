@@ -5,8 +5,8 @@
 
 #include <gtest/gtest.h>
 
-using namespace mmbridge::driven_adapters::persistence::sqlite;
-using mmbridge::application::model::EndpointId;
+using namespace mobmatter::driven_adapters::persistence::sqlite;
+using mobmatter::application::model::EndpointId;
 
 class SqliteEndpointIdGeneratorTest : public ::testing::Test {
 protected:

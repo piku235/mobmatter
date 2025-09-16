@@ -4,9 +4,9 @@
 #include <app/CommandHandlerInterfaceRegistry.h>
 
 using namespace chip::app;
-using mmbridge::application::driven_ports::CoverRepository;
+using mobmatter::application::driven_ports::CoverRepository;
 
-namespace mmbridge::driving_adapters::matter::cover_cluster {
+namespace mobmatter::driving_adapters::matter::cover_cluster {
 
 CoverClusterAdapter::CoverClusterAdapter(CoverRepository& coverRepository, logging::Logger& logger)
     : mCoverAttributeAccess(coverRepository)

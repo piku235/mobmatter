@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 class DomainEventPublisher final {
 public:

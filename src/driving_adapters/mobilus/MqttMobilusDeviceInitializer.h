@@ -10,10 +10,10 @@
 #include <optional>
 #include <vector>
 
-namespace mmbridge::driving_adapters::mobilus {
+namespace mobmatter::driving_adapters::mobilus {
 
-namespace model = mmbridge::application::model;
-namespace logging = mmbridge::common::logging;
+namespace model = mobmatter::application::model;
+namespace logging = mobmatter::common::logging;
 
 class MqttMobilusDeviceInitializer final {
 public:

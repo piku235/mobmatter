@@ -65,7 +65,7 @@ jobs:
       - name: Compiler version
         run: ${{ matrix.cxx }} --version
 
-      - name: Build matter bridge
+      - name: Build mobmatter
         run: ninja -C out/build
 
       - name: Build tests

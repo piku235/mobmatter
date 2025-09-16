@@ -5,9 +5,9 @@
 #include "application/model/MobilusDeviceId.h"
 #include "common/domain/DomainEvent.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
-struct CoverOperationalStatusChanged : public mmbridge::common::domain::DomainEvent {
+struct CoverOperationalStatusChanged : public mobmatter::common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_operational_status_changed";
 
     const EndpointId endpointId;

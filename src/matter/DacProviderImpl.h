@@ -4,7 +4,7 @@
 #include <lib/core/CHIPError.h>
 #include <lib/support/Span.h>
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 class DacProviderImpl final : public chip::Credentials::DeviceAttestationCredentialsProvider {
 public:

@@ -3,7 +3,7 @@
 #include "common/logging/LogHandler.h"
 #include "common/logging/LogLevel.h"
 
-namespace mmbridge::common::logging::handlers {
+namespace mobmatter::common::logging::handlers {
 
 class StdioLogHandler final : public LogHandler {
 public:

@@ -2,7 +2,7 @@
 
 #include "common/logging/LogHandler.h"
 
-namespace mmbridge::common::logging::handlers {
+namespace mobmatter::common::logging::handlers {
 
 class NoopLogHandler final : public LogHandler {
 public:

@@ -2,10 +2,10 @@
 
 static constexpr char kSequenceName[] = "endpoint_id";
 
-namespace sqlite = mmbridge::common::persistence::sqlite;
-using mmbridge::application::model::EndpointId;
+namespace sqlite = mobmatter::common::persistence::sqlite;
+using mobmatter::application::model::EndpointId;
 
-namespace mmbridge::driven_adapters::persistence::sqlite {
+namespace mobmatter::driven_adapters::persistence::sqlite {
 
 SqliteEndpointIdGenerator::SqliteEndpointIdGenerator(EndpointId initialEndpointId, sqlite::Connection& conn)
     : mInitialEndpointId(initialEndpointId)

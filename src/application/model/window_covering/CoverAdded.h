@@ -5,9 +5,9 @@
 #include "application/model/window_covering/CoverSpecification.h"
 #include "common/domain/DomainEvent.h"
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
-struct CoverAdded : public mmbridge::common::domain::DomainEvent {
+struct CoverAdded : public mobmatter::common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_added";
 
     const EndpointId endpointId;

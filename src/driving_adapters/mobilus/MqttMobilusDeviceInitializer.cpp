@@ -9,9 +9,9 @@
 #include <unordered_map>
 
 using namespace jungi::mobilus_gtw_client;
-using namespace mmbridge::application::model;
+using namespace mobmatter::application::model;
 
-namespace mmbridge::driving_adapters::mobilus {
+namespace mobmatter::driving_adapters::mobilus {
 
 MqttMobilusDeviceInitializer::MqttMobilusDeviceInitializer(MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger)
     : mMobilusGtwClient(mobilusGtwClient)

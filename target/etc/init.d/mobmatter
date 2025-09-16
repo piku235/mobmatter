@@ -3,7 +3,7 @@
 START=99 # after mobilus
 
 USE_PROCD=1
-PROG=/opt/matter/bin/matter-bridge
+PROG=/opt/jungi/bin/mobmatter
 LOG=syslog
 
 start_service() {

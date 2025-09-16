@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace mmbridge::common::domain {
+namespace mobmatter::common::domain {
 
 template <typename TCode>
 class DomainError final {
@@ -12,7 +12,7 @@ public:
         , mMessage(std::move(message))
     {
     }
-    
+
     TCode code() const { return mCode; }
     const std::string& message() const { return mMessage; }
 

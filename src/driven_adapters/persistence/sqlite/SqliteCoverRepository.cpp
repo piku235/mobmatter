@@ -9,11 +9,11 @@
 
 #define COLUMNS "endpoint_id, mobilus_device_id, unique_id, reachable, name, lift_status, lift_motion, lift_target_position, lift_current_position, spec_mobilus_device_type"
 
-using namespace mmbridge::application::model;
-using namespace mmbridge::application::model::window_covering;
-namespace sqlite = mmbridge::common::persistence::sqlite;
+using namespace mobmatter::application::model;
+using namespace mobmatter::application::model::window_covering;
+namespace sqlite = mobmatter::common::persistence::sqlite;
 
-namespace mmbridge::driven_adapters::persistence::sqlite {
+namespace mobmatter::driven_adapters::persistence::sqlite {
 
 SqliteCoverRepository::SqliteCoverRepository(sqlite::Connection& conn)
     : mConn(conn)

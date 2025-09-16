@@ -5,11 +5,11 @@
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
 #include "matter/AppComponent.h"
 
-namespace mmbridge::driving_adapters::mobilus {
+namespace mobmatter::driving_adapters::mobilus {
 
 namespace proto = jungi::mobilus_gtw_client::proto;
 
-class MqttMobilusEventSubscriber final : public mmbridge::matter::AppComponent {
+class MqttMobilusEventSubscriber final : public mobmatter::matter::AppComponent {
 public:
     MqttMobilusEventSubscriber(jungi::mobilus_gtw_client::MqttMobilusGtwClient& mobilusGtwClient, MobilusEventHandler& eventHandler);
 

@@ -2,7 +2,7 @@
 
 #include <platform/DeviceInfoProvider.h>
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 class DeviceInfoProviderImpl : public chip::DeviceLayer::DeviceInfoProvider {
 public:

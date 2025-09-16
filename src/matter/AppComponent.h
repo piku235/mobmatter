@@ -1,13 +1,13 @@
 #pragma once
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 class AppComponent {
 public:
     virtual ~AppComponent() = default;
-    virtual void boot() { };
-    virtual void run() { };
-    virtual void shutdown() { };
+    virtual void boot() {};
+    virtual void run() {};
+    virtual void shutdown() {};
 };
 
 }

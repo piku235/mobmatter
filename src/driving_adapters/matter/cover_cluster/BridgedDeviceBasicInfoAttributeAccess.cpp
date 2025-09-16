@@ -11,7 +11,7 @@ using namespace chip;
 using namespace chip::app;
 using namespace chip::app::Clusters;
 using namespace chip::app::Clusters::BridgedDeviceBasicInformation::Attributes;
-using mmbridge::application::driven_ports::CoverRepository;
+using mobmatter::application::driven_ports::CoverRepository;
 
 namespace {
 
@@ -20,7 +20,7 @@ constexpr uint16_t kBridgedDeviceBasicInfoClusterRevision = 4u;
 
 }
 
-namespace mmbridge::driving_adapters::matter::cover_cluster {
+namespace mobmatter::driving_adapters::matter::cover_cluster {
 
 BridgedDeviceBasicInfoAttributeAccess::BridgedDeviceBasicInfoAttributeAccess(CoverRepository& coverRepository)
     : AttributeAccessInterface(Optional<EndpointId>::Missing(), BridgedDeviceBasicInformation::Id)

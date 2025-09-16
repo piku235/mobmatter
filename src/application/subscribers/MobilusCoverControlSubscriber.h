@@ -3,12 +3,12 @@
 #include "application/model/window_covering/CoverStopMotionRequested.h"
 #include "common/domain/MultiDomainEventSubscriber.h"
 
-namespace mmbridge::application::subscribers {
+namespace mobmatter::application::subscribers {
 
-namespace driven_ports = mmbridge::application::driven_ports;
-namespace wc = mmbridge::application::model::window_covering;
+namespace driven_ports = mobmatter::application::driven_ports;
+namespace wc = mobmatter::application::model::window_covering;
 
-class MobilusCoverControlSubscriber final : public mmbridge::common::domain::MultiDomainEventSubscriber<wc::CoverLiftRequested, wc::CoverStopMotionRequested> {
+class MobilusCoverControlSubscriber final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverLiftRequested, wc::CoverStopMotionRequested> {
 public:
     MobilusCoverControlSubscriber(driven_ports::MobilusCoverControlService& coverControlService);
     void handle(const wc::CoverLiftRequested& event) override;

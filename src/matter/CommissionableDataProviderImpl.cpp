@@ -22,7 +22,7 @@ CHIP_ERROR GeneratePaseSalt(std::vector<uint8_t>& spake2pSaltVector)
 
 } // namespace
 
-namespace mmbridge::matter {
+namespace mobmatter::matter {
 
 CHIP_ERROR CommissionableDataProviderImpl::Init()
 {

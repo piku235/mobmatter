@@ -13,11 +13,11 @@
 #include <tuple>
 
 using namespace jungi::mobilus_gtw_client;
-using mmbridge::application::model::Percent;
-using mmbridge::application::model::window_covering::Position;
-using mmbridge::common::logging::Logger;
-using mmbridge::driven_adapters::mobilus::MqttMobilusCoverControlService;
-using mmbridge::tests::mobilus::MockMqttMobilusGtwClient;
+using mobmatter::application::model::Percent;
+using mobmatter::application::model::window_covering::Position;
+using mobmatter::common::logging::Logger;
+using mobmatter::driven_adapters::mobilus::MqttMobilusCoverControlService;
+using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 using testing::TestWithParam;
 using testing::Values;
 using ExpectedPosition = std::tuple<std::string, uint16_t>;

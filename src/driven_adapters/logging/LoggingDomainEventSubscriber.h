@@ -9,12 +9,12 @@
 #include "common/domain/MultiDomainEventSubscriber.h"
 #include "common/logging/Logger.h"
 
-namespace mmbridge::driven_adapters::logging {
+namespace mobmatter::driven_adapters::logging {
 
-namespace wc = mmbridge::application::model::window_covering;
-namespace logging = mmbridge::common::logging;
+namespace wc = mobmatter::application::model::window_covering;
+namespace logging = mobmatter::common::logging;
 
-class LoggingDomainEventSubscriber final : public mmbridge::common::domain::MultiDomainEventSubscriber<wc::CoverAdded, wc::CoverRemoved, wc::CoverLiftTargetPositionChanged, wc::CoverLiftCurrentPositionChanged, wc::CoverMarkedAsReachable, wc::CoverMarkedAsUnreachable> {
+class LoggingDomainEventSubscriber final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverAdded, wc::CoverRemoved, wc::CoverLiftTargetPositionChanged, wc::CoverLiftCurrentPositionChanged, wc::CoverMarkedAsReachable, wc::CoverMarkedAsUnreachable> {
 public:
     explicit LoggingDomainEventSubscriber(logging::Logger& logger);
     void handle(const wc::CoverAdded& event) override;

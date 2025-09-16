@@ -11,9 +11,9 @@
 #include <vector>
 
 using namespace jungi::mobilus_gtw_client;
-using mmbridge::driving_adapters::mobilus::MobilusEventHandler;
-using mmbridge::driving_adapters::mobilus::MqttMobilusEventSubscriber;
-using mmbridge::tests::mobilus::MockMqttMobilusGtwClient;
+using mobmatter::driving_adapters::mobilus::MobilusEventHandler;
+using mobmatter::driving_adapters::mobilus::MqttMobilusEventSubscriber;
+using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 
 namespace {
 

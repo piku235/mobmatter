@@ -15,16 +15,16 @@
 #include <cstdint>
 #include <optional>
 
-namespace mmbridge::application::model::window_covering {
+namespace mobmatter::application::model::window_covering {
 
-class Cover final : public mmbridge::common::domain::Entity {
+class Cover final : public mobmatter::common::domain::Entity {
 public:
     enum class ErrorCode {
         LiftUnavailable,
     };
 
     template <typename TOk = void>
-    using Result = tl::expected<TOk, mmbridge::common::domain::DomainError<ErrorCode>>;
+    using Result = tl::expected<TOk, mobmatter::common::domain::DomainError<ErrorCode>>;
 
     static Cover add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, PositionState liftState, CoverSpecification specification);
     static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, bool reachable, std::string name, PositionState liftState, CoverSpecification specification);

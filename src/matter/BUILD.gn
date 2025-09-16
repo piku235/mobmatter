@@ -3,19 +3,19 @@ import("//build_overrides/chip.gni")
 source_set("matter") {
   sources = [
     "ChipAppMain.cpp",
+    "CommissionableDataProviderImpl.cpp",
     "DacProviderImpl.cpp",
     "DeviceInfoProviderImpl.cpp",
     "DeviceInstanceInfoProviderImpl.cpp",
-    "CommissionableDataProviderImpl.cpp",
   ]
 
   public = [
     "AppComponent.h",
     "ChipAppMain.h",
+    "CommissionableDataProviderImpl.h",
     "DacProviderImpl.h",
     "DeviceInfoProviderImpl.h",
     "DeviceInstanceInfoProviderImpl.h",
-    "CommissionableDataProviderImpl.h",
   ]
 
   deps = [
@@ -25,9 +25,7 @@ source_set("matter") {
     "//third_party/mobilus_gtw_client",
   ]
 
-  public_deps = [
-    "//:mmbridge-zap",
-  ]
+  public_deps = [ "//:mobgtw-zap" ]
 
-  configs += ["//:includes"]
+  configs += [ "//:includes" ]
 }

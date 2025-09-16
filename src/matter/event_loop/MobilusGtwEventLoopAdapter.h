@@ -10,13 +10,13 @@
 
 #include <unordered_map>
 
-namespace mmbridge::matter::event_loop {
+namespace mobmatter::matter::event_loop {
 
 namespace mobio = jungi::mobilus_gtw_client::io;
 
 class MobilusGtwEventLoopAdapter final : public mobio::EventLoop,
                                          public chip::System::EventLoopHandler,
-                                         public mmbridge::matter::AppComponent {
+                                         public mobmatter::matter::AppComponent {
 public:
     MobilusGtwEventLoopAdapter(chip::System::LayerSocketsLoop& systemLayer);
     ~MobilusGtwEventLoopAdapter();

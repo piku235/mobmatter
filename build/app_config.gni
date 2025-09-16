@@ -3,7 +3,7 @@ declare_args() {
   config_ini_file = ""
 
   # db
-  database_file = "/tmp/matter-bridge.db"
+  database_file = "/tmp/mobmatter.db"
   database_pragma_sql = ""
 
   # mobilus
