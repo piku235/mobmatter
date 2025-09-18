@@ -1,7 +1,5 @@
 config("includes") {
   include_dirs = ["repo/include"]
-
-  defines = ["TL_CPLUSPLUS=__cplusplus"] # fix undef
 }
 
 source_set("tl_expected") {
