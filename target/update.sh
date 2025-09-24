@@ -60,16 +60,12 @@ for sourcefile in opt/jungi/lib/*; do
   filename=$(basename "$sourcefile")
   destfile="/opt/jungi/lib/$filename"
 
-  echo -n "$destfile: "
-
   if [ ! -f "$destfile" ]; then
     cp -a "$sourcefile" "$destfile"
-    echo "ADDED"
+    echo "$destfile: NEW"
   elif ! cmp -s "$sourcefile" "$destfile"; then
     cp -a "$sourcefile" "$destfile"
-    echo "UPDATED"
-  else
-    echo "OK"
+    echo "$destfile: MODIFIED"
   fi
 done
 
