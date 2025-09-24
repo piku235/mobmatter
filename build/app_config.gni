@@ -7,5 +7,5 @@ declare_args() {
   database_pragma_sql = ""
 
   # mobilus
-  mobilus_dsn = "mqtt://127.0.0.1:1883"
+  mobilus_dsn = "mqtts://mobilus:8883?cacert=/etc/ssl/certs/mobilelabs_mobilus_ca.pem"
 }
