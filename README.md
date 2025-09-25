@@ -14,8 +14,8 @@ It is a native application targeted to run on the Cosmo GTW itself, which runs O
 
 **Supported devices:**
 
-* Senso - e.g., ERS actuator
-* Cosmo
+* Senso - e.g. M35 ERS actuators
+* Cosmo - e.g. M35 MR actuators
 * C-MR
 
 For devices supported by the Cosmo GTW but not listed above, feel free to request support by [opening an issue](https://github.com/piku235/mobmatter/issues/new).
