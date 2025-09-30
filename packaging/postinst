@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+CONF=/opt/jungi/etc/mobmatter.conf
+
+echo "Enabling service"
+/etc/init.d/mobmatter enable
+
+echo "Adjust $CONF and /etc/init.d/mobmatter start"
+echo "View logs via logread -e matter"
