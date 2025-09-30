@@ -1,7 +1,8 @@
 #!/bin/sh
 set -e
 
-CONF=/opt/jungi/etc/mobmatter.conf
-
 echo "Stopping and disabling service"
-/etc/init.d/mobmatter stop && /etc/init.d/mobmatter disable
+/etc/init.d/mobmatter stop || true
+/etc/init.d/mobmatter disable || true
+
+exit 0
