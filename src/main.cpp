@@ -42,10 +42,6 @@
 #include <optional>
 #include <string>
 
-#ifdef CONFIG_INI_FILE
-#include <inipp/inipp.h>
-#endif
-
 using namespace mobmatter::common::persistence;
 using namespace mobmatter::common::domain;
 using namespace mobmatter::common::logging;
@@ -96,62 +92,11 @@ const char* getEnvOr(const char* name, const char* defaultValue)
     return value ? value : defaultValue;
 }
 
-#ifdef CONFIG_INI_FILE
-void parseIniConfig(AppConfig& config)
-{
-    std::ifstream fs(CONFIG_INI_FILE);
-    if (!fs) {
-        return;
-    }
-
-    inipp::Ini<char> ini;
-    ini.parse(fs);
-
-    auto sit = ini.sections.find("mobilus");
-    if (ini.sections.end() == sit) {
-        return;
-    }
-
-    auto& section = sit->second;
-
-    if (!section["username"].empty()) {
-        config.mobilusUsername = section["username"];
-    }
-    if (!section["password"].empty()) {
-        config.mobilusPassword = section["password"];
-    }
-}
-#endif
-
-AppConfig loadAppConfig()
-{
-    AppConfig config = {
-        .mobilusUsername = "admin",
-        .mobilusPassword = "admin"
-    };
-
-#ifdef CONFIG_INI_FILE
-    parseIniConfig(config);
-#endif
-
-    const char* value;
-
-    if (nullptr != (value = getenv("MOBILUS_USERNAME"))) {
-        config.mobilusUsername = value;
-    }
-
-    if (nullptr != (value = getenv("MOBILUS_PASSWORD"))) {
-        config.mobilusPassword = value;
-    }
-
-    return config;
-}
-
-std::unique_ptr<mobgtw::MqttMobilusGtwClient> createMobilusGtwClient(const AppConfig& appConfig, mobgtw::io::EventLoop* loop, mobgtw::logging::Logger* logger)
+std::unique_ptr<mobgtw::MqttMobilusGtwClient> createMobilusGtwClient(mobgtw::io::EventLoop* loop, mobgtw::logging::Logger* logger)
 {
     return mobgtw::MqttMobilusGtwClient::builder()
         .dsn(mobgtw::MqttDsn::from(MOBILUS_DSN).value())
-        .login({ appConfig.mobilusUsername, appConfig.mobilusPassword })
+        .login({ getEnvOr("MOBILUS_USERNAME", "admin"), getEnvOr("MOBILUS_PASSWORD", "admin") })
         .useKeepAliveMessage(std::make_unique<proto::DeviceSettingsRequest>())
         .useLogger(logger)
         .attachTo(loop)
@@ -265,11 +210,10 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    auto appConfig = loadAppConfig();
     auto& chipSystemLayer = static_cast<chip::System::LayerSocketsLoop&>(chip::DeviceLayer::SystemLayer());
     MobilusGtwEventLoopAdapter mobilusGtwEventLoopAdapter(chipSystemLayer);
     MqttMobilusGtwClientLoggerAdapter mobilusLoggerAdapter(logger);
-    auto mobilusGtwClient = createMobilusGtwClient(appConfig, &mobilusGtwEventLoopAdapter, &mobilusLoggerAdapter);
+    auto mobilusGtwClient = createMobilusGtwClient(&mobilusGtwEventLoopAdapter, &mobilusLoggerAdapter);
 
     // chip
     static SqlitePersistentStorageDelegate persistentStorageDelegate;

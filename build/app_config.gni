@@ -1,7 +1,4 @@
 declare_args() {
-  # config
-  config_ini_file = ""
-
   # db
   database_file = "/tmp/mobmatter.db"
   database_pragma_sql = ""

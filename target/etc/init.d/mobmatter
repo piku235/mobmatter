@@ -4,11 +4,21 @@ START=99 # after mobilus
 
 USE_PROCD=1
 PROG=/opt/jungi/bin/mobmatter
+CONF=/opt/jungi/etc/mobmatter.conf
 LOG=syslog
 
 start_service() {
     procd_open_instance
     procd_set_param command $PROG
+    procd_set_param file $CONF
     procd_set_param env LOG=$LOG
+
+    while IFS= read -r line; do
+        case "$line" in
+            ''|\#*) continue ;;
+        esac
+        procd_append_param env "$line"
+    done < $CONF
+
     procd_close_instance
 }

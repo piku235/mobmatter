@@ -47,9 +47,8 @@ echo -n "Provide the mobilus password: "
 read mobilus_password
 
 cat <<EOF > "opt/jungi/etc/$CONF_FILE"
-[mobilus]
-username=$mobilus_username
-password=$mobilus_password
+MOBILUS_USERNAME=$mobilus_username
+MOBILUS_PASSWORD=$mobilus_password
 EOF
 
 echo "Copying files to storage, may take a while ..."

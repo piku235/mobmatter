@@ -19,10 +19,3 @@
 #ifndef MOBILUS_DSN
 #define MOBILUS_DSN "mqtt://127.0.0.1:1883"
 #endif
-
-#include <string>
-
-struct AppConfig {
-    std::string mobilusUsername;
-    std::string mobilusPassword;
-};

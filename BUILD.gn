@@ -22,10 +22,6 @@ config("app_config") {
     "DATABASE_PRAGMA_SQL=\"${database_pragma_sql}\"",
     "MOBILUS_DSN=\"${mobilus_dsn}\"",
   ]
-
-  if (config_ini_file != "") {
-    defines += [ "CONFIG_INI_FILE=\"${config_ini_file}\"" ]
-  }
 }
 
 executable("mobmatter") {
