@@ -1,12 +1,12 @@
 #!/bin/sh
 set -e
 
-CONF=$RUNTIME_DIR/etc/mobmatter.conf
+CONF="$RUNTIME_DIR/etc/mobmatter.conf"
 
 echo "Enabling service"
 /etc/init.d/mobmatter enable || true
 
-echo "Adjust $CONF and /etc/init.d/mobmatter start"
-echo "View logs via logread -e matter"
+echo "Starting service"
+/etc/init.d/mobmatter restart || true
 
 exit 0
