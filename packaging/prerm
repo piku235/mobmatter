@@ -1,8 +1,10 @@
 #!/bin/sh
 set -e
 
-echo "Stopping and disabling service"
+echo "Stopping service"
 /etc/init.d/mobmatter stop || true
+
+echo "Disabling service"
 /etc/init.d/mobmatter disable || true
 
 exit 0
