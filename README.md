@@ -69,13 +69,13 @@ You can use the QR code above in this README, or pair manually using this code: 
 ### Update
 
 ```bash
-/opt/jungi/scripts/pkg update mobmatter
+/opt/jungi/bin/pkg update mobmatter
 ```
 
 ### Remove
 
 ```bash
-/opt/jungi/scripts/pkg remove mobmatter
+/opt/jungi/bin/pkg remove mobmatter
 ```
 
 ## Build
