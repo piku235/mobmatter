@@ -39,18 +39,11 @@ jobs:
           tar -xf openwrt-toolchain-${OPENWRT_VERSION}-${MAIN_TARGET}-${SUB_TARGET}_gcc-${GCC_VERSION}_musl.Linux-x86_64.tar.zst
           mv openwrt-toolchain-${OPENWRT_VERSION}-${MAIN_TARGET}-${SUB_TARGET}_gcc-${GCC_VERSION}_musl.Linux-x86_64 openwrt-toolchain
 
-      - name: Download runtime
+      - name: Download OpenWRT target from runtime
         run: |
-          RUNTIME_URL=$(curl -s https://api.github.com/repos/piku235/mobilus-gtw-runtime/releases/latest | jq -r '.assets[] | select(.name=="runtime.tar.gz") | .browser_download_url')
-          wget -q "$RUNTIME_URL"
-          mkdir runtime
-          tar -xf runtime.tar.gz -C runtime .
-
-      - name: Setup OpenWRT target
-        run: |
-          mkdir -p openwrt-target/usr
-          ln -s "$PWD/runtime/lib" openwrt-target/usr/lib
-          ln -s "$PWD/runtime/include" openwrt-target/usr/include
+          TARGET_URL=$(curl -s https://api.github.com/repos/piku235/mobilus-gtw-runtime/releases/latest | jq -r '.assets[] | select(.name=="openwrt-target.tar.gz") | .browser_download_url')
+          wget -q "$TARGET_URL"
+          tar -xf openwrt-target.tar.gz
 
       - name: Export OpenWRT
         run: |
