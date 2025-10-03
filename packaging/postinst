@@ -5,6 +5,6 @@ echo "Enabling service"
 /etc/init.d/mobmatter enable || true
 
 echo "Starting service"
-/etc/init.d/mobmatter restart || true
+/etc/init.d/mobmatter restart 2>/dev/null || true
 
 exit 0
