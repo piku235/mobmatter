@@ -47,7 +47,7 @@ wget --no-check-certificate -qO- https://raw.githubusercontent.com/piku235/mobil
 After the **runtime** installation, you can finally install the **mobmatter** with this simple command:
 
 ```bash
-/opt/jungi/scripts/pkg install mobmatter
+/opt/jungi/bin/pkg install mobmatter
 ```
 
 Adjust the config `/opt/jungi/etc/mobmatter.conf` and start the **mobmatter** service:
