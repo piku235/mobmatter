@@ -49,8 +49,8 @@ jobs:
       - name: Setup OpenWRT target
         run: |
           mkdir -p openwrt-target/usr
-          ln -s runtime/lib openwrt-target/usr/lib
-          ln -s runtime/include openwrt-target/usr/include
+          ln -s "$PWD/runtime/lib" openwrt-target/usr/lib
+          ln -s "$PWD/runtime/include" openwrt-target/usr/include
 
       - name: Export OpenWRT
         run: |
