@@ -3,8 +3,8 @@
 START=99 # after mobilus
 
 USE_PROCD=1
-PROG=/opt/jungi/bin/mobmatter
-CONF=/opt/jungi/etc/mobmatter.conf
+PROG=${RUNTIME_DIR}/bin/mobmatter
+CONF=${RUNTIME_DIR}/etc/mobmatter.conf
 LOG=syslog
 
 start_service() {
