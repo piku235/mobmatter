@@ -41,9 +41,7 @@ Installation is performed on the Cosmo GTW via SSH. How to enable SSH access, yo
 Once connected via SSH, run the following command to start the installation of the [**runtime**](https://github.com/piku235/mobilus-gtw-runtime), which is required to run the **mobmatter**:
 
 ```bash
-cd /tmp && wget --no-check-certificate https://raw.githubusercontent.com/piku235/mobilus-gtw-runtime/main/install.sh
-chmod a+x install.sh
-./install.sh
+wget --no-check-certificate -qO- https://raw.githubusercontent.com/piku235/mobilus-gtw-runtime/main/install.sh | sh
 ```
 
 After the **runtime** installation, you can finally install the **mobmatter** with this simple command:
