@@ -13,8 +13,7 @@ target_cflags = [
 ]
 target_ldflags = [
   "-s",
-  "-L${openwrt_sysroot}/usr/lib",
-  "-Wl,-rpath-link=${openwrt_sysroot}/usr/lib",
+  "--sysroot=${openwrt_sysroot}",
   "-Wl,-rpath=/opt/jungi/lib",
   "-Wl,--dynamic-linker=/opt/jungi/lib/ld-musl-mipsel-sf.so.1",
 ]
