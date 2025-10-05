@@ -1,0 +1,3 @@
+declare_args() {
+  openwrt_sysroot = getenv("OPENWRT_TARGET_DIR")
+}

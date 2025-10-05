@@ -1,20 +1,20 @@
-import("//build/openwrt.gni")
+import("//build/openwrt_sysroot.gni")
 import("//build_overrides/build.gni")
 
-assert(openwrt_root != "", "Must specify OPENWRT_TARGET_DIR")
+assert(openwrt_sysroot != "", "Must specify OPENWRT_TARGET_DIR")
 
 # toolchain
 target_cpu = "mipsel_24kec"
 target_os = "linux"
 target_cflags = [
-  "-I${openwrt_root}/usr/include",
+  "-I${openwrt_sysroot}/usr/include",
   "-march=24kec",
   "-mxgot",
 ]
 target_ldflags = [
   "-s",
-  "-L${openwrt_root}/usr/lib",
-  "-Wl,-rpath-link=${openwrt_root}/usr/lib",
+  "-L${openwrt_sysroot}/usr/lib",
+  "-Wl,-rpath-link=${openwrt_sysroot}/usr/lib",
   "-Wl,-rpath=/opt/jungi/lib",
   "-Wl,--dynamic-linker=/opt/jungi/lib/ld-musl-mipsel-sf.so.1",
 ]
@@ -23,11 +23,13 @@ _toolprefix = "mipsel-openwrt-linux-"
 target_cc = "${_toolprefix}gcc"
 target_cxx = "${_toolprefix}g++"
 target_ar = "${_toolprefix}ar"
+sysroot = openwrt_sysroot
 
 # config
 database_file = "/opt/jungi/var/mobmatter.db"
 database_pragma_sql = "PRAGMA journal_mode=MEMORY; PRAGMA synchronous=NORMAL; PRAGMA page_size=4096;"
-mobilus_dsn = "mqtts://mobilus:8883?cacert=/etc/ssl/certs/mobilelabs_mobilus_ca.crt"
+mobilus_dsn =
+    "mqtts://mobilus:8883?cacert=/etc/ssl/certs/mobilelabs_mobilus_ca.crt"
 
 is_debug = false
 treat_warnings_as_errors = false
