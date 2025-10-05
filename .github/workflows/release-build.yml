@@ -39,18 +39,18 @@ jobs:
           tar -xf openwrt-toolchain-${OPENWRT_VERSION}-${MAIN_TARGET}-${SUB_TARGET}_gcc-${GCC_VERSION}_musl.Linux-x86_64.tar.zst
           mv openwrt-toolchain-${OPENWRT_VERSION}-${MAIN_TARGET}-${SUB_TARGET}_gcc-${GCC_VERSION}_musl.Linux-x86_64 openwrt-toolchain
 
-      - name: Download OpenWRT target from runtime
+      - name: Download target sysroot
         run: |
-          TARGET_URL=$(curl -s https://api.github.com/repos/piku235/mobilus-gtw-runtime/releases/latest | jq -r '.assets[] | select(.name=="openwrt-target.tar.gz") | .browser_download_url')
-          wget -q "$TARGET_URL"
-          tar -xf openwrt-target.tar.gz
+          TARGET_SYSROOT_URL=$(curl -s https://api.github.com/repos/piku235/mobilus-gtw-runtime/releases/latest | jq -r '.assets[] | select(.name=="target-sysroot.tar.gz") | .browser_download_url')
+          wget -q "$TARGET_SYSROOT_URL"
+          tar -xf target-sysroot.tar.gz
 
       - name: Export OpenWRT
         run: |
           TOOLCHAIN="toolchain-${ARCH}_gcc-${GCC_VERSION}_musl"
           echo "PATH=${PWD}/openwrt-toolchain/$TOOLCHAIN/bin:$PATH" >> $GITHUB_ENV
           echo "STAGING_DIR=${PWD}/openwrt-toolchain/$TOOLCHAIN" >> $GITHUB_ENV
-          echo "OPENWRT_TARGET_DIR=${PWD}/openwrt-target" >> $GITHUB_ENV
+          echo "OPENWRT_SYSROOT_DIR=${PWD}/target-sysroot" >> $GITHUB_ENV
 
       - name: Setup CHIP dependencies
         working-directory: third_party/connectedhomeip

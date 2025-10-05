@@ -1,7 +1,7 @@
 import("//build/openwrt_sysroot.gni")
 import("//build_overrides/build.gni")
 
-assert(openwrt_sysroot != "", "Must specify OPENWRT_TARGET_DIR")
+assert(openwrt_sysroot != "", "Must specify OPENWRT_SYSROOT_DIR")
 
 # toolchain
 target_cpu = "mipsel_24kec"
