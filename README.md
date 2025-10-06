@@ -125,7 +125,7 @@ For first time use:
 ```bash
 third_party/connectedhomeip/scripts/checkout_submodules.py --platform linux --shallow
 source third_party/connectedhomeip/scripts/bootstrap.sh
-export OPENWRT_TARGET_DIR=<path_to_openwrt_build>
+export OPENWRT_SYSROOT_DIR=<path_to_openwrt_build>
 gn gen out/target --args='import("//build/target.gni")'
 ninja -C out/target
 ```
@@ -134,7 +134,7 @@ For subsequent builds:
 
 ```bash
 source export.sh
-export OPENWRT_TARGET_DIR=<path_to_openwrt_build>
+export OPENWRT_SYSROOT_DIR=<path_to_openwrt_build>
 gn gen out/target --args='import("//build/target.gni")'
 ninja -C out/target
 ```
