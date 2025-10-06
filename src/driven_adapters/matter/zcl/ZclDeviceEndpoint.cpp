@@ -9,17 +9,18 @@ using namespace chip;
 
 namespace {
 
-uint16_t dynEndpointIndex = 0;
+constexpr uint16_t kOutOfRangeEndpointIndex = 0xFFFF;
 DataVersion* gDataVersionStorage[CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT];
 
-uint16_t nextDynamicEndpointIndex()
+uint16_t nextEndpointIndex()
 {
-    return dynEndpointIndex++;
-}
+    for (uint16_t index = 0; index < CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT; index++) {
+        if (nullptr == gDataVersionStorage[index]) {
+            return index;
+        }
+    }
 
-void releaseDynamicEndpointIndex(uint16_t index)
-{
-    // todo: release dynamic endpoint index
+    return kOutOfRangeEndpointIndex;
 }
 
 }
@@ -28,22 +29,28 @@ namespace mobmatter::driven_adapters::matter::zcl {
 
 void addDeviceEndpoint(EndpointId id, const EmberAfEndpointType* ep, Span<const EmberAfDeviceType> deviceTypeList, EndpointId parentEndpointId)
 {
-    uint16_t index = nextDynamicEndpointIndex();
-    gDataVersionStorage[index] = new DataVersion[ep->clusterCount];
+    auto index = nextEndpointIndex();
+    if (kOutOfRangeEndpointIndex == index) {
+        ChipLogError(Zcl, "Run out of available endpoints, max endpoint count: %u", CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT);
+        return;
+    }
 
-    CHIP_ERROR err = emberAfSetDynamicEndpoint(index, id, ep, Span<DataVersion>(gDataVersionStorage[index], ep->clusterCount), deviceTypeList, parentEndpointId);
+    auto dataVersion = new DataVersion[ep->clusterCount];
+    CHIP_ERROR err = emberAfSetDynamicEndpoint(index, id, ep, Span<DataVersion>(dataVersion, ep->clusterCount), deviceTypeList, parentEndpointId);
 
     if (CHIP_NO_ERROR != err) {
-        delete[] gDataVersionStorage[index];
-        releaseDynamicEndpointIndex(index);
-
+        delete[] dataVersion;
         ChipLogError(Zcl, "Failed adding device at endpoint %u", id);
+
+        return;
     }
+
+    gDataVersionStorage[index] = dataVersion;
 }
 
 void removeDeviceEndpoint(EndpointId id)
 {
-    uint16_t index = emberAfGetDynamicIndexFromEndpoint(id);
+    auto index = emberAfGetDynamicIndexFromEndpoint(id);
     if (kEmberInvalidEndpointIndex == index) {
         ChipLogError(Zcl, "Failed removing device at endpoint %u: not found", id);
         return;
@@ -51,7 +58,7 @@ void removeDeviceEndpoint(EndpointId id)
 
     emberAfClearDynamicEndpoint(index);
     delete[] gDataVersionStorage[index];
-    releaseDynamicEndpointIndex(index);
+    gDataVersionStorage[index] = nullptr;
 }
 
 }
