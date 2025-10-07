@@ -10,7 +10,7 @@ namespace wc = mobmatter::application::model::window_covering;
 
 class CoverEndpointSubscriber final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverAdded, wc::CoverRemoved> {
 public:
-    CoverEndpointSubscriber(driven_ports::CoverEndpointService& coverEndpointService);
+    explicit CoverEndpointSubscriber(driven_ports::CoverEndpointService& coverEndpointService);
     void handle(const wc::CoverAdded& event) override;
     void handle(const wc::CoverRemoved& event) override;
 

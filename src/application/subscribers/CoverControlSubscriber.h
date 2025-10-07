@@ -8,9 +8,9 @@ namespace mobmatter::application::subscribers {
 namespace driven_ports = mobmatter::application::driven_ports;
 namespace wc = mobmatter::application::model::window_covering;
 
-class MobilusCoverControlSubscriber final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverLiftRequested, wc::CoverStopMotionRequested> {
+class CoverControlSubscriber final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverLiftRequested, wc::CoverStopMotionRequested> {
 public:
-    explicit MobilusCoverControlSubscriber(driven_ports::CoverControlService& coverControlService);
+    explicit CoverControlSubscriber(driven_ports::CoverControlService& coverControlService);
     void handle(const wc::CoverLiftRequested& event) override;
     void handle(const wc::CoverStopMotionRequested& event) override;
 
