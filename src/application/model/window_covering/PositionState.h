@@ -8,7 +8,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct PositionState final {
+class PositionState final {
 public:
     static PositionState unavailable();
     static PositionState at(Position position);
