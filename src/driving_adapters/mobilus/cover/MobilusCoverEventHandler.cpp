@@ -28,7 +28,7 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
 
     switch (event.event_number()) {
     case EventNumber::Device:
-        if (!event.value().compare("REMOVE")) {
+        if ("REMOVE" == event.value()) {
             mCoverRepository.remove(*cover);
         }
 
@@ -38,7 +38,7 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
         auto position = ConversionUtils::convertLiftPosition(event.value());
 
         if (!position) {
-            if (!event.value().compare("STOP")) {
+            if ("STOP" == event.value()) {
                 cover->initiateStopMotion();
                 mCoverRepository.save(*cover);
 
@@ -74,7 +74,7 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
     case EventNumber::Error:
         mLogger.notice(LOG_TAG "Device error: %s" LOG_SUFFIX, event.value().c_str(), cover->endpointId(), cover->mobilusDeviceId());
 
-        if (!event.value().compare("NO_CONNECTION")) {
+        if ("NO_CONNECTION" == event.value()) {
             cover->markAsUnreachable();
             mCoverRepository.save(*cover);
 

@@ -19,11 +19,11 @@ std::optional<Position> ConversionUtils::convertLiftPosition(const std::string& 
         return std::nullopt;
     }
 
-    if (!value.compare("UP")) {
+    if ("UP" == value) {
         return Position::fullyOpen();
     }
 
-    if (!value.compare("DOWN")) {
+    if ("DOWN" == value) {
         return Position::fullyClosed();
     }
 
