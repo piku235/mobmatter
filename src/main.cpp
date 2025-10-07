@@ -9,7 +9,6 @@
 #include "common/logging/handlers/StdioLogHandler.h"
 #include "common/logging/handlers/SyslogHandler.h"
 #include "common/persistence/sqlite/Connection.h"
-#include "driven_adapters/logging/LoggingDomainEventSubscriber.h"
 #include "driven_adapters/matter/reporting/CoverReportingAdapter.h"
 #include "driven_adapters/matter/zcl/ZclCoverEndpointService.h"
 #include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
@@ -53,7 +52,6 @@ using namespace mobmatter::driven_adapters::persistence::sqlite;
 using namespace mobmatter::driven_adapters::mobilus;
 using namespace mobmatter::driven_adapters::matter::zcl;
 using namespace mobmatter::driven_adapters::matter::reporting;
-using namespace mobmatter::driven_adapters::logging;
 using namespace mobmatter::driving_adapters::mobilus;
 using namespace mobmatter::driving_adapters::mobilus::cover;
 using namespace mobmatter::driving_adapters::matter::cover_cluster;
@@ -224,7 +222,6 @@ int main(int argc, char* argv[])
     SqliteEndpointIdGenerator endpointIdGenerator(ZCL_INITIAL_DYNAMIC_ENDPOINT_ID, *db);
     ZclCoverEndpointService coverEndpointService(ZCL_AGGREGATOR_ENDPOINT_ID);
     MqttMobilusCoverControlService coverControlService(*mobilusGtwClient, logger);
-    LoggingDomainEventSubscriber loggingDomainEventSubscriber(logger);
 
     // app subscribers
     auto& domainEventPublisher = DomainEventPublisher::instance();
@@ -245,7 +242,6 @@ int main(int argc, char* argv[])
     domainEventPublisher.subscribe(mobilusCoverControlSubscriber);
     domainEventPublisher.subscribe(chipCoverEndpointSubscriber);
     domainEventPublisher.subscribe(coverReportingAdapter);
-    domainEventPublisher.subscribe(loggingDomainEventSubscriber);
 
     sChipApp.registerComponent(mobilusGtwEventLoopAdapter);
     sChipApp.registerComponent(domainEventPublisherAdapter);

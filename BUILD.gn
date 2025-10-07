@@ -36,7 +36,6 @@ executable("mobmatter") {
     "//src/application",
     "//src/common/logging:stdio",
     "//src/common/logging:syslog",
-    "//src/driven_adapters/logging",
     "//src/driven_adapters/matter/reporting:cover",
     "//src/driven_adapters/matter/zcl:cover_endpoint",
     "//src/driven_adapters/mobilus:cover_control",
