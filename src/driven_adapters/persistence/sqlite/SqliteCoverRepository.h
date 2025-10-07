@@ -10,7 +10,7 @@ namespace sqlite = mobmatter::common::persistence::sqlite;
 
 class SqliteCoverRepository final : public mobmatter::application::driven_ports::CoverRepository {
 public:
-    SqliteCoverRepository(mobmatter::common::persistence::sqlite::Connection& conn);
+    explicit SqliteCoverRepository(mobmatter::common::persistence::sqlite::Connection& conn);
     void save(const model::window_covering::Cover& cover) override;
     void remove(const model::window_covering::Cover& cover) override;
     std::optional<model::window_covering::Cover> findOfMobilusDeviceId(model::MobilusDeviceId deviceId) const override;
