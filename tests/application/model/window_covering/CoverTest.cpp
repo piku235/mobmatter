@@ -257,6 +257,37 @@ TEST(CoverTest, RequestsStopMotion)
     ASSERT_EQ(0u, events.size());
 }
 
+TEST(CoverTest, RequestsStopMotionAfterLiftRequest)
+{
+    auto cover = coverStub();
+    ASSERT_TRUE(cover.requestLiftTo(Position::fullyClosed()));
+
+    auto& events = DomainEventQueue::instance();
+    events.clear();
+
+    cover.requestStopMotion();
+
+    ASSERT_EQ(PositionStatus::Stopping, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
+
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverStopMotionRequested::kEventName, events.peek()->eventName());
+
+    {
+        auto& event = static_cast<const CoverStopMotionRequested&>(*events.peek());
+
+        ASSERT_EQ(cover.endpointId(), event.endpointId);
+        ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    }
+
+    (void)events.pop();
+
+    cover.requestStopMotion();
+    ASSERT_EQ(0u, events.size());
+}
+
 TEST(CoverTest, RequestsStopMotionDoesNothingIfNotInMotion)
 {
     auto cover = coverStub();
@@ -268,33 +299,6 @@ TEST(CoverTest, RequestsStopMotionDoesNothingIfNotInMotion)
     ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
     ASSERT_EQ(0u, events.size());
-}
-
-TEST(CoverTest, RequestStopMotionForRequestedLiftResetsLiftState)
-{
-    auto cover = coverStub();
-    cover.requestClose();
-
-    auto& events = DomainEventQueue::instance();
-    events.clear();
-
-    cover.requestStopMotion();
-
-    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
-    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
-
-    ASSERT_EQ(1u, events.size());
-    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
-
-    auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
-
-    ASSERT_EQ(cover.endpointId(), event.endpointId);
-    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-    ASSERT_EQ(cover.liftState().targetPosition(), event.position);
-
-    (void)events.pop();
 }
 
 TEST(CoverTest, InitiatesStopMotion)

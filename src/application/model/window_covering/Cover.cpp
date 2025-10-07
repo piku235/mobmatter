@@ -110,12 +110,7 @@ Cover::Result<> Cover::changeLiftPosition(Position position)
 
 void Cover::requestStopMotion()
 {
-    if (PositionStatus::Requested == mLiftState.status()) {
-        replaceLiftState(mLiftState.reset());
-        return;
-    }
-
-    if (PositionStatus::Moving == mLiftState.status()) {
+    if (PositionStatus::Requested == mLiftState.status() || PositionStatus::Moving == mLiftState.status()) {
         replaceLiftState(mLiftState.stop());
         raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
     }
