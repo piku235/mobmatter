@@ -1,21 +1,21 @@
-#include "ChipCoverEndpointSubscriber.h"
+#include "CoverEndpointSubscriber.h"
 
 using namespace mobmatter::application::model::window_covering;
 using mobmatter::application::driven_ports::CoverEndpointService;
 
 namespace mobmatter::application::subscribers {
 
-ChipCoverEndpointSubscriber::ChipCoverEndpointSubscriber(CoverEndpointService& coverEndpointService)
+CoverEndpointSubscriber::CoverEndpointSubscriber(CoverEndpointService& coverEndpointService)
     : mCoverEndpointService(coverEndpointService)
 {
 }
 
-void ChipCoverEndpointSubscriber::handle(const CoverAdded& event)
+void CoverEndpointSubscriber::handle(const CoverAdded& event)
 {
     mCoverEndpointService.addEndpoint(event.endpointId, event.specification);
 }
 
-void ChipCoverEndpointSubscriber::handle(const CoverRemoved& event)
+void CoverEndpointSubscriber::handle(const CoverRemoved& event)
 {
     mCoverEndpointService.removeEndpoint(event.endpointId);
 }

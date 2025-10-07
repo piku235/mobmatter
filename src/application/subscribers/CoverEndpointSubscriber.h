@@ -8,9 +8,9 @@ namespace mobmatter::application::subscribers {
 namespace driven_ports = mobmatter::application::driven_ports;
 namespace wc = mobmatter::application::model::window_covering;
 
-class ChipCoverEndpointSubscriber final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverAdded, wc::CoverRemoved> {
+class CoverEndpointSubscriber final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverAdded, wc::CoverRemoved> {
 public:
-    ChipCoverEndpointSubscriber(driven_ports::CoverEndpointService& coverEndpointService);
+    CoverEndpointSubscriber(driven_ports::CoverEndpointService& coverEndpointService);
     void handle(const wc::CoverAdded& event) override;
     void handle(const wc::CoverRemoved& event) override;
 

@@ -13,7 +13,7 @@ static_library("application") {
     "model/window_covering/Cover.cpp",
     "model/window_covering/CoverSpecification.cpp",
     "model/window_covering/PositionState.cpp",
-    "subscribers/ChipCoverEndpointSubscriber.cpp",
+    "subscribers/CoverEndpointSubscriber.cpp",
     "subscribers/MobilusCoverControlSubscriber.cpp",
   ]
 
@@ -46,7 +46,7 @@ static_library("application") {
     "model/window_covering/Position.h",
     "model/window_covering/PositionState.h",
     "model/window_covering/PositionStatus.h",
-    "subscribers/ChipCoverEndpointSubscriber.h",
+    "subscribers/CoverEndpointSubscriber.h",
     "subscribers/MobilusCoverControlSubscriber.h",
   ]
 

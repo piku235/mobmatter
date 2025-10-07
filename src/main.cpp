@@ -1,7 +1,7 @@
 #include "AppConfig.h"
 #include "CHIPProjectAppConfig.h"
 #include "SqliteDatabaseSchema.h"
-#include "application/subscribers/ChipCoverEndpointSubscriber.h"
+#include "application/subscribers/CoverEndpointSubscriber.h"
 #include "application/subscribers/MobilusCoverControlSubscriber.h"
 #include "common/domain/DomainEventPublisher.h"
 #include "common/logging/LogHandler.h"
@@ -230,7 +230,7 @@ int main(int argc, char* argv[])
     auto& domainEventPublisher = DomainEventPublisher::instance();
     DomainEventPublisherAdapter domainEventPublisherAdapter(chipSystemLayer);
     MobilusCoverControlSubscriber mobilusCoverControlSubscriber(coverControlService);
-    ChipCoverEndpointSubscriber chipCoverEndpointSubscriber(coverEndpointService);
+    CoverEndpointSubscriber chipCoverEndpointSubscriber(coverEndpointService);
     CoverReportingAdapter coverReportingAdapter;
 
     // driving
