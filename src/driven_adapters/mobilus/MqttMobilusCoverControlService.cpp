@@ -6,6 +6,7 @@
 #include <cinttypes>
 
 #define LOG_TAG "GTW: "
+#define LOG_SUFFIX " [md=%" PRId64 "]"
 
 using namespace jungi::mobilus_gtw_client;
 using namespace mobmatter::application::model;
@@ -22,21 +23,21 @@ MqttMobilusCoverControlService::MqttMobilusCoverControlService(MqttMobilusGtwCli
 void MqttMobilusCoverControlService::liftCover(MobilusDeviceId mobilusDeviceId, Position position)
 {
     if (mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, convertLiftPosition(position)))) {
-        mLogger.info(LOG_TAG "Lift command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
+        mLogger.info(LOG_TAG "Lift command sent to cover" LOG_SUFFIX, mobilusDeviceId);
         return;
     }
 
-    mLogger.error(LOG_TAG "Lift command failed for cover [md=%" PRId64 "]", mobilusDeviceId);
+    mLogger.error(LOG_TAG "Lift command failed for cover" LOG_SUFFIX, mobilusDeviceId);
 }
 
 void MqttMobilusCoverControlService::stopCoverMotion(MobilusDeviceId mobilusDeviceId)
 {
     if (mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, "STOP"))) {
-        mLogger.info(LOG_TAG "Stop motion command sent to cover [md=%" PRId64 "]", mobilusDeviceId);
+        mLogger.info(LOG_TAG "Stop motion command sent to cover" LOG_SUFFIX, mobilusDeviceId);
         return;
     }
 
-    mLogger.error(LOG_TAG "Stop motion command failed for cover [md=%" PRId64 "]", mobilusDeviceId);
+    mLogger.error(LOG_TAG "Stop motion command failed for cover" LOG_SUFFIX, mobilusDeviceId);
 }
 
 proto::CallEvents MqttMobilusCoverControlService::callEventsFor(MobilusDeviceId mobilusDeviceId, const std::string& eventValue) const
