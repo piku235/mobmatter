@@ -1,11 +1,11 @@
 #include "MobilusCoverControlSubscriber.h"
 
 using namespace mobmatter::application::model::window_covering;
-using mobmatter::application::driven_ports::MobilusCoverControlService;
+using mobmatter::application::driven_ports::CoverControlService;
 
 namespace mobmatter::application::subscribers {
 
-MobilusCoverControlSubscriber::MobilusCoverControlSubscriber(MobilusCoverControlService& coverControlService)
+MobilusCoverControlSubscriber::MobilusCoverControlSubscriber(CoverControlService& coverControlService)
     : mCoverControlService(coverControlService)
 {
 }

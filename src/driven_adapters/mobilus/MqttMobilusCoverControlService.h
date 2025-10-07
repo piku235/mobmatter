@@ -1,6 +1,6 @@
 #pragma once
 
-#include "application/driven_ports/MobilusCoverControlService.h"
+#include "application/driven_ports/CoverControlService.h"
 #include "common/logging/Logger.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 
@@ -18,7 +18,7 @@ namespace proto = jungi::mobilus_gtw_client::proto;
 namespace model = mobmatter::application::model;
 namespace logging = mobmatter::common::logging;
 
-class MqttMobilusCoverControlService : public mobmatter::application::driven_ports::MobilusCoverControlService {
+class MqttMobilusCoverControlService : public mobmatter::application::driven_ports::CoverControlService {
 public:
     MqttMobilusCoverControlService(jungi::mobilus_gtw_client::MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger);
     void liftCover(model::MobilusDeviceId mobilusDeviceId, model::window_covering::Position position) override;

@@ -7,9 +7,9 @@ namespace mobmatter::application::driven_ports {
 
 namespace model = mobmatter::application::model;
 
-class MobilusCoverControlService {
+class CoverControlService {
 public:
-    virtual ~MobilusCoverControlService() = default;
+    virtual ~CoverControlService() = default;
     virtual void liftCover(model::MobilusDeviceId mobilusDeviceId, model::window_covering::Position position) = 0;
     virtual void stopCoverMotion(model::MobilusDeviceId mobilusDeviceId) = 0;
 };

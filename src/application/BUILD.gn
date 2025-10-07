@@ -18,36 +18,36 @@ static_library("application") {
   ]
 
   public = [
+    "driven_ports/CoverControlService.h",
+    "driven_ports/CoverEndpointService.h",
+    "driven_ports/CoverRepository.h",
+    "driven_ports/EndpointIdGenerator.h",
+    "model/EndpointId.h",
     "model/Flags.h",
     "model/MobilusDeviceId.h",
     "model/MobilusDeviceType.h",
-    "model/EndpointId.h",
-    "model/UniqueId.h",
     "model/Percent.h",
+    "model/UniqueId.h",
     "model/window_covering/Cover.h",
+    "model/window_covering/CoverAdded.h",
     "model/window_covering/CoverEndProductType.h",
     "model/window_covering/CoverFeature.h",
-    "model/window_covering/CoverSpecification.h",
-    "model/window_covering/CoverOperationalStatus.h",
-    "model/window_covering/CoverMotion.h",
-    "model/window_covering/CoverAdded.h",
-    "model/window_covering/CoverRemoved.h",
-    "model/window_covering/CoverLiftRequested.h",
-    "model/window_covering/CoverOperationalStatusChanged.h",
-    "model/window_covering/CoverLiftTargetPositionChanged.h",
     "model/window_covering/CoverLiftCurrentPositionChanged.h",
-    "model/window_covering/CoverStopMotionRequested.h",
+    "model/window_covering/CoverLiftRequested.h",
+    "model/window_covering/CoverLiftTargetPositionChanged.h",
     "model/window_covering/CoverMarkedAsReachable.h",
     "model/window_covering/CoverMarkedAsUnreachable.h",
+    "model/window_covering/CoverMotion.h",
+    "model/window_covering/CoverOperationalStatus.h",
+    "model/window_covering/CoverOperationalStatusChanged.h",
+    "model/window_covering/CoverRemoved.h",
+    "model/window_covering/CoverSpecification.h",
+    "model/window_covering/CoverStopMotionRequested.h",
+    "model/window_covering/Position.h",
     "model/window_covering/PositionState.h",
     "model/window_covering/PositionStatus.h",
-    "model/window_covering/Position.h",
     "subscribers/ChipCoverEndpointSubscriber.h",
     "subscribers/MobilusCoverControlSubscriber.h",
-    "driven_ports/EndpointIdGenerator.h",
-    "driven_ports/MobilusCoverControlService.h",
-    "driven_ports/CoverEndpointService.h",
-    "driven_ports/CoverRepository.h",
   ]
 
   public_deps = [
@@ -57,7 +57,7 @@ static_library("application") {
 
   configs += [
     "//:includes",
-    ":openssl_config"
+    ":openssl_config",
   ]
 
   cflags = [ "-Wconversion" ]
