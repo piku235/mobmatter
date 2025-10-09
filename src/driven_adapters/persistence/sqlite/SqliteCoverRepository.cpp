@@ -15,8 +15,9 @@ namespace sqlite = mobmatter::common::persistence::sqlite;
 
 namespace mobmatter::driven_adapters::persistence::sqlite {
 
-SqliteCoverRepository::SqliteCoverRepository(sqlite::Connection& conn)
+SqliteCoverRepository::SqliteCoverRepository(sqlite::Connection& conn, logging::Logger& logger)
     : mConn(conn)
+    , mLogger(logger)
 {
 }
 
@@ -24,59 +25,85 @@ void SqliteCoverRepository::save(const Cover& cover)
 {
     auto stmt = mConn.prepare("INSERT OR REPLACE INTO cover (" COLUMNS ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    stmt.bind(1, cover.endpointId());
-    stmt.bind(2, cover.mobilusDeviceId());
-    stmt.bind(3, cover.uniqueId().value());
-    stmt.bind(4, cover.isReachable());
-    stmt.bind(5, cover.name());
-    stmt.bind(6, static_cast<uint8_t>(cover.liftState().status()));
-    stmt.bind(7, static_cast<uint8_t>(cover.liftState().motion()));
-    stmt.bind(8, cover.liftState().targetPosition() ? std::optional(cover.liftState().targetPosition()->closedPercent().value()) : std::nullopt);
-    stmt.bind(9, cover.liftState().currentPosition() ? std::optional(cover.liftState().currentPosition()->closedPercent().value()) : std::nullopt);
-    stmt.bind(10, static_cast<uint8_t>(cover.specification().mobilusDeviceType()));
+    stmt->bind(1, cover.endpointId());
+    stmt->bind(2, cover.mobilusDeviceId());
+    stmt->bind(3, cover.uniqueId().value());
+    stmt->bind(4, cover.isReachable());
+    stmt->bind(5, cover.name());
+    stmt->bind(6, static_cast<uint8_t>(cover.liftState().status()));
+    stmt->bind(7, static_cast<uint8_t>(cover.liftState().motion()));
+    stmt->bind(8, cover.liftState().targetPosition() ? std::optional(cover.liftState().targetPosition()->closedPercent().value()) : std::nullopt);
+    stmt->bind(9, cover.liftState().currentPosition() ? std::optional(cover.liftState().currentPosition()->closedPercent().value()) : std::nullopt);
+    stmt->bind(10, static_cast<uint8_t>(cover.specification().mobilusDeviceType()));
 
-    stmt.exec();
+    if (auto r = stmt->exec(); !r) {
+        mLogger.error("Could not save cover: %s", r.error().message().c_str());
+    }
 }
 
 void SqliteCoverRepository::remove(const Cover& cover)
 {
     auto stmt = mConn.prepare("DELETE FROM cover WHERE endpoint_id = ?");
+    stmt->bind(1, cover.endpointId());
 
-    stmt.bind(1, cover.endpointId());
-    stmt.exec();
+    if (auto r = stmt->exec(); !r) {
+        mLogger.error("Could not remove cover: %s", r.error().message().c_str());
+    }
 }
 
 std::optional<Cover> SqliteCoverRepository::findOfMobilusDeviceId(MobilusDeviceId deviceId) const
 {
     auto stmt = mConn.prepare("SELECT " COLUMNS " FROM cover WHERE mobilus_device_id = ?");
-    stmt.bind(1, deviceId);
+    stmt->bind(1, deviceId);
 
-    if (!stmt.fetch()) {
+    auto r = stmt->fetch();
+
+    if (!r) {
+        mLogger.error("Couldnt fetch cover of mobilus device id: %s", r.error().message().c_str());
         return std::nullopt;
     }
 
-    return mapRowTo(stmt);
+    if (!r.value()) {
+        return std::nullopt;
+    }
+
+    return mapRowTo(*stmt);
 }
 
 std::optional<Cover> SqliteCoverRepository::find(EndpointId endpointId) const
 {
     auto stmt = mConn.prepare("SELECT " COLUMNS " FROM cover WHERE endpoint_id = ?");
-    stmt.bind(1, endpointId);
+    stmt->bind(1, endpointId);
 
-    if (!stmt.fetch()) {
+    auto r = stmt->fetch();
+
+    if (!r) {
+        mLogger.error("Couldnt fetch cover: %s", r.error().message().c_str());
         return std::nullopt;
     }
 
-    return mapRowTo(stmt);
+    if (!r.value()) {
+        return std::nullopt;
+    }
+
+    return mapRowTo(*stmt);
 }
 
 std::vector<Cover> SqliteCoverRepository::all() const
 {
     auto stmt = mConn.prepare("SELECT " COLUMNS " FROM cover");
+    auto r = stmt->fetch();
+
+    if (!r) {
+        mLogger.error("Couldnt fetch all covers: %s", r.error().message().c_str());
+        return {};
+    }
+
     std::vector<Cover> covers;
 
-    while (stmt.fetch()) {
-        covers.push_back(mapRowTo(stmt));
+    while (*r) {
+        covers.push_back(mapRowTo(*stmt));
+        r = stmt->fetch();
     }
 
     return covers;

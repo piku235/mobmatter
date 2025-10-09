@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Result.h"
+
 #include <cstdint>
 #include <optional>
 #include <sqlite3.h>
@@ -12,6 +14,11 @@ class Connection;
 class Statement final {
 public:
     Statement(Statement&& other);
+    Statement& operator=(Statement&& other) = delete;
+
+    Statement(const Statement& other) = delete;
+    Statement& operator=(const Statement& other) = delete;
+
     ~Statement();
 
     void bind(const int param, const std::string& value);
@@ -45,12 +52,9 @@ public:
     uint32_t columnAsUint32(const int index) const;
     bool isColumnNull(const int index) const;
     int columnSize(const int index) const;
-    int exec();
-    bool fetch();
-
-    Statement(const Statement& other) = delete;
-    Statement& operator=(const Statement& other) = delete;
-    Statement& operator=(Statement&& other) = delete;
+    int changes() const;
+    Result<bool> fetch();
+    Result<> exec();
 
 private:
     friend class Connection; // calls constructor

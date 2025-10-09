@@ -16,5 +16,7 @@ source_set("sqlite") {
     "Statement.h",
   ]
 
-  configs += [":sqlite_config"]
+  public_deps = [ "//third_party/tl_expected" ]
+
+  configs += [ ":sqlite_config" ]
 }

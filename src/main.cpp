@@ -30,6 +30,7 @@
 #include "matter/persistence/SqlitePersistentStorageDelegate.h"
 
 #include <platform/CHIPDeviceLayer.h>
+#include <tl/expected.hpp>
 
 #include <csignal>
 #include <cstdio>
@@ -101,33 +102,32 @@ std::unique_ptr<mobgtw::MqttMobilusGtwClient> createMobilusGtwClient(mobgtw::io:
         .build();
 }
 
-std::optional<sqlite::Connection> openSqliteDb(Logger& logger)
+tl::expected<sqlite::Connection, sqlite::SqliteError> openSqliteDb()
 {
     bool initiate = !std::filesystem::exists(DATABASE_FILE);
     auto db = sqlite::Connection::open(DATABASE_FILE, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE);
 
     if (!db) {
-        logger.critical("Failed to open database");
-        return std::nullopt;
+        return std::move(db);
     }
 
-    if (-1 == db->exec(DATABASE_PRAGMA_SQL)) {
-        db.reset(); // close by destruct
+    if (auto r = db->exec(DATABASE_PRAGMA_SQL); !r) {
+        db->close();
         std::filesystem::remove(DATABASE_FILE);
 
-        logger.critical("Failed to setup database connection");
-        return std::nullopt;
+        return tl::unexpected(std::move(r.error()));
     }
 
-    if (initiate && -1 == db->exec(kDatabaseSchema)) {
-        db.reset(); // close by destruct
-        std::filesystem::remove(DATABASE_FILE);
+    if (initiate) {
+        if (auto r = db->exec(kDatabaseSchema); !r) {
+            db->close();
+            std::filesystem::remove(DATABASE_FILE);
 
-        logger.critical("Failed to initialize database");
-        return std::nullopt;
+            return tl::unexpected(std::move(r.error()));
+        }
     }
 
-    return db;
+    return std::move(db);
 }
 
 std::unique_ptr<LogHandler> createLogHandler()
@@ -202,9 +202,10 @@ int main(int argc, char* argv[])
 
     // must outlive the main()
     static Logger logger(createLogHandler());
-    static auto db = openSqliteDb(logger);
+    static auto db = openSqliteDb();
 
     if (!db) {
+        logger.critical("Sqlite error: %s", db.error().message().c_str());
         return 1;
     }
 
@@ -215,11 +216,11 @@ int main(int argc, char* argv[])
 
     // chip
     static SqlitePersistentStorageDelegate persistentStorageDelegate;
-    persistentStorageDelegate.Init(&*db);
+    persistentStorageDelegate.Init(&*db, &logger);
 
     // driven
-    SqliteCoverRepository coverRepository(*db);
-    SqliteEndpointIdGenerator endpointIdGenerator(ZCL_INITIAL_DYNAMIC_ENDPOINT_ID, *db);
+    SqliteCoverRepository coverRepository(*db, logger);
+    SqliteEndpointIdGenerator endpointIdGenerator(ZCL_INITIAL_DYNAMIC_ENDPOINT_ID, *db, logger);
     ZclCoverEndpointService coverEndpointService(ZCL_AGGREGATOR_ENDPOINT_ID);
     MqttMobilusCoverControlService coverControlService(*mobilusGtwClient, logger);
 

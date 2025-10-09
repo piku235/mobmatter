@@ -9,7 +9,7 @@ namespace model = mobmatter::application::model;
 class InMemoryEndpointIdGenerator final : public mobmatter::application::driven_ports::EndpointIdGenerator {
 public:
     InMemoryEndpointIdGenerator(model::EndpointId initialEndpointId);
-    model::EndpointId next() override;
+    std::optional<model::EndpointId> next() override;
 
 private:
     model::EndpointId mNextEndpointId;

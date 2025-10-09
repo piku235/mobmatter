@@ -9,7 +9,7 @@ InMemoryEndpointIdGenerator::InMemoryEndpointIdGenerator(EndpointId initialEndpo
 {
 }
 
-EndpointId InMemoryEndpointIdGenerator::next()
+std::optional<model::EndpointId> InMemoryEndpointIdGenerator::next()
 {
     return mNextEndpointId++;
 }

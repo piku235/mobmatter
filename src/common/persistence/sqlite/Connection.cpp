@@ -1,21 +1,22 @@
 #include "Connection.h"
+#include "SqliteError.h"
+
 #include <utility>
 
 namespace mobmatter::common::persistence::sqlite {
 
-std::optional<Connection> Connection::open(const std::string& filename, int flags)
+Result<Connection> Connection::open(const std::string& filename, int flags)
 {
     sqlite3* db;
 
-    // todo: error
     if (SQLITE_OK != sqlite3_open_v2(filename.c_str(), &db, flags, nullptr)) {
-        return std::nullopt;
+        return tl::unexpected(SqliteError::recent(db));
     }
 
     return Connection(db);
 }
 
-std::optional<Connection> Connection::inMemory()
+Result<Connection> Connection::inMemory()
 {
     return open(":memory:");
 }
@@ -35,20 +36,21 @@ Connection::~Connection()
     close();
 }
 
-Statement Connection::prepare(const std::string& sql)
+Result<Statement> Connection::prepare(const std::string& sql)
 {
     sqlite3_stmt* stmt;
 
-    // todo: error
-    sqlite3_prepare_v2(mDb, sql.c_str(), static_cast<int>(sql.length()), &stmt, nullptr);
+    if (SQLITE_OK != sqlite3_prepare_v2(mDb, sql.c_str(), static_cast<int>(sql.length()), &stmt, nullptr)) {
+        return tl::unexpected(SqliteError::recent(mDb));
+    }
 
     return Statement(stmt);
 }
 
-int Connection::exec(const std::string& sql)
+Result<int> Connection::exec(const std::string& sql)
 {
     if (SQLITE_OK != sqlite3_exec(mDb, sql.c_str(), nullptr, nullptr, nullptr)) {
-        return -1;
+        return tl::unexpected(SqliteError::recent(mDb));
     }
 
     return sqlite3_changes(mDb);

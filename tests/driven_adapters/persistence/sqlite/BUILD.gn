@@ -1,7 +1,7 @@
 source_set("sqlite") {
-  sources = [ 
+  sources = [
     "SqliteCoverRepositoryTest.cpp",
-    "SqliteEndpointIdGeneratorTest.cpp"
+    "SqliteEndpointIdGeneratorTest.cpp",
   ]
 
   include_dirs = [

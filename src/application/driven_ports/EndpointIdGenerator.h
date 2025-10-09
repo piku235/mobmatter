@@ -2,6 +2,8 @@
 
 #include "application/model/EndpointId.h"
 
+#include <optional>
+
 namespace mobmatter::application::driven_ports {
 
 namespace model = mobmatter::application::model;
@@ -9,7 +11,7 @@ namespace model = mobmatter::application::model;
 class EndpointIdGenerator {
 public:
     virtual ~EndpointIdGenerator() = default;
-    virtual model::EndpointId next() = 0;
+    virtual std::optional<model::EndpointId> next() = 0;
 };
 
 }

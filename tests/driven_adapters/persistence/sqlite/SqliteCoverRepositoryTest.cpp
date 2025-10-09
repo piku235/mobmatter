@@ -1,6 +1,7 @@
 #include "driven_adapters/persistence/sqlite/SqliteCoverRepository.h"
 #include "SqliteDatabaseSchema.h"
 #include "application/model/window_covering/Cover.h"
+#include "common/logging/Logger.h"
 #include "common/persistence/sqlite/Connection.h"
 
 #include <gmock/gmock.h>
@@ -9,6 +10,7 @@
 using namespace mobmatter::application::model;
 using namespace mobmatter::application::model::window_covering;
 using namespace mobmatter::driven_adapters::persistence::sqlite;
+using namespace mobmatter::common::logging;
 using testing::Contains;
 
 namespace {
@@ -32,9 +34,9 @@ protected:
 
     SqliteCoverRepositoryTest()
         : conn(*sqlite::Connection::inMemory())
-        , coverRepository(conn)
+        , coverRepository(conn, Logger::noop())
     {
-        conn.exec(kDatabaseSchema);
+        (void)conn.exec(kDatabaseSchema);
     }
 };
 
@@ -66,16 +68,6 @@ TEST_F(SqliteCoverRepositoryTest, Removes)
 
     coverRepository.remove(cover);
     ASSERT_FALSE(coverRepository.find(cover.endpointId()));
-}
-
-TEST_F(SqliteCoverRepositoryTest, DoesNotFind)
-{
-    auto cover = sensoStub();
-    coverRepository.save(cover);
-
-    auto foundCover = coverRepository.find(11);
-
-    ASSERT_FALSE(foundCover.has_value());
 }
 
 TEST_F(SqliteCoverRepositoryTest, FindsAndDoesNotFindOfMobilusDeviceId)

@@ -1,4 +1,6 @@
 #include "Statement.h"
+#include "SqliteError.h"
+
 #include <utility>
 
 namespace mobmatter::common::persistence::sqlite {
@@ -115,16 +117,32 @@ int Statement::columnSize(const int index) const
     return sqlite3_column_bytes(mStmt, index);
 }
 
-int Statement::exec()
+int Statement::changes() const
 {
-    sqlite3_step(mStmt);
-
     return sqlite3_changes(sqlite3_db_handle(mStmt));
 }
 
-bool Statement::fetch()
+Result<> Statement::exec()
 {
-    return SQLITE_ROW == sqlite3_step(mStmt);
+    if (auto r = fetch(); !r) {
+        return tl::unexpected(r.error());
+    }
+
+    return {};
+}
+
+Result<bool> Statement::fetch()
+{
+    auto db = sqlite3_db_handle(mStmt);
+    auto rc = sqlite3_step(mStmt);
+
+    if (SQLITE_ROW == rc) {
+        return true;
+    } else if (SQLITE_DONE == rc) {
+        return false;
+    }
+
+    return tl::unexpected(SqliteError::recent(db));
 }
 
 }

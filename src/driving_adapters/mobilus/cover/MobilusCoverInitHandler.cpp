@@ -8,6 +8,8 @@
 
 #include <cinttypes>
 
+#define LOG_SUFFIX " [md=%" PRId64 "]"
+
 using namespace jungi::mobilus_gtw_client;
 using namespace mobmatter::application::model;
 using namespace mobmatter::application::model::window_covering;
@@ -36,12 +38,18 @@ void MobilusCoverInitHandler::initDevice(const proto::Device& device, const prot
         liftPosition = ConversionUtils::convertLiftPosition(currentState.value());
 
         if (!liftPosition) {
-            mLogger.error(LOG_TAG "Invalid cover lift position: %s [md=%" PRId64 "]", currentState.value().c_str(), device.id());
+            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, currentState.value().c_str(), device.id());
         }
     }
 
+    auto endpointId = mEndpointIdGenerator.next();
+
+    if (!endpointId) {
+        mLogger.error(LOG_TAG "Could not get next endpoint id" LOG_SUFFIX, device.id());
+    }
+
     auto cover = Cover::add(
-        mEndpointIdGenerator.next(),
+        *endpointId,
         static_cast<MobilusDeviceId>(device.id()),
         device.name(),
         PositionState::at(liftPosition.value_or(Position::fullyClosed())),
