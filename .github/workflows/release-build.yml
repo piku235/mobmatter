@@ -90,6 +90,7 @@ jobs:
           cp -a packaging/mobmatter.conf target/etc
           cp -a packaging/mobmatter.initd.template target/etc/init.d/mobmatter.template
           echo "${{ steps.strings.outputs.version }}" > target/.pkg/version
+          cp -a packaging/conffiles target/.pkg
           cp -a packaging/postinst target/.pkg
           cp -a packaging/prerm target/.pkg
 
