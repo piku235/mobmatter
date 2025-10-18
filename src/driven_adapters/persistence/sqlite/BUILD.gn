@@ -9,10 +9,9 @@ source_set("sqlite") {
     "SqliteEndpointIdGenerator.h",
   ]
 
-  deps = [
-    "//src/application",
-    "//src/common/persistence/sqlite",
-  ]
+  deps = [ "//src/application" ]
+
+  public_deps = [ "//src/common/persistence/sqlite" ]
 
   configs += [ "//:app_includes" ]
 }

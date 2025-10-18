@@ -6,10 +6,11 @@ source_set("sqlite") {
 
   deps = [
     "//src/application",
-    "//src/driven_adapters/persistence/sqlite",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest",
   ]
+
+  public_deps = [ "//src/driven_adapters/persistence/sqlite" ]
 
   configs += [ "//tests:tests_include" ]
 }
