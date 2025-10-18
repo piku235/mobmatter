@@ -1,5 +1,8 @@
 source_set("mock_client") {
   sources = [ "MockMqttMobilusGtwClient.hpp" ]
 
-  public_deps = [ "//third_party/mobilus_gtw_client" ]
+  public_deps = [
+    "//third_party/mobilus_gtw_client",
+    "//third_party/tl_expected",
+  ]
 }
