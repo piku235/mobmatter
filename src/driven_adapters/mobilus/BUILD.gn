@@ -1,16 +1,25 @@
 source_set("cover_control") {
-  sources = [
-    "MqttMobilusCoverControlService.cpp",
-  ]
+  sources = [ "MqttMobilusCoverControlService.cpp" ]
 
-  public = [
-    "MqttMobilusCoverControlService.h",
-  ]
+  public = [ "MqttMobilusCoverControlService.h" ]
 
   deps = [
     "//src/application",
     "//third_party/mobilus_gtw_client",
   ]
 
-  configs += ["//:includes"]
+  configs += [ "//:includes" ]
+}
+
+source_set("device_management") {
+  sources = [ "MqttMobilusDeviceManagementService.cpp" ]
+
+  public = [ "MqttMobilusDeviceManagementService.h" ]
+
+  deps = [
+    "//src/application",
+    "//third_party/mobilus_gtw_client",
+  ]
+
+  configs += [ "//:includes" ]
 }

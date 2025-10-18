@@ -1,0 +1,11 @@
+source_set("generic") {
+  sources = [ "MobilusDeviceNameSyncerAdapter.cpp" ]
+
+  public = [ "MobilusDeviceNameSyncerAdapter.h" ]
+
+  deps = [ "//src/driving_adapters/mobilus:device_name_syncer" ]
+
+  public_deps = [ "//third_party/mobilus_gtw_client" ]
+
+  configs += [ "//:includes" ]
+}

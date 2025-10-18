@@ -34,6 +34,7 @@ public:
     void requestOpen();
     void requestClose();
     void requestStopMotion();
+    void requestRename(std::string name);
 
     /* mobilus specific */
     Result<> startLiftTo(Position position);
@@ -41,6 +42,7 @@ public:
     void initiateStopMotion();
     void failMotion();
     void markAsUnreachable();
+    void rename(std::string name);
     void remove();
 
     bool operator==(const Cover& other) const;

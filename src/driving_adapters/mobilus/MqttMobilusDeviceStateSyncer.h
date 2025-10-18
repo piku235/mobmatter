@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MobilusEventHandler.h"
+#include "MobilusDeviceEventHandler.h"
 #include "common/logging/Logger.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 
@@ -10,12 +10,12 @@ namespace logging = mobmatter::common::logging;
 
 class MqttMobilusDeviceStateSyncer final {
 public:
-    MqttMobilusDeviceStateSyncer(jungi::mobilus_gtw_client::MqttMobilusGtwClient& mobilusGtwClient, MobilusEventHandler& eventHandler, logging::Logger& logger);
+    MqttMobilusDeviceStateSyncer(jungi::mobilus_gtw_client::MqttMobilusGtwClient& mobilusGtwClient, MobilusDeviceEventHandler& eventHandler, logging::Logger& logger);
     void run();
 
 private:
     jungi::mobilus_gtw_client::MqttMobilusGtwClient& mMobilusGtwClient;
-    MobilusEventHandler& mEventHandler;
+    MobilusDeviceEventHandler& mEventHandler;
     logging::Logger& mLogger;
 };
 

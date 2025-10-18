@@ -1,5 +1,8 @@
 source_set("mobilus") {
-  sources = [ "MqttMobilusCoverControlServiceTest.cpp" ]
+  sources = [
+    "MqttMobilusCoverControlServiceTest.cpp",
+    "MqttMobilusDeviceManagementServiceTest.cpp",
+  ]
 
   include_dirs = [
     "//src",
@@ -10,6 +13,7 @@ source_set("mobilus") {
     "//src/application",
     "//src/common/logging",
     "//src/driven_adapters/mobilus:cover_control",
+    "//src/driven_adapters/mobilus:device_management",
     "//tests/mobilus:mock_client",
     "//third_party/googletest:gtest",
   ]

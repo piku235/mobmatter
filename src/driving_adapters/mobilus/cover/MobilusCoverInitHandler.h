@@ -14,8 +14,8 @@ class MobilusCoverInitHandler final : public MobilusDeviceInitHandler {
 public:
     MobilusCoverInitHandler(driven_ports::CoverRepository& coverRepository, driven_ports::EndpointIdGenerator& endpointIdGenerator, logging::Logger& logger);
 
-    void initDevice(const proto::Device& device, const proto::Event& currentState) override;
-    bool supports(model::MobilusDeviceType deviceType) override;
+    void handle(const proto::Device& device, const proto::Event& currentState) override;
+    bool supports(model::MobilusDeviceType deviceType) const override;
 
 private:
     driven_ports::CoverRepository& mCoverRepository;

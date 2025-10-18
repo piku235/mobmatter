@@ -24,9 +24,9 @@ void MqttMobilusDeviceInitializer::useTestDeviceOnly(MobilusDeviceId deviceId)
     mTestDeviceId = deviceId;
 }
 
-void MqttMobilusDeviceInitializer::registerHandler(std::unique_ptr<MobilusDeviceInitHandler> handler)
+void MqttMobilusDeviceInitializer::registerHandler(MobilusDeviceInitHandler& handler)
 {
-    mHandlers.push_back(std::move(handler));
+    mHandlers.push_back(handler);
 }
 
 bool MqttMobilusDeviceInitializer::run()
@@ -85,7 +85,7 @@ bool MqttMobilusDeviceInitializer::run()
             continue;
         }
 
-        handler->initDevice(device, *it->second);
+        handler->handle(device, *it->second);
     }
 
     return true;
@@ -93,9 +93,9 @@ bool MqttMobilusDeviceInitializer::run()
 
 MobilusDeviceInitHandler* MqttMobilusDeviceInitializer::handlerFor(model::MobilusDeviceType deviceType)
 {
-    for (auto& handler : mHandlers) {
-        if (handler->supports(deviceType)) {
-            return handler.get();
+    for (MobilusDeviceInitHandler& handler : mHandlers) {
+        if (handler.supports(deviceType)) {
+            return &handler;
         }
     }
 

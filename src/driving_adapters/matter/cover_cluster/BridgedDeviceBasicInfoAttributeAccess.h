@@ -15,10 +15,9 @@ namespace driven_ports = mobmatter::application::driven_ports;
 class BridgedDeviceBasicInfoAttributeAccess final : public chip::app::AttributeAccessInterface {
 public:
     explicit BridgedDeviceBasicInfoAttributeAccess(driven_ports::CoverRepository& coverRepository);
-    CHIP_ERROR Read(const chip::app::ConcreteReadAttributePath& path, chip::app::AttributeValueEncoder& encoder) override;
 
-    // nothing to write
-    CHIP_ERROR Write(const chip::app::ConcreteDataAttributePath& path, chip::app::AttributeValueDecoder& decoder) override { return CHIP_ERROR_INVALID_ARGUMENT; }
+    CHIP_ERROR Read(const chip::app::ConcreteReadAttributePath& path, chip::app::AttributeValueEncoder& encoder) override;
+    CHIP_ERROR Write(const chip::app::ConcreteDataAttributePath& path, chip::app::AttributeValueDecoder& decoder) override;
 
 private:
     driven_ports::CoverRepository& mCoverRepository;

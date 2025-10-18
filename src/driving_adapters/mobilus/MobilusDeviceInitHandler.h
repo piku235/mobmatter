@@ -13,8 +13,8 @@ class MobilusDeviceInitHandler {
 public:
     virtual ~MobilusDeviceInitHandler() = default;
 
-    virtual void initDevice(const proto::Device& device, const proto::Event& currentState) = 0;
-    virtual bool supports(model::MobilusDeviceType deviceType) = 0;
+    virtual void handle(const proto::Device& device, const proto::Event& currentState) = 0;
+    virtual bool supports(model::MobilusDeviceType deviceType) const = 0;
 };
 
 }

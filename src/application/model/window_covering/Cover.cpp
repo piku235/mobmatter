@@ -6,8 +6,10 @@
 #include "CoverMarkedAsReachable.h"
 #include "CoverMarkedAsUnreachable.h"
 #include "CoverMotion.h"
+#include "CoverNameChanged.h"
 #include "CoverOperationalStatusChanged.h"
 #include "CoverRemoved.h"
+#include "CoverRenameRequested.h"
 #include "CoverStopMotionRequested.h"
 
 using namespace mobmatter::common::domain;
@@ -116,6 +118,18 @@ void Cover::requestStopMotion()
     }
 }
 
+void Cover::requestRename(std::string name)
+{
+    if (mName == name) {
+        return;
+    }
+
+    mName = std::move(name);
+
+    raise(std::make_unique<CoverNameChanged>(mEndpointId, mMobilusDeviceId, mName));
+    raise(std::make_unique<CoverRenameRequested>(mEndpointId, mMobilusDeviceId, mName));
+}
+
 void Cover::initiateStopMotion()
 {
     if (PositionStatus::Moving == mLiftState.status()) {
@@ -140,6 +154,16 @@ void Cover::markAsUnreachable()
     if (PositionStatus::Moving == mLiftState.status()) {
         replaceLiftState(mLiftState.reset());
     }
+}
+
+void Cover::rename(std::string name)
+{
+    if (mName == name) {
+        return;
+    }
+
+    mName = std::move(name);
+    raise(std::make_unique<CoverNameChanged>(mEndpointId, mMobilusDeviceId, mName));
 }
 
 void Cover::remove()

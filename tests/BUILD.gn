@@ -5,9 +5,10 @@ executable("tests") {
     "application",
     "driven_adapters/mobilus",
     "driven_adapters/persistence/sqlite",
+    "driving_adapters/mobilus:device_event_subscriber",
     "driving_adapters/mobilus:device_initializer",
+    "driving_adapters/mobilus:device_name_syncer",
     "driving_adapters/mobilus:device_state_syncer",
-    "driving_adapters/mobilus:event_subscriber",
     "driving_adapters/mobilus/cover",
     "//third_party/googletest:gtest_main",
   ]

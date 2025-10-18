@@ -8,7 +8,6 @@
 
 #include <gtest/gtest.h>
 
-#include <memory>
 #include <vector>
 
 using namespace jungi::mobilus_gtw_client;
@@ -32,12 +31,12 @@ public:
     {
     }
 
-    void initDevice(const proto::Device& device, const proto::Event& currentState) override
+    void handle(const proto::Device& device, const proto::Event& currentState) override
     {
         mInitiatedDevices.push_back({ device, currentState });
     }
 
-    bool supports(MobilusDeviceType deviceType) override
+    bool supports(MobilusDeviceType deviceType) const override
     {
         return MobilusDeviceType::Senso == deviceType
             || MobilusDeviceType::Cmr == deviceType;
@@ -91,7 +90,8 @@ TEST(MqttMobilusDeviceInitializerTest, Initializes)
     MqttMobilusDeviceInitializer deviceInitializer(client, Logger::noop());
 
     std::vector<FakeDeviceInitHandler::InitiatedDevice> initiatedDevices;
-    deviceInitializer.registerHandler(std::make_unique<FakeDeviceInitHandler>(initiatedDevices));
+    FakeDeviceInitHandler handler(initiatedDevices);
+    deviceInitializer.registerHandler(handler);
 
     proto::DevicesListResponse deviceList;
     proto::CurrentStateResponse currentState;
@@ -126,7 +126,8 @@ TEST(MqttMobilusDeviceInitializerTest, InitializesNone)
     MqttMobilusDeviceInitializer deviceInitializer(client, Logger::noop());
 
     std::vector<FakeDeviceInitHandler::InitiatedDevice> initiatedDevices;
-    deviceInitializer.registerHandler(std::make_unique<FakeDeviceInitHandler>(initiatedDevices));
+    FakeDeviceInitHandler handler(initiatedDevices);
+    deviceInitializer.registerHandler(handler);
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>());
     client.mockResponse(std::make_unique<proto::CurrentStateResponse>());

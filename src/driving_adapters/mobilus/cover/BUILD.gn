@@ -2,11 +2,13 @@ source_set("cover") {
   sources = [
     "MobilusCoverEventHandler.cpp",
     "MobilusCoverInitHandler.cpp",
+    "MobilusCoverNameHandler.cpp",
   ]
 
   public = [
     "MobilusCoverEventHandler.h",
     "MobilusCoverInitHandler.h",
+    "MobilusCoverNameHandler.h",
   ]
 
   deps = [

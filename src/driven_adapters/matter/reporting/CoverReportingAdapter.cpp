@@ -34,4 +34,9 @@ void CoverReportingAdapter::handle(const CoverOperationalStatusChanged& event)
     MatterReportingAttributeChangeCallback(event.endpointId, WindowCovering::Id, WindowCovering::Attributes::OperationalStatus::Id);
 }
 
+void CoverReportingAdapter::handle(const wc::CoverNameChanged& event)
+{
+    MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::NodeLabel::Id);
+}
+
 }

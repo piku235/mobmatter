@@ -4,11 +4,10 @@
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 
 using namespace jungi::mobilus_gtw_client;
-using mobmatter::application::driven_ports::CoverRepository;
 
 namespace mobmatter::driving_adapters::mobilus::cover {
 
-MobilusCoverEventHandler::MobilusCoverEventHandler(CoverRepository& coverRepository, logging::Logger& logger)
+MobilusCoverEventHandler::MobilusCoverEventHandler(driven_ports::CoverRepository& coverRepository, logging::Logger& logger)
     : mCoverRepository(coverRepository)
     , mLogger(logger)
 {
@@ -17,13 +16,13 @@ MobilusCoverEventHandler::MobilusCoverEventHandler(CoverRepository& coverReposit
 MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::Event& event)
 {
     if (!event.has_device_id()) {
-        return Result::Handled; // ignore
+        return Result::Unsupported;
     }
 
     auto cover = mCoverRepository.findOfMobilusDeviceId(event.device_id());
 
     if (!cover) {
-        return Result::UnmatchedDevice;
+        return Result::Unsupported;
     }
 
     switch (event.event_number()) {

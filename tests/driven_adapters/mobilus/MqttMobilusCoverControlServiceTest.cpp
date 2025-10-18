@@ -6,6 +6,7 @@
 #include "jungi/mobilus_gtw_client/ProtoUtils.h"
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
+#include "common/logging/Logger.h"
 
 #include <gtest/gtest.h>
 

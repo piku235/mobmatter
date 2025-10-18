@@ -20,32 +20,32 @@ MqttMobilusCoverControlService::MqttMobilusCoverControlService(MqttMobilusGtwCli
 {
 }
 
-void MqttMobilusCoverControlService::liftCover(MobilusDeviceId mobilusDeviceId, Position position)
+void MqttMobilusCoverControlService::liftCover(MobilusDeviceId deviceId, Position position)
 {
-    if (mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, convertLiftPosition(position)))) {
-        mLogger.info(LOG_TAG "Lift command sent to cover" LOG_SUFFIX, mobilusDeviceId);
+    if (mMobilusGtwClient.send(callEventsFor(deviceId, convertLiftPosition(position)))) {
+        mLogger.info(LOG_TAG "Lift command sent to cover" LOG_SUFFIX, deviceId);
         return;
     }
 
-    mLogger.error(LOG_TAG "Lift command failed for cover" LOG_SUFFIX, mobilusDeviceId);
+    mLogger.error(LOG_TAG "Lift command failed for cover" LOG_SUFFIX, deviceId);
 }
 
-void MqttMobilusCoverControlService::stopCoverMotion(MobilusDeviceId mobilusDeviceId)
+void MqttMobilusCoverControlService::stopCoverMotion(MobilusDeviceId deviceId)
 {
-    if (mMobilusGtwClient.send(callEventsFor(mobilusDeviceId, "STOP"))) {
-        mLogger.info(LOG_TAG "Stop motion command sent to cover" LOG_SUFFIX, mobilusDeviceId);
+    if (mMobilusGtwClient.send(callEventsFor(deviceId, "STOP"))) {
+        mLogger.info(LOG_TAG "Stop motion command sent to cover" LOG_SUFFIX, deviceId);
         return;
     }
 
-    mLogger.error(LOG_TAG "Stop motion command failed for cover" LOG_SUFFIX, mobilusDeviceId);
+    mLogger.error(LOG_TAG "Stop motion command failed for cover" LOG_SUFFIX, deviceId);
 }
 
-proto::CallEvents MqttMobilusCoverControlService::callEventsFor(MobilusDeviceId mobilusDeviceId, const std::string& eventValue) const
+proto::CallEvents MqttMobilusCoverControlService::callEventsFor(MobilusDeviceId deviceId, const std::string& eventValue) const
 {
     proto::CallEvents callEvents;
     auto event = callEvents.add_events();
 
-    event->set_device_id(mobilusDeviceId);
+    event->set_device_id(deviceId);
     event->set_event_number(static_cast<int32_t>(EventNumber::Triggered));
     event->set_value(eventValue);
     event->set_platform(static_cast<int32_t>(Platform::Web));

@@ -15,12 +15,14 @@ static_library("application") {
     "model/window_covering/PositionState.cpp",
     "subscribers/CoverControlSubscriber.cpp",
     "subscribers/CoverEndpointSubscriber.cpp",
+    "subscribers/DeviceManagementSubscriber.cpp",
   ]
 
   public = [
     "driven_ports/CoverControlService.h",
     "driven_ports/CoverEndpointService.h",
     "driven_ports/CoverRepository.h",
+    "driven_ports/DeviceManagementService.h",
     "driven_ports/EndpointIdGenerator.h",
     "model/EndpointId.h",
     "model/Flags.h",
@@ -38,9 +40,11 @@ static_library("application") {
     "model/window_covering/CoverMarkedAsReachable.h",
     "model/window_covering/CoverMarkedAsUnreachable.h",
     "model/window_covering/CoverMotion.h",
+    "model/window_covering/CoverNameChanged.h",
     "model/window_covering/CoverOperationalStatus.h",
     "model/window_covering/CoverOperationalStatusChanged.h",
     "model/window_covering/CoverRemoved.h",
+    "model/window_covering/CoverRenameRequested.h",
     "model/window_covering/CoverSpecification.h",
     "model/window_covering/CoverStopMotionRequested.h",
     "model/window_covering/Position.h",
@@ -48,6 +52,7 @@ static_library("application") {
     "model/window_covering/PositionStatus.h",
     "subscribers/CoverControlSubscriber.h",
     "subscribers/CoverEndpointSubscriber.h",
+    "subscribers/DeviceManagementSubscriber.h",
   ]
 
   public_deps = [

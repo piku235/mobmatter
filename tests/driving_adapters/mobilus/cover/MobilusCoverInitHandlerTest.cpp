@@ -70,7 +70,7 @@ TEST_P(MobilusCoverInitHandlerTest, InitiatesCovers)
     event.set_value(GetParam().eventValue);
     event.set_event_number(GetParam().eventNumber);
 
-    handler.initDevice(device, event);
+    handler.handle(device, event);
 
     auto cover = coverRepository.find(1u);
     ASSERT_TRUE(cover.has_value());

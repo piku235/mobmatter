@@ -11,6 +11,7 @@ namespace wc = mobmatter::application::model::window_covering;
 class CoverControlSubscriber final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverLiftRequested, wc::CoverStopMotionRequested> {
 public:
     explicit CoverControlSubscriber(driven_ports::CoverControlService& coverControlService);
+    
     void handle(const wc::CoverLiftRequested& event) override;
     void handle(const wc::CoverStopMotionRequested& event) override;
 

@@ -33,6 +33,11 @@ public:
 
     Result<> sendRequest(const google::protobuf::MessageLite& request, google::protobuf::MessageLite& response) override
     {
+        std::unique_ptr<google::protobuf::MessageLite> sentRequest(request.New());
+
+        sentRequest->CheckTypeAndMergeFrom(request);
+        mSentRequests.push_back(std::move(sentRequest));
+
         if (mMockResponses.empty()) {
             return tl::unexpected(mobgtw::Error::Transport("Missing mock response for this request"));
         }
@@ -55,10 +60,12 @@ public:
     const std::optional<mobgtw::SessionInformation>& sessionInfo() const override { return mobgtw::SessionInformation(); }
 
     const std::vector<std::unique_ptr<google::protobuf::MessageLite>>& sentMessages() const { return mSentMessages; }
+    const std::vector<std::unique_ptr<google::protobuf::MessageLite>>& sentRequests() const { return mSentRequests; }
 
 private:
     mobgtw::MessageBus mMessageBus;
     std::vector<std::unique_ptr<google::protobuf::MessageLite>> mSentMessages;
+    std::vector<std::unique_ptr<google::protobuf::MessageLite>> mSentRequests;
     std::queue<std::unique_ptr<google::protobuf::MessageLite>> mMockResponses;
 
     std::unique_ptr<google::protobuf::MessageLite> clone(const google::protobuf::MessageLite& message)

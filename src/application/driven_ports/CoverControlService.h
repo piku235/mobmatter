@@ -10,8 +10,9 @@ namespace model = mobmatter::application::model;
 class CoverControlService {
 public:
     virtual ~CoverControlService() = default;
-    virtual void liftCover(model::MobilusDeviceId mobilusDeviceId, model::window_covering::Position position) = 0;
-    virtual void stopCoverMotion(model::MobilusDeviceId mobilusDeviceId) = 0;
+
+    virtual void liftCover(model::MobilusDeviceId deviceId, model::window_covering::Position position) = 0;
+    virtual void stopCoverMotion(model::MobilusDeviceId deviceId) = 0;
 };
 
 }

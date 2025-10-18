@@ -21,14 +21,15 @@ namespace logging = mobmatter::common::logging;
 class MqttMobilusCoverControlService : public mobmatter::application::driven_ports::CoverControlService {
 public:
     MqttMobilusCoverControlService(jungi::mobilus_gtw_client::MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger);
-    void liftCover(model::MobilusDeviceId mobilusDeviceId, model::window_covering::Position position) override;
-    void stopCoverMotion(model::MobilusDeviceId mobilusDeviceId) override;
+
+    void liftCover(model::MobilusDeviceId deviceId, model::window_covering::Position position) override;
+    void stopCoverMotion(model::MobilusDeviceId deviceId) override;
 
 private:
     jungi::mobilus_gtw_client::MqttMobilusGtwClient& mMobilusGtwClient;
     logging::Logger& mLogger;
 
-    proto::CallEvents callEventsFor(model::MobilusDeviceId mobilusDeviceId, const std::string& eventValue) const;
+    proto::CallEvents callEventsFor(model::MobilusDeviceId deviceId, const std::string& eventValue) const;
     std::string convertLiftPosition(model::window_covering::Position position) const;
 };
 

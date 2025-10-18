@@ -1,18 +1,17 @@
-#include "driving_adapters/mobilus/MqttMobilusEventSubscriber.h"
-#include "FakeEventHandler.hpp"
-#include "driving_adapters/mobilus/MobilusEventHandler.h"
+#include "FakeDeviceEventHandler.hpp"
+#include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
+#include "driving_adapters/mobilus/MqttMobilusDeviceEventSubscriber.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
 
-#include <memory>
 #include <vector>
 
 using namespace jungi::mobilus_gtw_client;
-using mobmatter::driving_adapters::mobilus::MobilusEventHandler;
-using mobmatter::driving_adapters::mobilus::MqttMobilusEventSubscriber;
+using mobmatter::driving_adapters::mobilus::MobilusDeviceEventHandler;
+using mobmatter::driving_adapters::mobilus::MqttMobilusDeviceEventSubscriber;
 using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 
 namespace {
@@ -36,12 +35,12 @@ auto callEventsStub()
 
 }
 
-TEST(MqttMobilusEventSubscriberTest, DelegatesEventsToEventHandler)
+TEST(MqttMobilusDeviceEventSubscriberTest, DelegatesEventsToEventHandler)
 {
     std::vector<proto::Event> handledEvents;
-    FakeEventHandler eventHandler(handledEvents);
+    FakeDeviceEventHandler eventHandler(handledEvents);
     MockMqttMobilusGtwClient client;
-    MqttMobilusEventSubscriber eventSubscriber(client, eventHandler);
+    MqttMobilusDeviceEventSubscriber eventSubscriber(client, eventHandler);
     eventSubscriber.boot();
 
     auto callEvents = callEventsStub();

@@ -1,19 +1,18 @@
 #include "driving_adapters/mobilus/MqttMobilusDeviceStateSyncer.h"
-#include "FakeEventHandler.hpp"
+#include "FakeDeviceEventHandler.hpp"
 #include "common/logging/Logger.h"
-#include "driving_adapters/mobilus/MobilusEventHandler.h"
+#include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateResponse.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
 
-#include <memory>
 #include <vector>
 
 using namespace jungi::mobilus_gtw_client;
 using mobmatter::common::logging::Logger;
-using mobmatter::driving_adapters::mobilus::MobilusEventHandler;
+using mobmatter::driving_adapters::mobilus::MobilusDeviceEventHandler;
 using mobmatter::driving_adapters::mobilus::MqttMobilusDeviceStateSyncer;
 using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 
@@ -41,7 +40,7 @@ auto currentStateResponseStub()
 TEST(MqttMobilusDeviceStateSyncerTest, Runs)
 {
     std::vector<proto::Event> handledEvents;
-    FakeEventHandler eventHandler(handledEvents);
+    FakeDeviceEventHandler eventHandler(handledEvents);
     MockMqttMobilusGtwClient client;
     MqttMobilusDeviceStateSyncer eventSubscriber(client, eventHandler, Logger::noop());
 

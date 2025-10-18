@@ -23,7 +23,7 @@ MobilusCoverInitHandler::MobilusCoverInitHandler(driven_ports::CoverRepository& 
 {
 }
 
-void MobilusCoverInitHandler::initDevice(const proto::Device& device, const proto::Event& currentState)
+void MobilusCoverInitHandler::handle(const proto::Device& device, const proto::Event& currentState)
 {
     auto coverSpec = CoverSpecification::findFor(static_cast<MobilusDeviceType>(device.type()));
 
@@ -59,7 +59,7 @@ void MobilusCoverInitHandler::initDevice(const proto::Device& device, const prot
     mLogger.notice(LOG_TAG "Added cover" LOG_SUFFIX, cover.endpointId(), device.id());
 }
 
-bool MobilusCoverInitHandler::supports(MobilusDeviceType deviceType)
+bool MobilusCoverInitHandler::supports(MobilusDeviceType deviceType) const
 {
     return CoverSpecification::findFor(deviceType).has_value();
 }

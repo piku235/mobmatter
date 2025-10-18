@@ -24,6 +24,20 @@ source_set("device_initializer") {
   configs += [ "//:includes" ]
 }
 
+source_set("device_name_syncer") {
+  sources = [ "MqttMobilusDeviceNameSyncer.cpp" ]
+
+  public = [ "MqttMobilusDeviceNameSyncer.h" ]
+
+  deps = [
+    ":common",
+    "//src/application",
+    "//third_party/mobilus_gtw_client",
+  ]
+
+  configs += [ "//:includes" ]
+}
+
 source_set("device_state_syncer") {
   sources = [ "MqttMobilusDeviceStateSyncer.cpp" ]
 
@@ -38,16 +52,24 @@ source_set("device_state_syncer") {
   configs += [ "//:includes" ]
 }
 
-source_set("event_subscriber") {
-  sources = [ "MqttMobilusEventSubscriber.cpp" ]
+source_set("device_event_subscriber") {
+  sources = [ "MqttMobilusDeviceEventSubscriber.cpp" ]
 
-  public = [ "MqttMobilusEventSubscriber.h" ]
+  public = [ "MqttMobilusDeviceEventSubscriber.h" ]
 
   deps = [
     ":common",
     "//src/application",
     "//third_party/mobilus_gtw_client",
   ]
+
+  configs += [ "//:includes" ]
+}
+
+source_set("composite_device_event_handler") {
+  public = [ "CompositeMobilusDeviceEventHandler.hpp" ]
+
+  deps = [ "//third_party/mobilus_gtw_client" ]
 
   configs += [ "//:includes" ]
 }

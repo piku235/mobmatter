@@ -1,7 +1,8 @@
 source_set("cover") {
   sources = [
-    "MobilusCoverInitHandlerTest.cpp",
     "MobilusCoverEventHandlerTest.cpp",
+    "MobilusCoverInitHandlerTest.cpp",
+    "MobilusCoverNameHandlerTest.cpp",
   ]
 
   include_dirs = [
@@ -14,7 +15,7 @@ source_set("cover") {
     "//src/common/logging",
     "//src/driving_adapters/mobilus/cover",
     "//tests/driven_adapters/persistence/in_memory",
-    "//third_party/googletest:gtest",
     "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest",
   ]
 }

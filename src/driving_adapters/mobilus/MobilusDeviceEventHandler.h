@@ -6,14 +6,14 @@ namespace mobmatter::driving_adapters::mobilus {
 
 namespace proto = jungi::mobilus_gtw_client::proto;
 
-class MobilusEventHandler {
+class MobilusDeviceEventHandler {
 public:
     enum class Result {
-        UnmatchedDevice,
+        Unsupported,
         Handled,
     };
 
-    virtual ~MobilusEventHandler() = default;
+    virtual ~MobilusDeviceEventHandler() = default;
     virtual Result handle(const proto::Event& event) = 0;
 };
 
