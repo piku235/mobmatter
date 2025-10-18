@@ -4,15 +4,12 @@ source_set("sqlite") {
     "SqliteEndpointIdGeneratorTest.cpp",
   ]
 
-  include_dirs = [
-    "//include",
-    "//src",
-  ]
-
   deps = [
     "//src/application",
     "//src/driven_adapters/persistence/sqlite",
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest",
   ]
+
+  configs += [ "//tests:tests_include" ]
 }

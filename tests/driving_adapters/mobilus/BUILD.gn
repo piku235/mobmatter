@@ -1,11 +1,6 @@
 source_set("device_initializer") {
   sources = [ "MqttMobilusDeviceInitializerTest.cpp" ]
 
-  include_dirs = [
-    "//src",
-    "//tests",
-  ]
-
   deps = [
     "//src/application",
     "//src/common/logging",
@@ -13,15 +8,12 @@ source_set("device_initializer") {
     "//tests/mobilus:mock_client",
     "//third_party/googletest:gtest",
   ]
+
+  configs += [ "//tests:tests_include" ]
 }
 
 source_set("device_state_syncer") {
   sources = [ "MqttMobilusDeviceStateSyncerTest.cpp" ]
-
-  include_dirs = [
-    "//src",
-    "//tests",
-  ]
 
   deps = [
     "//src/application",
@@ -30,15 +22,12 @@ source_set("device_state_syncer") {
     "//tests/mobilus:mock_client",
     "//third_party/googletest:gtest",
   ]
+
+  configs += [ "//tests:tests_include" ]
 }
 
 source_set("device_name_syncer") {
   sources = [ "MqttMobilusDeviceNameSyncerTest.cpp" ]
-
-  include_dirs = [
-    "//src",
-    "//tests",
-  ]
 
   deps = [
     "//src/application",
@@ -46,15 +35,11 @@ source_set("device_name_syncer") {
     "//tests/mobilus:mock_client",
     "//third_party/googletest:gtest",
   ]
+  configs += [ "//tests:tests_include" ]
 }
 
 source_set("device_event_subscriber") {
   sources = [ "MqttMobilusDeviceEventSubscriberTest.cpp" ]
-
-  include_dirs = [
-    "//src",
-    "//tests",
-  ]
 
   deps = [
     "//src/application",
@@ -62,4 +47,6 @@ source_set("device_event_subscriber") {
     "//tests/mobilus:mock_client",
     "//third_party/googletest:gtest",
   ]
+
+  configs += [ "//tests:tests_include" ]
 }

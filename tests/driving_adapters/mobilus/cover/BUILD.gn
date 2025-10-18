@@ -5,11 +5,6 @@ source_set("cover") {
     "MobilusCoverNameHandlerTest.cpp",
   ]
 
-  include_dirs = [
-    "//src",
-    "//tests",
-  ]
-
   deps = [
     "//src/application",
     "//src/common/logging",
@@ -18,4 +13,6 @@ source_set("cover") {
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest",
   ]
+
+  configs += [ "//tests:tests_include" ]
 }

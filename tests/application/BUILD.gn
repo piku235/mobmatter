@@ -5,13 +5,10 @@ source_set("application") {
     "model/window_covering/PositionTest.cpp",
   ]
 
-  include_dirs = [
-    "//include",
-    "//src",
-  ]
-
   deps = [
     "//src/application",
     "//third_party/googletest:gtest",
   ]
+
+  configs += [ "//tests:tests_include" ]
 }

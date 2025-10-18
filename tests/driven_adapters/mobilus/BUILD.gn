@@ -4,11 +4,6 @@ source_set("mobilus") {
     "MqttMobilusDeviceManagementServiceTest.cpp",
   ]
 
-  include_dirs = [
-    "//src",
-    "//tests",
-  ]
-
   deps = [
     "//src/application",
     "//src/common/logging",
@@ -18,4 +13,6 @@ source_set("mobilus") {
     "//third_party/googletest:gmock",
     "//third_party/googletest:gtest",
   ]
+
+  configs += [ "//tests:tests_include" ]
 }

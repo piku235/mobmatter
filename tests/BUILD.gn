@@ -1,3 +1,11 @@
+config("tests_include") {
+  include_dirs = [
+    "//include",
+    "//src",
+    "//tests",
+  ]
+}
+
 executable("tests") {
   testonly = true
 
