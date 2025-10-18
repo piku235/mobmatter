@@ -12,18 +12,20 @@ namespace mobgtw = jungi::mobilus_gtw_client;
 
 class FakeDeviceEventHandler final : public mobmatter::driving_adapters::mobilus::MobilusDeviceEventHandler {
 public:
-    FakeDeviceEventHandler(std::vector<mobgtw::proto::Event>& handledEvents)
-        : mHandledEvents(handledEvents)
+    FakeDeviceEventHandler(std::vector<mobgtw::proto::Event>& seenEvents, Result result = Result::Handled)
+        : mSeenEvents(seenEvents)
+        , mResult(result)
     {
     }
 
     Result handle(const mobgtw::proto::Event& event) override
     {
-        mHandledEvents.push_back(event);
+        mSeenEvents.push_back(event);
 
-        return Result::Handled;
+        return mResult;
     }
 
 private:
-    std::vector<mobgtw::proto::Event>& mHandledEvents;
+    std::vector<mobgtw::proto::Event>& mSeenEvents;
+    Result mResult;
 };

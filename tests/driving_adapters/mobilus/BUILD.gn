@@ -1,49 +1,19 @@
-source_set("device_initializer") {
-  sources = [ "MqttMobilusDeviceInitializerTest.cpp" ]
+source_set("mobilus") {
+  sources = [
+    "CompositeMobilusDeviceEventHandlerTest.cpp",
+    "MqttMobilusDeviceEventSubscriberTest.cpp",
+    "MqttMobilusDeviceInitializerTest.cpp",
+    "MqttMobilusDeviceNameSyncerTest.cpp",
+    "MqttMobilusDeviceStateSyncerTest.cpp",
+  ]
 
   deps = [
     "//src/application",
     "//src/common/logging",
-    "//src/driving_adapters/mobilus:device_initializer",
-    "//tests/mobilus:mock_client",
-    "//third_party/googletest:gtest",
-  ]
-
-  configs += [ "//tests:tests_include" ]
-}
-
-source_set("device_state_syncer") {
-  sources = [ "MqttMobilusDeviceStateSyncerTest.cpp" ]
-
-  deps = [
-    "//src/application",
-    "//src/common/logging",
-    "//src/driving_adapters/mobilus:device_state_syncer",
-    "//tests/mobilus:mock_client",
-    "//third_party/googletest:gtest",
-  ]
-
-  configs += [ "//tests:tests_include" ]
-}
-
-source_set("device_name_syncer") {
-  sources = [ "MqttMobilusDeviceNameSyncerTest.cpp" ]
-
-  deps = [
-    "//src/application",
-    "//src/driving_adapters/mobilus:device_name_syncer",
-    "//tests/mobilus:mock_client",
-    "//third_party/googletest:gtest",
-  ]
-  configs += [ "//tests:tests_include" ]
-}
-
-source_set("device_event_subscriber") {
-  sources = [ "MqttMobilusDeviceEventSubscriberTest.cpp" ]
-
-  deps = [
-    "//src/application",
     "//src/driving_adapters/mobilus:device_event_subscriber",
+    "//src/driving_adapters/mobilus:device_initializer",
+    "//src/driving_adapters/mobilus:device_name_syncer",
+    "//src/driving_adapters/mobilus:device_state_syncer",
     "//tests/mobilus:mock_client",
     "//third_party/googletest:gtest",
   ]

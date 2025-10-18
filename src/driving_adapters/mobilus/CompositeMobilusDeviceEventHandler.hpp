@@ -13,10 +13,13 @@ public:
     Result handle(const proto::Event& event) override
     {
         for (MobilusDeviceEventHandler& handler : mHandlers) {
-            if (MobilusDeviceEventHandler::Result::Unsupported != handler.handle(event)) {
-                break;
+            auto r = handler.handle(event);
+            if (Result::Unsupported != r) {
+                return r;
             }
         }
+
+        return Result::Unsupported;
     }
 
 private:
