@@ -15,6 +15,7 @@ source_set("mobilus") {
     "//src/driven_adapters/mobilus:cover_control",
     "//src/driven_adapters/mobilus:device_management",
     "//tests/mobilus:mock_client",
+    "//third_party/googletest:gmock",
     "//third_party/googletest:gtest",
   ]
 }
