@@ -9,8 +9,6 @@
 #include "application/model/UniqueId.h"
 #include "common/domain/Entity.h"
 
-#include <tl/expected.hpp>
-
 #include <cstdint>
 #include <optional>
 
