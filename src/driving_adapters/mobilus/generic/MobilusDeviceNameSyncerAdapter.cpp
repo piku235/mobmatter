@@ -14,7 +14,11 @@ MobilusDeviceEventHandler::Result MobilusDeviceNameSyncerAdapter::handle(const p
 {
     if (EventNumber::Device == event.event_number() && "MODIFY" == event.value()) {
         mMobilusDeviceNameSyncer.run();
+
+        return Result::Handled;
     }
+
+    return Result::Unsupported;
 }
 
 }

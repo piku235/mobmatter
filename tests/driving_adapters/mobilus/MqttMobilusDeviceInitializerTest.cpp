@@ -87,27 +87,27 @@ void setupResponses(proto::DevicesListResponse& deviceList, proto::CurrentStateR
 TEST(MqttMobilusDeviceInitializerTest, Initializes)
 {
     MockMqttMobilusGtwClient client;
-    MqttMobilusDeviceInitializer deviceInitializer(client, Logger::noop());
+    MqttMobilusDeviceInitializer initializer(client, Logger::noop());
 
     std::vector<FakeDeviceInitHandler::InitiatedDevice> initiatedDevices;
     FakeDeviceInitHandler handler(initiatedDevices);
-    deviceInitializer.registerHandler(handler);
+    initializer.registerHandler(handler);
 
     proto::DevicesListResponse deviceList;
     proto::CurrentStateResponse currentState;
 
     setupResponses(deviceList, currentState);
 
-    deviceInitializer.run();
+    initializer.run();
     ASSERT_EQ(0, initiatedDevices.size());
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceList));
-    deviceInitializer.run();
+    initializer.run();
     ASSERT_EQ(0, initiatedDevices.size());
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceList));
     client.mockResponse(std::make_unique<proto::CurrentStateResponse>(currentState));
-    deviceInitializer.run();
+    initializer.run();
     ASSERT_EQ(2, initiatedDevices.size());
 
     for (auto i : { 1, 2 }) {
@@ -123,16 +123,16 @@ TEST(MqttMobilusDeviceInitializerTest, Initializes)
 TEST(MqttMobilusDeviceInitializerTest, InitializesNone)
 {
     MockMqttMobilusGtwClient client;
-    MqttMobilusDeviceInitializer deviceInitializer(client, Logger::noop());
+    MqttMobilusDeviceInitializer initializer(client, Logger::noop());
 
     std::vector<FakeDeviceInitHandler::InitiatedDevice> initiatedDevices;
     FakeDeviceInitHandler handler(initiatedDevices);
-    deviceInitializer.registerHandler(handler);
+    initializer.registerHandler(handler);
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>());
     client.mockResponse(std::make_unique<proto::CurrentStateResponse>());
 
-    deviceInitializer.run();
+    initializer.run();
 
     ASSERT_EQ(0, initiatedDevices.size());
 }

@@ -42,12 +42,12 @@ TEST(MqttMobilusDeviceStateSyncerTest, Runs)
     std::vector<proto::Event> handledEvents;
     FakeDeviceEventHandler eventHandler(handledEvents);
     MockMqttMobilusGtwClient client;
-    MqttMobilusDeviceStateSyncer eventSubscriber(client, eventHandler, Logger::noop());
+    MqttMobilusDeviceStateSyncer syncer(client, eventHandler, Logger::noop());
 
     auto currentState = currentStateResponseStub();
     client.mockResponse(std::make_unique<proto::CurrentStateResponse>(currentState));
 
-    eventSubscriber.run();
+    syncer.run();
 
     ASSERT_EQ(2, handledEvents.size());
     for (int i = 0; i < 2; i++) {

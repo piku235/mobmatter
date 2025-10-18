@@ -1,15 +1,12 @@
 #include "driving_adapters/mobilus/MqttMobilusDeviceNameSyncer.h"
+#include "FakeDeviceNameHandler.hpp"
 #include "application/model/MobilusDeviceType.h"
 #include "common/logging/Logger.h"
-#include "driving_adapters/mobilus/MobilusDeviceNameHandler.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/DevicesListResponse.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
-
-#include <unordered_map>
-#include <vector>
 
 using namespace jungi::mobilus_gtw_client;
 using namespace mobmatter::driving_adapters::mobilus;
@@ -19,26 +16,6 @@ using mobmatter::common::logging::Logger;
 using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 
 namespace {
-
-class FakeMobilusDeviceNameHandler final : public MobilusDeviceNameHandler {
-public:
-    std::unordered_map<MobilusDeviceId, std::string> handledNames;
-
-    explicit FakeMobilusDeviceNameHandler(MobilusDeviceType deviceType)
-        : mDeviceType(deviceType)
-    {
-    }
-
-    void handle(MobilusDeviceId deviceId, const std::string& name)
-    {
-        handledNames[deviceId] = name;
-    }
-
-    bool supports(MobilusDeviceType deviceType) const { return deviceType == mDeviceType; }
-
-private:
-    MobilusDeviceType mDeviceType;
-};
 
 auto deviceListResponseStub()
 {
@@ -67,16 +44,16 @@ auto deviceListResponseStub()
 TEST(MqttMobilusDeviceNameSyncerTest, Runs)
 {
     MockMqttMobilusGtwClient client;
-    MqttMobilusDeviceNameSyncer deviceNameSyncer(client, Logger::noop());
-    FakeMobilusDeviceNameHandler handlerSenso(MobilusDeviceType::Senso);
-    FakeMobilusDeviceNameHandler handlerCosmo(MobilusDeviceType::Cosmo);
-    FakeMobilusDeviceNameHandler handlerUnmatched(MobilusDeviceType::SwitchNp);
+    MqttMobilusDeviceNameSyncer syncer(client, Logger::noop());
+    FakeDeviceNameHandler handlerSenso(MobilusDeviceType::Senso);
+    FakeDeviceNameHandler handlerCosmo(MobilusDeviceType::Cosmo);
+    FakeDeviceNameHandler handlerUnmatched(MobilusDeviceType::SwitchNp);
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceListResponseStub()));
-    deviceNameSyncer.registerHandler(handlerSenso);
-    deviceNameSyncer.registerHandler(handlerCosmo);
+    syncer.registerHandler(handlerSenso);
+    syncer.registerHandler(handlerCosmo);
 
-    deviceNameSyncer.run();
+    syncer.run();
 
     ASSERT_TRUE(handlerUnmatched.handledNames.empty());
     ASSERT_EQ(1, handlerSenso.handledNames.size());
