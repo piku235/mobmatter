@@ -76,10 +76,12 @@ jobs:
         run: source scripts/bootstrap.sh -p all,linux
 
       - name: Configure GN
-        run: gn gen out/target --args='import("//build/target.gni")'
+        run: |
+          source third_party/connectedhomeip/scripts/activate.sh
+          gn gen out/target --args='import("//build/target.gni")'
 
       - name: Build mobmatter
-        run: ninja -C out/target
+        run: third_party/connectedhomeip/scripts/run_in_build_env.sh "ninja -C out/target"
 
       - name: Make target
         run: |
