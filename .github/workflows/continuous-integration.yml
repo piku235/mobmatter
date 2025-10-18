@@ -60,16 +60,18 @@ jobs:
         run: source scripts/bootstrap.sh -p all,linux
 
       - name: Configure GN
-        run: gn gen out/build --args='is_debug=false custom_toolchain="custom" is_clang=${{ matrix.is_clang }} target_cc="${{ matrix.cc }}" target_cxx="${{ matrix.cxx }}" target_ar="ar"'
+        run: |
+          source third_party/connectedhomeip/scripts/activate.sh
+          gn gen out/build --args='is_debug=false custom_toolchain="custom" is_clang=${{ matrix.is_clang }} target_cc="${{ matrix.cc }}" target_cxx="${{ matrix.cxx }}" target_ar="ar"'
 
       - name: Compiler version
         run: ${{ matrix.cxx }} --version
 
       - name: Build mobmatter
-        run: ninja -C out/build
+        run: third_party/connectedhomeip/scripts/run_in_build_env.sh "ninja -C out/build"
 
       - name: Build tests
-        run: ninja -C out/build tests
+        run: third_party/connectedhomeip/scripts/run_in_build_env.sh "ninja -C out/build tests"
 
       - name: Run tests
         run: out/build/tests
