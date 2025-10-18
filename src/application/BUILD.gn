@@ -55,10 +55,7 @@ static_library("application") {
     "subscribers/DeviceManagementSubscriber.h",
   ]
 
-  public_deps = [
-    "//src/common/domain",
-    "//third_party/tl_expected",
-  ]
+  public_deps = [ "//src/common/domain" ]
 
   configs += [
     "//:includes",

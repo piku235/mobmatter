@@ -1,5 +1,6 @@
 #include "BridgedDeviceBasicInfoAttributeAccess.h"
 #include "CHIPProjectAppConfig.h"
+#include "application/model/window_covering/Cover.h"
 
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
@@ -13,6 +14,7 @@ using namespace chip::app;
 using namespace chip::app::Clusters;
 using namespace chip::app::Clusters::BridgedDeviceBasicInformation::Attributes;
 using mobmatter::application::driven_ports::CoverRepository;
+using mobmatter::application::model::window_covering::Cover;
 
 namespace {
 
@@ -72,8 +74,9 @@ CHIP_ERROR BridgedDeviceBasicInfoAttributeAccess::Write(const ConcreteDataAttrib
         CharSpan nodeLabel;
         ReturnErrorOnFailure(decoder.Decode(nodeLabel));
 
-        cover->requestRename(std::string(nodeLabel.data(), nodeLabel.size()));
-        mCoverRepository.save(*cover);
+        if (Cover::Result::Ok == cover->requestRename(std::string(nodeLabel.data(), nodeLabel.size()))) {
+            mCoverRepository.save(*cover);
+        }
 
         return CHIP_NO_ERROR;
     }

@@ -1,4 +1,5 @@
 #include "CoverCommandHandler.h"
+#include "application/model/window_covering/Cover.h"
 #include "application/model/window_covering/Position.h"
 
 #include <app-common/zap-generated/cluster-objects.h>
@@ -11,9 +12,9 @@ using namespace chip;
 using namespace chip::app;
 using namespace chip::app::Clusters;
 using namespace chip::app::Clusters::WindowCovering::Commands;
+using namespace mobmatter::application::model::window_covering;
 using mobmatter::application::driven_ports::CoverRepository;
 using AppPercent = mobmatter::application::model::Percent;
-using mobmatter::application::model::window_covering::Position;
 using Protocols::InteractionModel::Status;
 
 namespace mobmatter::driving_adapters::matter::cover_cluster {
@@ -40,8 +41,9 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
     case UpOrOpen::Id:
         mLogger.notice("UpOrOpen command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
 
-        cover->requestOpen();
-        mCoverRepository.save(*cover);
+        if (Cover::Result::Ok == cover->requestOpen()) {
+            mCoverRepository.save(*cover);
+        }
 
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
 
@@ -49,8 +51,9 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
     case DownOrClose::Id:
         mLogger.notice("DownOrClose command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
 
-        cover->requestClose();
-        mCoverRepository.save(*cover);
+        if (Cover::Result::Ok == cover->requestClose()) {
+            mCoverRepository.save(*cover);
+        }
 
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
 
@@ -58,8 +61,9 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
     case StopMotion::Id:
         mLogger.notice("StopMotion command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
 
-        cover->requestStopMotion();
-        mCoverRepository.save(*cover);
+        if (Cover::Result::Ok == cover->requestStopMotion()) {
+            mCoverRepository.save(*cover);
+        }
 
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
 
@@ -81,13 +85,18 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
             break;
         }
 
-        if (auto e = cover->requestLiftTo(Position::closed(*percent)); !e) {
-            mLogger.error("GoToLiftPercentage command for endpoint: %u failed: %s", handlerContext.mRequestPath.mEndpointId, e.error().message().c_str());
+        auto r = cover->requestLiftTo(Position::closed(*percent));
+
+        if (Cover::Result::Ok != r && Cover::Result::NoChange != r) {
+            mLogger.error("GoToLiftPercentage command for endpoint: %u failed: %u", handlerContext.mRequestPath.mEndpointId, r);
             handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Failure);
             break;
         }
 
-        mCoverRepository.save(*cover);
+        if (Cover::Result::Ok == r) {
+            mCoverRepository.save(*cover);
+        }
+            
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
 
         break;

@@ -1,9 +1,11 @@
 #include "MobilusCoverEventHandler.h"
+#include "application/model/window_covering/Cover.h"
 #include "driving_adapters/mobilus/ConversionUtils.h"
 #include "driving_adapters/mobilus/Log.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 
 using namespace jungi::mobilus_gtw_client;
+using mobmatter::application::model::window_covering::Cover;
 
 namespace mobmatter::driving_adapters::mobilus::cover {
 
@@ -28,7 +30,9 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
     switch (event.event_number()) {
     case EventNumber::Device:
         if ("REMOVE" == event.value()) {
+            cover->remove();
             mCoverRepository.remove(*cover);
+
             mLogger.notice(LOG_TAG "Removed cover" LOG_SUFFIX, cover->endpointId(), cover->mobilusDeviceId());
         }
 
@@ -39,8 +43,9 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
 
         if (!position) {
             if ("STOP" == event.value()) {
-                cover->initiateStopMotion();
-                mCoverRepository.save(*cover);
+                if (Cover::Result::Ok == cover->initiateStopMotion()) {
+                    mCoverRepository.save(*cover);
+                }
 
                 break;
             }
@@ -49,13 +54,10 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
             break;
         }
 
-        if (auto e = cover->startLiftTo(*position); !e) {
-            mLogger.error(LOG_TAG "Failed to lift cover to target position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover->endpointId(), cover->mobilusDeviceId());
-            break;
+        if (Cover::Result::Ok == cover->startLiftTo(*position)) {
+            mCoverRepository.save(*cover);
+            mLogger.notice(LOG_TAG "Started lifting cover to target position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover->endpointId(), cover->mobilusDeviceId());
         }
-
-        mCoverRepository.save(*cover);
-        mLogger.notice(LOG_TAG "Started lifting cover to target position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover->endpointId(), cover->mobilusDeviceId());
 
         break;
     }
@@ -67,28 +69,27 @@ MobilusCoverEventHandler::Result MobilusCoverEventHandler::handle(const proto::E
             break;
         }
 
-        if (auto e = cover->changeLiftPosition(*position); !e) {
-            mLogger.error(LOG_TAG "Failed to change cover lift position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover->endpointId(), cover->mobilusDeviceId());
-            break;
+        if (Cover::Result::Ok == cover->changeLiftPosition(*position)) {
+            mCoverRepository.save(*cover);
+            mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover->endpointId(), cover->mobilusDeviceId());
         }
-
-        mCoverRepository.save(*cover);
-        mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover->endpointId(), cover->mobilusDeviceId());
 
         break;
     }
     case EventNumber::Error:
         if ("NO_CONNECTION" == event.value()) {
-            cover->markAsUnreachable();
-            mCoverRepository.save(*cover);
-            mLogger.notice(LOG_TAG "Cover marked as unreachable" LOG_SUFFIX, cover->endpointId(), cover->mobilusDeviceId());
+            if (Cover::Result::Ok == cover->markAsUnreachable()) {
+                mCoverRepository.save(*cover);
+                mLogger.notice(LOG_TAG "Cover marked as unreachable" LOG_SUFFIX, cover->endpointId(), cover->mobilusDeviceId());
+            }
 
             break;
         }
 
-        cover->failMotion();
-        mCoverRepository.save(*cover);
-        mLogger.notice(LOG_TAG "Cover motion failed: %s" LOG_SUFFIX, event.value().c_str(), cover->endpointId(), cover->mobilusDeviceId());
+        if (Cover::Result::Ok == cover->failMotion()) {
+            mCoverRepository.save(*cover);
+            mLogger.notice(LOG_TAG "Cover motion failed: %s" LOG_SUFFIX, event.value().c_str(), cover->endpointId(), cover->mobilusDeviceId());
+        }
 
         break;
     default:

@@ -1,8 +1,10 @@
 #include "MobilusCoverNameHandler.h"
+#include "application/model/window_covering/Cover.h"
 #include "application/model/window_covering/CoverSpecification.h"
 #include "driving_adapters/mobilus/Log.h"
 
 using namespace mobmatter::application::model::window_covering;
+using mobmatter::application::model::window_covering::Cover;
 
 namespace mobmatter::driving_adapters::mobilus::cover {
 
@@ -16,14 +18,10 @@ void MobilusCoverNameHandler::handle(model::MobilusDeviceId deviceId, const std:
 {
     auto cover = mCoverRepository.findOfMobilusDeviceId(deviceId);
 
-    if (!cover) {
-        return;
+    if (cover && Cover::Result::Ok == cover->rename(name)) {
+        mCoverRepository.save(*cover);
+        mLogger.notice(LOG_TAG "Renamed cover to: %s" LOG_SUFFIX, name.c_str(), cover->endpointId(), cover->mobilusDeviceId());
     }
-
-    cover->rename(name);
-    mCoverRepository.save(*cover);
-
-    mLogger.notice(LOG_TAG "Renamed cover to: %s" LOG_SUFFIX, name.c_str(), cover->endpointId(), cover->mobilusDeviceId());
 }
 
 bool MobilusCoverNameHandler::supports(model::MobilusDeviceType deviceType) const

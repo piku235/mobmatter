@@ -7,7 +7,6 @@
 #include "application/model/EndpointId.h"
 #include "application/model/MobilusDeviceId.h"
 #include "application/model/UniqueId.h"
-#include "common/domain/DomainError.h"
 #include "common/domain/Entity.h"
 
 #include <tl/expected.hpp>
@@ -19,30 +18,29 @@ namespace mobmatter::application::model::window_covering {
 
 class Cover final : public mobmatter::common::domain::Entity {
 public:
-    enum class ErrorCode {
-        LiftUnavailable,
+    enum class Result: uint8_t {
+        Ok = 0,
+        NoChange = 1,
+        LiftNotSupported = 2,
     };
-
-    template <typename TOk = void>
-    using Result = tl::expected<TOk, mobmatter::common::domain::DomainError<ErrorCode>>;
 
     static Cover add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, PositionState liftState, CoverSpecification specification);
     static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, bool reachable, std::string name, PositionState liftState, CoverSpecification specification);
 
     /* chip specific */
-    Result<> requestLiftTo(Position position);
-    void requestOpen();
-    void requestClose();
-    void requestStopMotion();
-    void requestRename(std::string name);
+    Result requestLiftTo(Position position);
+    Result requestOpen();
+    Result requestClose();
+    Result requestStopMotion();
+    Result requestRename(std::string name);
 
     /* mobilus specific */
-    Result<> startLiftTo(Position position);
-    Result<> changeLiftPosition(Position position);
-    void initiateStopMotion();
-    void failMotion();
-    void markAsUnreachable();
-    void rename(std::string name);
+    Result startLiftTo(Position position);
+    Result changeLiftPosition(Position position);
+    Result initiateStopMotion();
+    Result failMotion();
+    Result markAsUnreachable();
+    Result rename(std::string name);
     void remove();
 
     bool operator==(const Cover& other) const;
@@ -67,7 +65,6 @@ private:
     Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, bool reachable, std::string name, PositionState liftState, CoverSpecification specification);
     void replaceLiftState(PositionState&& liftState);
     void markAsReachable();
-    Result<> assertLiftIsAvailable();
 };
 
 }
