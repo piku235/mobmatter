@@ -24,27 +24,40 @@ class FakeMobilusDeviceNameHandler final : public MobilusDeviceNameHandler {
 public:
     std::unordered_map<MobilusDeviceId, std::string> handledNames;
 
+    explicit FakeMobilusDeviceNameHandler(MobilusDeviceType deviceType)
+        : mDeviceType(deviceType)
+    {
+    }
+
     void handle(MobilusDeviceId deviceId, const std::string& name)
     {
         handledNames[deviceId] = name;
     }
 
-    bool supports(MobilusDeviceType deviceType) const { return MobilusDeviceType::Senso == deviceType; }
+    bool supports(MobilusDeviceType deviceType) const { return deviceType == mDeviceType; }
+
+private:
+    MobilusDeviceType mDeviceType;
 };
 
 auto deviceListResponseStub()
 {
     proto::DevicesListResponse response;
 
-    auto devFoo = response.add_devices();
-    devFoo->set_id(1);
-    devFoo->set_name("Foo");
-    devFoo->set_type(static_cast<google::protobuf::int32>(MobilusDeviceType::Cosmo));
+    auto devCosmo = response.add_devices();
+    devCosmo->set_id(1);
+    devCosmo->set_name("Cosmo");
+    devCosmo->set_type(static_cast<google::protobuf::int32>(MobilusDeviceType::Cosmo));
 
-    auto devBar = response.add_devices();
-    devBar->set_id(2);
-    devBar->set_name("Bar");
-    devBar->set_type(static_cast<google::protobuf::int32>(MobilusDeviceType::Senso));
+    auto devSenso = response.add_devices();
+    devSenso->set_id(2);
+    devSenso->set_name("Senso");
+    devSenso->set_type(static_cast<google::protobuf::int32>(MobilusDeviceType::Senso));
+
+    auto devSwitch = response.add_devices();
+    devSwitch->set_id(2);
+    devSwitch->set_name("Switch");
+    devSwitch->set_type(static_cast<google::protobuf::int32>(MobilusDeviceType::Switch));
 
     return response;
 }
@@ -55,13 +68,19 @@ TEST(MqttMobilusDeviceNameSyncerTest, Runs)
 {
     MockMqttMobilusGtwClient client;
     MqttMobilusDeviceNameSyncer deviceNameSyncer(client, Logger::noop());
-    FakeMobilusDeviceNameHandler handler;
+    FakeMobilusDeviceNameHandler handlerSenso(MobilusDeviceType::Senso);
+    FakeMobilusDeviceNameHandler handlerCosmo(MobilusDeviceType::Cosmo);
+    FakeMobilusDeviceNameHandler handlerUnmatched(MobilusDeviceType::SwitchNp);
 
-    deviceNameSyncer.registerHandler(handler);
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceListResponseStub()));
+    deviceNameSyncer.registerHandler(handlerSenso);
+    deviceNameSyncer.registerHandler(handlerCosmo);
 
     deviceNameSyncer.run();
 
-    ASSERT_EQ(1, handler.handledNames.size());
-    ASSERT_EQ("Bar", handler.handledNames[2]);
+    ASSERT_TRUE(handlerUnmatched.handledNames.empty());
+    ASSERT_EQ(1, handlerSenso.handledNames.size());
+    ASSERT_EQ(1, handlerCosmo.handledNames.size());
+    ASSERT_EQ("Cosmo", handlerCosmo.handledNames[1]);
+    ASSERT_EQ("Senso", handlerSenso.handledNames[2]);
 }

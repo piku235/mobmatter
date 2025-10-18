@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MobilusDeviceNameHandler.h"
+#include "application/model/MobilusDeviceType.h"
 #include "common/logging/Logger.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 
@@ -9,6 +10,7 @@
 
 namespace mobmatter::driving_adapters::mobilus {
 
+namespace model = mobmatter::application::model;
 namespace logging = mobmatter::common::logging;
 
 class MqttMobilusDeviceNameSyncer final {
@@ -22,6 +24,8 @@ private:
     jungi::mobilus_gtw_client::MqttMobilusGtwClient& mMobilusGtwClient;
     std::vector<std::reference_wrapper<MobilusDeviceNameHandler>> mHandlers;
     logging::Logger& mLogger;
+
+    MobilusDeviceNameHandler* handlerFor(model::MobilusDeviceType deviceType);
 };
 
 }

@@ -33,14 +33,23 @@ void MqttMobilusDeviceNameSyncer::run()
 
     for (int i = 0; i < response.devices_size(); i++) {
         auto& device = response.devices(i);
-        for (MobilusDeviceNameHandler& handler : mHandlers) {
-            if (!handler.supports(static_cast<MobilusDeviceType>(device.type()))) {
-                continue;
-            }
+        auto handler = handlerFor(static_cast<MobilusDeviceType>(device.type()));
 
-            handler.handle(device.id(), device.name());
+        if (nullptr != handler) {
+            handler->handle(device.id(), device.name());
         }
     }
+}
+
+MobilusDeviceNameHandler* MqttMobilusDeviceNameSyncer::handlerFor(model::MobilusDeviceType deviceType)
+{
+    for (MobilusDeviceNameHandler& handler : mHandlers) {
+        if (handler.supports(deviceType)) {
+            return &handler;
+        }
+    }
+
+    return nullptr;
 }
 
 }
