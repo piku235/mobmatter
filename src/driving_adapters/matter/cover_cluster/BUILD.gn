@@ -4,21 +4,21 @@ source_set("cover_cluster") {
   sources = [
     "BridgedDeviceBasicInfoAttributeAccess.cpp",
     "CoverAttributeAccess.cpp",
-    "CoverCommandHandler.cpp",
     "CoverClusterAdapter.cpp",
+    "CoverCommandHandler.cpp",
   ]
 
   public = [
     "BridgedDeviceBasicInfoAttributeAccess.h",
     "CoverAttributeAccess.h",
-    "CoverCommandHandler.h",
     "CoverClusterAdapter.h",
+    "CoverCommandHandler.h",
   ]
 
   deps = [
     "${chip_root}/src/app",
     "//src/application",
   ]
-  
-  configs += ["//:includes"]
+
+  configs += [ "//:app_includes" ]
 }

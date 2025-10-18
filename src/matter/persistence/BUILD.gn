@@ -1,18 +1,14 @@
 import("//build_overrides/chip.gni")
 
 source_set("sqlite") {
-  sources = [
-    "SqlitePersistentStorageDelegate.cpp",
-  ]
+  sources = [ "SqlitePersistentStorageDelegate.cpp" ]
 
-  public = [
-    "SqlitePersistentStorageDelegate.h",
-  ]
+  public = [ "SqlitePersistentStorageDelegate.h" ]
 
   deps = [
     "${chip_root}/src/lib",
     "//src/common/persistence/sqlite",
   ]
 
-  configs += ["//:includes"]
+  configs += [ "//:app_includes" ]
 }

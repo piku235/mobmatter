@@ -12,7 +12,7 @@ chip_data_model("mobgtw-zap") {
   cflags = [ "-DDYNAMIC_ENDPOINT_COUNT=100" ]
 }
 
-config("includes") {
+config("app_includes") {
   include_dirs = [ "//src" ]
 }
 

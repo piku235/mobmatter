@@ -13,5 +13,5 @@ source_set("in_memory") {
     "//src/application"
   ]
 
-  configs += ["//:includes"]
+  configs += ["//:app_includes"]
 }

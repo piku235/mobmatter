@@ -58,7 +58,7 @@ static_library("application") {
   public_deps = [ "//src/common/domain" ]
 
   configs += [
-    "//:includes",
+    "//:app_includes",
     ":openssl_config",
   ]
 

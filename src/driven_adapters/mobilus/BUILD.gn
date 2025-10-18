@@ -8,7 +8,7 @@ source_set("cover_control") {
     "//third_party/mobilus_gtw_client",
   ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }
 
 source_set("device_management") {
@@ -21,5 +21,5 @@ source_set("device_management") {
     "//third_party/mobilus_gtw_client",
   ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }

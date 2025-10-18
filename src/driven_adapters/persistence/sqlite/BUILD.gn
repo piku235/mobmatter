@@ -1,12 +1,12 @@
 source_set("sqlite") {
   sources = [
-    "SqliteEndpointIdGenerator.cpp",
     "SqliteCoverRepository.cpp",
+    "SqliteEndpointIdGenerator.cpp",
   ]
 
   public = [
-    "SqliteEndpointIdGenerator.h",
     "SqliteCoverRepository.h",
+    "SqliteEndpointIdGenerator.h",
   ]
 
   deps = [
@@ -14,5 +14,5 @@ source_set("sqlite") {
     "//src/common/persistence/sqlite",
   ]
 
-  configs += ["//:includes"]
+  configs += [ "//:app_includes" ]
 }

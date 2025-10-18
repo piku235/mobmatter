@@ -7,7 +7,7 @@ source_set("common") {
 
   deps = [ "//src/application" ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }
 
 source_set("device_initializer") {
@@ -21,7 +21,7 @@ source_set("device_initializer") {
     "//third_party/mobilus_gtw_client",
   ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }
 
 source_set("device_name_syncer") {
@@ -35,7 +35,7 @@ source_set("device_name_syncer") {
     "//third_party/mobilus_gtw_client",
   ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }
 
 source_set("device_state_syncer") {
@@ -49,7 +49,7 @@ source_set("device_state_syncer") {
     "//third_party/mobilus_gtw_client",
   ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }
 
 source_set("device_event_subscriber") {
@@ -63,7 +63,7 @@ source_set("device_event_subscriber") {
     "//third_party/mobilus_gtw_client",
   ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }
 
 source_set("composite_device_event_handler") {
@@ -71,5 +71,5 @@ source_set("composite_device_event_handler") {
 
   deps = [ "//third_party/mobilus_gtw_client" ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }

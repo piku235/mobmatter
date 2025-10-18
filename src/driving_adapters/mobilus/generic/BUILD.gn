@@ -7,5 +7,5 @@ source_set("generic") {
 
   public_deps = [ "//third_party/mobilus_gtw_client" ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }

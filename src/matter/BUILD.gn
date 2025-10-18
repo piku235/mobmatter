@@ -27,5 +27,5 @@ source_set("matter") {
 
   public_deps = [ "//:mobgtw-zap" ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }

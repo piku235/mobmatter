@@ -11,7 +11,7 @@ source_set("cover_endpoint") {
   sources = [ "ZclCoverEndpointService.cpp" ]
   public = [ "ZclCoverEndpointService.h" ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 
   deps = [
     ":base",

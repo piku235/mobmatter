@@ -17,5 +17,5 @@ source_set("event_loop") {
     "//third_party/mobilus_gtw_client",
   ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }

@@ -24,7 +24,7 @@ pkg_config("openssl_config") {
   packages = [ "openssl" ]
 }
 
-config("includes") {
+config("mobgtw_includes") {
   include_dirs = [ "repo/include" ]
 }
 
@@ -169,5 +169,5 @@ static_library("mobilus_gtw_client") {
     ":mosquitto_config",
   ]
 
-  public_configs = [ ":includes" ]
+  public_configs = [ ":mobgtw_includes" ]
 }

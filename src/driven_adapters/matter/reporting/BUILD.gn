@@ -1,18 +1,14 @@
 import("//build_overrides/chip.gni")
 
 source_set("cover") {
-  sources = [
-    "CoverReportingAdapter.cpp",
-  ]
+  sources = [ "CoverReportingAdapter.cpp" ]
 
-  public = [
-    "CoverReportingAdapter.h",
-  ]
+  public = [ "CoverReportingAdapter.h" ]
 
   deps = [
     "${chip_root}/src/app",
     "//src/application",
   ]
 
-  configs += ["//:includes"]
+  configs += [ "//:app_includes" ]
 }

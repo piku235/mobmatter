@@ -18,5 +18,5 @@ source_set("cover") {
 
   public_deps = [ "//third_party/mobilus_gtw_client" ]
 
-  configs += [ "//:includes" ]
+  configs += [ "//:app_includes" ]
 }

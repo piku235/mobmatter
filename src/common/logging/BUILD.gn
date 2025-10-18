@@ -1,48 +1,34 @@
 source_set("logging") {
-  sources = [
-    "Logger.cpp",
-  ]
+  sources = [ "Logger.cpp" ]
 
   public = [
-    "Logger.h",
     "LogHandler.h",
     "LogLevel.h",
+    "Logger.h",
     "handlers/NoopLogHandler.h",
   ]
 
-  configs += ["//:includes"]
+  configs += [ "//:app_includes" ]
 
-  cflags_cc = ["-Wno-format-nonliteral"]
+  cflags_cc = [ "-Wno-format-nonliteral" ]
 }
 
 source_set("syslog") {
-  sources = [
-    "handlers/SyslogHandler.cpp",
-  ]
+  sources = [ "handlers/SyslogHandler.cpp" ]
 
-  public = [
-    "handlers/SyslogHandler.h",
-  ]
+  public = [ "handlers/SyslogHandler.h" ]
 
-  deps = [
-    ":logging"
-  ]
+  deps = [ ":logging" ]
 
-  configs += ["//:includes"]
+  configs += [ "//:app_includes" ]
 }
 
 source_set("stdio") {
-  sources = [
-    "handlers/StdioLogHandler.cpp",
-  ]
+  sources = [ "handlers/StdioLogHandler.cpp" ]
 
-  public = [
-    "handlers/StdioLogHandler.h",
-  ]
+  public = [ "handlers/StdioLogHandler.h" ]
 
-  deps = [
-    ":logging"
-  ]
+  deps = [ ":logging" ]
 
-  configs += ["//:includes"]
+  configs += [ "//:app_includes" ]
 }
