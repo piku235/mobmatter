@@ -9,6 +9,7 @@ namespace mobmatter::driving_adapters::matter::cluster_stubs {
 class ClusterStubsAdapter final : public mobmatter::matter::AppComponent {
 public:
     ~ClusterStubsAdapter();
+
     void boot() override;
     void shutdown() override;
 

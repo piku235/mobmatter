@@ -14,6 +14,7 @@ source_set("matter") {
     "ChipAppMain.h",
     "CommissionableDataProviderImpl.h",
     "DacProviderImpl.h",
+    "DeviceEndpointLoader.hpp",
     "DeviceInfoProviderImpl.h",
     "DeviceInstanceInfoProviderImpl.h",
   ]

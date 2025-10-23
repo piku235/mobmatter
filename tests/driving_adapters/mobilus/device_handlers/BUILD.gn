@@ -1,0 +1,27 @@
+source_set("generic") {
+  sources = [ "MobilusDeviceInfoSyncerAdapterTest.cpp" ]
+
+  deps = [
+    "//src/application",
+    "//src/common/logging",
+    "//src/driving_adapters/mobilus/device_handlers:generic",
+    "//third_party/googletest:gtest",
+  ]
+
+  configs += [ "//tests:tests_include" ]
+}
+
+source_set("cover") {
+  sources = [ "MobilusCoverHandlerTest.cpp" ]
+
+  deps = [
+    "//src/application",
+    "//src/common/logging",
+    "//src/driving_adapters/mobilus/device_handlers:cover",
+    "//tests/driven_adapters/persistence/in_memory",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest",
+  ]
+
+  configs += [ "//tests:tests_include" ]
+}

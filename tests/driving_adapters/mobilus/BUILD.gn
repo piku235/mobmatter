@@ -1,19 +1,22 @@
 source_set("mobilus") {
   sources = [
-    "CompositeMobilusDeviceEventHandlerTest.cpp",
     "MqttMobilusDeviceEventSubscriberTest.cpp",
-    "MqttMobilusDeviceInitializerTest.cpp",
-    "MqttMobilusDeviceNameSyncerTest.cpp",
-    "MqttMobilusDeviceStateSyncerTest.cpp",
+    "MqttMobilusDeviceInfoSyncerTest.cpp",
+    "MqttMobilusDeviceSyncerTest.cpp",
+  ]
+
+  public = [
+    "FakeDeviceEventHandler.hpp",
+    "FakeDeviceInfoHandler.hpp",
+    "FakeDeviceSyncHandler.hpp",
   ]
 
   deps = [
     "//src/application",
     "//src/common/logging",
     "//src/driving_adapters/mobilus:device_event_subscriber",
-    "//src/driving_adapters/mobilus:device_initializer",
-    "//src/driving_adapters/mobilus:device_name_syncer",
-    "//src/driving_adapters/mobilus:device_state_syncer",
+    "//src/driving_adapters/mobilus:device_info_syncer",
+    "//src/driving_adapters/mobilus:device_syncer",
     "//tests/mobilus:mock_client",
     "//third_party/googletest:gtest",
   ]

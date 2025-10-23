@@ -1,17 +1,14 @@
-#include "FakeDeviceEventHandler.hpp"
-#include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceEventSubscriber.h"
+#include "FakeDeviceEventHandler.hpp"
+#include "driving_adapters/mobilus/HandlerResult.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
 
-#include <vector>
-
 using namespace jungi::mobilus_gtw_client;
-using mobmatter::driving_adapters::mobilus::MobilusDeviceEventHandler;
-using mobmatter::driving_adapters::mobilus::MqttMobilusDeviceEventSubscriber;
+using namespace mobmatter::driving_adapters::mobilus;
 using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 
 namespace {
@@ -35,21 +32,34 @@ auto callEventsStub()
 
 }
 
-TEST(MqttMobilusDeviceEventSubscriberTest, DelegatesEventsToEventHandler)
+TEST(MqttMobilusDeviceEventSubscriberTest, DoesNotDelegateEventsIfNoHandlers)
 {
-    std::vector<proto::Event> handledEvents;
-    FakeDeviceEventHandler eventHandler(handledEvents);
     MockMqttMobilusGtwClient client;
-    MqttMobilusDeviceEventSubscriber eventSubscriber(client, eventHandler);
+    MqttMobilusDeviceEventSubscriber eventSubscriber(client);
+
+    eventSubscriber.boot();
+
+    client.messageBus().dispatch(callEventsStub());
+}
+
+TEST(MqttMobilusDeviceEventSubscriberTest, DelegatesEventsToHandler)
+{
+    MockMqttMobilusGtwClient client;
+    MqttMobilusDeviceEventSubscriber eventSubscriber(client);
+
+    FakeDeviceEventHandler unmatchedHandler(HandlerResult::Unmatched);
+    FakeDeviceEventHandler handledHandler(HandlerResult::Handled);
+    FakeDeviceEventHandler otherHandler(HandlerResult::Unmatched);
+
+    eventSubscriber.registerHandler(unmatchedHandler);
+    eventSubscriber.registerHandler(handledHandler);
+    eventSubscriber.registerHandler(otherHandler);
     eventSubscriber.boot();
 
     auto callEvents = callEventsStub();
     client.messageBus().dispatch(callEvents);
 
-    ASSERT_EQ(2, handledEvents.size());
-    for (int i = 0; i < 2; i++) {
-        ASSERT_EQ(callEvents.events(i).device_id(), handledEvents[i].device_id());
-        ASSERT_EQ(callEvents.events(i).value(), handledEvents[i].value());
-        ASSERT_EQ(callEvents.events(i).event_number(), handledEvents[i].event_number());
-    }
+    ASSERT_EQ(2, unmatchedHandler.seenEvents().size());
+    ASSERT_EQ(2, handledHandler.seenEvents().size());
+    ASSERT_TRUE(otherHandler.seenEvents().empty());
 }

@@ -16,6 +16,7 @@ class CoverClusterAdapter final : public mobmatter::matter::AppComponent {
 public:
     CoverClusterAdapter(driven_ports::CoverRepository& coverRepository, logging::Logger& logger);
     ~CoverClusterAdapter();
+
     void boot() override;
     void shutdown() override;
 

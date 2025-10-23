@@ -15,8 +15,8 @@ using mobmatter::application::model::MobilusDeviceId;
 
 namespace mobmatter::driven_adapters::mobilus {
 
-MqttMobilusDeviceManagementService::MqttMobilusDeviceManagementService(MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger)
-    : mMobilusGtwClient(mobilusGtwClient)
+MqttMobilusDeviceManagementService::MqttMobilusDeviceManagementService(MqttMobilusGtwClient& client, logging::Logger& logger)
+    : mClient(client)
     , mLogger(logger)
 {
 }
@@ -35,7 +35,7 @@ bool MqttMobilusDeviceManagementService::patchDevice(model::MobilusDeviceId devi
 {
     proto::DevicesListResponse deviceListResponse;
 
-    if (!mMobilusGtwClient.sendRequest(proto::DevicesListRequest(), deviceListResponse)) {
+    if (!mClient.sendRequest(proto::DevicesListRequest(), deviceListResponse)) {
         mLogger.error(LOG_TAG "Failed to send device list request" LOG_SUFFIX, deviceId);
     }
 
@@ -60,7 +60,7 @@ bool MqttMobilusDeviceManagementService::patchDevice(model::MobilusDeviceId devi
     updateDeviceRequest.mutable_device()->CopyFrom(*matchedDevice);
     updateDeviceRequest.mutable_device()->MergeFrom(device);
 
-    if (!mMobilusGtwClient.sendRequest(updateDeviceRequest, updateDeviceResponse)) {
+    if (!mClient.sendRequest(updateDeviceRequest, updateDeviceResponse)) {
         mLogger.error(LOG_TAG "Failed to send rename request" LOG_SUFFIX, deviceId);
         return false;
     }

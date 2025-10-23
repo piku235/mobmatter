@@ -1,9 +1,10 @@
-#include "driving_adapters/mobilus/generic/MobilusDeviceNameSyncerAdapter.h"
+#include "driving_adapters/mobilus/device_handlers/MobilusDeviceInfoSyncerAdapter.h"
 #include "application/model/MobilusDeviceType.h"
 #include "common/logging/Logger.h"
-#include "driving_adapters/mobilus/FakeDeviceNameHandler.hpp"
+#include "driving_adapters/mobilus/FakeDeviceInfoHandler.hpp"
+#include "driving_adapters/mobilus/HandlerResult.h"
 #include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
-#include "driving_adapters/mobilus/MqttMobilusDeviceNameSyncer.h"
+#include "driving_adapters/mobilus/MqttMobilusDeviceInfoSyncer.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/DevicesListResponse.pb.h"
 #include "jungi/mobilus_gtw_client/proto/Event.pb.h"
@@ -16,7 +17,7 @@ using namespace jungi::mobilus_gtw_client;
 using mobmatter::application::model::MobilusDeviceType;
 using mobmatter::common::logging::Logger;
 using mobmatter::driving_adapters::mobilus::MobilusDeviceEventHandler;
-using mobmatter::driving_adapters::mobilus::generic::MobilusDeviceNameSyncerAdapter;
+using mobmatter::driving_adapters::mobilus::device_handlers::MobilusDeviceInfoSyncerAdapter;
 using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 
 namespace {
@@ -35,36 +36,36 @@ auto deviceListResponseStub()
 
 }
 
-TEST(MobilusDeviceNameSyncerAdapterTest, DoesNotRunSyncer)
+TEST(MobilusDeviceInfoSyncerAdapterTest, DoesNotRunSyncer)
 {
     MockMqttMobilusGtwClient client;
-    FakeDeviceNameHandler handler(MobilusDeviceType::Senso);
-    MqttMobilusDeviceNameSyncer deviceNameSyncer(client, Logger::noop());
-    MobilusDeviceNameSyncerAdapter adapter(deviceNameSyncer);
+    FakeDeviceInfoHandler handler(HandlerResult::Handled);
+    MqttMobilusDeviceInfoSyncer syncer(client, Logger::noop());
+    MobilusDeviceInfoSyncerAdapter adapter(syncer);
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceListResponseStub()));
-    deviceNameSyncer.registerHandler(handler);
+    syncer.registerHandler(handler);
 
     proto::Event event;
     event.set_value("ADD");
     event.set_event_number(EventNumber::Device);
 
-    ASSERT_EQ(MobilusDeviceEventHandler::Result::Unsupported, adapter.handle(event));
-    ASSERT_TRUE(handler.handledNames.empty());
+    ASSERT_EQ(HandlerResult::Unmatched, adapter.handle(event));
+    ASSERT_TRUE(handler.seenDevices().empty());
 
     event.set_value("MODIFY");
     event.set_event_number(EventNumber::User);
 
-    ASSERT_EQ(MobilusDeviceEventHandler::Result::Unsupported, adapter.handle(event));
-    ASSERT_TRUE(handler.handledNames.empty());
+    ASSERT_EQ(HandlerResult::Unmatched, adapter.handle(event));
+    ASSERT_TRUE(handler.seenDevices().empty());
 }
 
-TEST(MobilusDeviceNameSyncerAdapterTest, RunsSyncer)
+TEST(MobilusDeviceInfoSyncerAdapterTest, RunsSyncer)
 {
     MockMqttMobilusGtwClient client;
-    FakeDeviceNameHandler handler(MobilusDeviceType::Senso);
-    MqttMobilusDeviceNameSyncer syncer(client, Logger::noop());
-    MobilusDeviceNameSyncerAdapter adapter(syncer);
+    FakeDeviceInfoHandler handler(HandlerResult::Handled);
+    MqttMobilusDeviceInfoSyncer syncer(client, Logger::noop());
+    MobilusDeviceInfoSyncerAdapter adapter(syncer);
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceListResponseStub()));
     syncer.registerHandler(handler);
@@ -75,6 +76,6 @@ TEST(MobilusDeviceNameSyncerAdapterTest, RunsSyncer)
 
     auto r = adapter.handle(event);
 
-    ASSERT_EQ(MobilusDeviceEventHandler::Result::Handled, r);
-    ASSERT_EQ(1, handler.handledNames.size());
+    ASSERT_EQ(HandlerResult::Handled, r);
+    ASSERT_EQ(1, handler.seenDevices().size());
 }

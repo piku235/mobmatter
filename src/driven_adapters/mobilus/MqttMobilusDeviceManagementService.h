@@ -18,12 +18,12 @@ namespace proto = jungi::mobilus_gtw_client::proto;
 
 class MqttMobilusDeviceManagementService final : public mobmatter::application::driven_ports::DeviceManagementService {
 public:
-    MqttMobilusDeviceManagementService(jungi::mobilus_gtw_client::MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger);
+    MqttMobilusDeviceManagementService(jungi::mobilus_gtw_client::MqttMobilusGtwClient& client, logging::Logger& logger);
 
     void renameDevice(model::MobilusDeviceId deviceId, std::string name) override;
 
 private:
-    jungi::mobilus_gtw_client::MqttMobilusGtwClient& mMobilusGtwClient;
+    jungi::mobilus_gtw_client::MqttMobilusGtwClient& mClient;
     logging::Logger& mLogger;
 
     bool patchDevice(model::MobilusDeviceId mobilusDeviceId, const proto::Device& device);

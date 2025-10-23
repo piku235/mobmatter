@@ -1,6 +1,7 @@
-#include "MqttMobilusDeviceInitializer.h"
+#include "MqttMobilusDeviceSyncer.h"
+#include "HandlerResult.h"
 #include "Log.h"
-#include "application/model/MobilusDeviceType.h"
+#include "application/model/MobilusDeviceId.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateRequest.pb.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateResponse.pb.h"
 #include "jungi/mobilus_gtw_client/proto/DevicesListRequest.pb.h"
@@ -13,36 +14,31 @@ using namespace mobmatter::application::model;
 
 namespace mobmatter::driving_adapters::mobilus {
 
-MqttMobilusDeviceInitializer::MqttMobilusDeviceInitializer(MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger)
-    : mMobilusGtwClient(mobilusGtwClient)
+MqttMobilusDeviceSyncer::MqttMobilusDeviceSyncer(MqttMobilusGtwClient& client, logging::Logger& logger)
+    : mClient(client)
     , mLogger(logger)
 {
 }
 
-void MqttMobilusDeviceInitializer::useTestDeviceOnly(MobilusDeviceId deviceId)
-{
-    mTestDeviceId = deviceId;
-}
-
-void MqttMobilusDeviceInitializer::registerHandler(MobilusDeviceInitHandler& handler)
+void MqttMobilusDeviceSyncer::registerHandler(MobilusDeviceSyncHandler& handler)
 {
     mHandlers.push_back(handler);
 }
 
-bool MqttMobilusDeviceInitializer::run()
+void MqttMobilusDeviceSyncer::boot()
 {
     proto::DevicesListResponse deviceList;
 
-    if (!mMobilusGtwClient.sendRequest(proto::DevicesListRequest(), deviceList)) {
+    if (!mClient.sendRequest(proto::DevicesListRequest(), deviceList)) {
         mLogger.error(LOG_TAG "Failed to get device list from mobilus");
-        return false;
+        return;
     }
 
     proto::CurrentStateResponse currentStateResponse;
 
-    if (!mMobilusGtwClient.sendRequest(proto::CurrentStateRequest(), currentStateResponse)) {
+    if (!mClient.sendRequest(proto::CurrentStateRequest(), currentStateResponse)) {
         mLogger.error(LOG_TAG "Failed to get current state from mobilus");
-        return false;
+        return;
     }
 
     std::unordered_map<MobilusDeviceId, const proto::Event*> currentStateMap;
@@ -66,18 +62,6 @@ bool MqttMobilusDeviceInitializer::run()
             continue;
         }
 
-        if (mTestDeviceId && *mTestDeviceId != device.id()) {
-            continue;
-        }
-
-        auto deviceType = static_cast<MobilusDeviceType>(device.type());
-        auto handler = handlerFor(deviceType);
-
-        if (nullptr == handler) {
-            mLogger.notice(LOG_TAG "Device: %s is not supported [md=%" PRId64 "]", device.name().c_str(), device.id());
-            continue;
-        }
-
         auto it = currentStateMap.find(device.id());
 
         if (it == currentStateMap.end()) {
@@ -85,21 +69,19 @@ bool MqttMobilusDeviceInitializer::run()
             continue;
         }
 
-        handler->handle(device, *it->second);
-    }
+        HandlerResult r;
 
-    return true;
-}
+        for (MobilusDeviceSyncHandler& handler : mHandlers) {
+            r = handler.handle(device, *it->second);
+            if (HandlerResult::Unmatched != r) {
+                break;
+            }
+        }
 
-MobilusDeviceInitHandler* MqttMobilusDeviceInitializer::handlerFor(model::MobilusDeviceType deviceType)
-{
-    for (MobilusDeviceInitHandler& handler : mHandlers) {
-        if (handler.supports(deviceType)) {
-            return &handler;
+        if (HandlerResult::Unmatched == r) {
+            mLogger.notice(LOG_TAG "Device: %s is not supported [md=%" PRId64 "]", device.name().c_str(), device.id());
         }
     }
-
-    return nullptr;
 }
 
 }

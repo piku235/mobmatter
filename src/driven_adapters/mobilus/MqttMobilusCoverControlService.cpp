@@ -14,15 +14,15 @@ using namespace mobmatter::application::model::window_covering;
 
 namespace mobmatter::driven_adapters::mobilus {
 
-MqttMobilusCoverControlService::MqttMobilusCoverControlService(MqttMobilusGtwClient& mobilusGtwClient, logging::Logger& logger)
-    : mMobilusGtwClient(mobilusGtwClient)
+MqttMobilusCoverControlService::MqttMobilusCoverControlService(MqttMobilusGtwClient& client, logging::Logger& logger)
+    : mClient(client)
     , mLogger(logger)
 {
 }
 
 void MqttMobilusCoverControlService::liftCover(MobilusDeviceId deviceId, Position position)
 {
-    if (mMobilusGtwClient.send(callEventsFor(deviceId, convertLiftPosition(position)))) {
+    if (mClient.send(callEventsFor(deviceId, convertLiftPosition(position)))) {
         mLogger.info(LOG_TAG "Lift command sent to cover" LOG_SUFFIX, deviceId);
         return;
     }
@@ -32,7 +32,7 @@ void MqttMobilusCoverControlService::liftCover(MobilusDeviceId deviceId, Positio
 
 void MqttMobilusCoverControlService::stopCoverMotion(MobilusDeviceId deviceId)
 {
-    if (mMobilusGtwClient.send(callEventsFor(deviceId, "STOP"))) {
+    if (mClient.send(callEventsFor(deviceId, "STOP"))) {
         mLogger.info(LOG_TAG "Stop motion command sent to cover" LOG_SUFFIX, deviceId);
         return;
     }

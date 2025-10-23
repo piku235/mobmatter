@@ -18,20 +18,16 @@
 #include "driven_adapters/persistence/sqlite/SqliteEndpointIdGenerator.h"
 #include "driving_adapters/matter/cluster_stubs/ClusterStubsAdapter.h"
 #include "driving_adapters/matter/cover_cluster/CoverClusterAdapter.h"
-#include "driving_adapters/mobilus/CompositeMobilusDeviceEventHandler.hpp"
-#include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceEventSubscriber.h"
-#include "driving_adapters/mobilus/MqttMobilusDeviceInitializer.h"
-#include "driving_adapters/mobilus/MqttMobilusDeviceNameSyncer.h"
-#include "driving_adapters/mobilus/MqttMobilusDeviceStateSyncer.h"
-#include "driving_adapters/mobilus/cover/MobilusCoverEventHandler.h"
-#include "driving_adapters/mobilus/cover/MobilusCoverInitHandler.h"
-#include "driving_adapters/mobilus/cover/MobilusCoverNameHandler.h"
-#include "driving_adapters/mobilus/generic/MobilusDeviceNameSyncerAdapter.h"
+#include "driving_adapters/mobilus/MqttMobilusDeviceInfoSyncer.h"
+#include "driving_adapters/mobilus/MqttMobilusDeviceSyncer.h"
+#include "driving_adapters/mobilus/device_handlers/MobilusCoverHandler.h"
+#include "driving_adapters/mobilus/device_handlers/MobilusDeviceInfoSyncerAdapter.h"
 #include "jungi/mobilus_gtw_client/MqttDsn.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 #include "jungi/mobilus_gtw_client/proto/DeviceSettingsRequest.pb.h"
 #include "matter/ChipAppMain.h"
+#include "matter/DeviceEndpointLoader.hpp"
 #include "matter/event_loop/DomainEventPublisherAdapter.h"
 #include "matter/event_loop/MobilusGtwEventLoopAdapter.h"
 #include "matter/persistence/SqlitePersistentStorageDelegate.h"
@@ -61,8 +57,7 @@ using namespace mobmatter::driven_adapters::mobilus;
 using namespace mobmatter::driven_adapters::matter::zcl;
 using namespace mobmatter::driven_adapters::matter::reporting;
 using namespace mobmatter::driving_adapters::mobilus;
-using namespace mobmatter::driving_adapters::mobilus::generic;
-using namespace mobmatter::driving_adapters::mobilus::cover;
+using namespace mobmatter::driving_adapters::mobilus::device_handlers;
 using namespace mobmatter::driving_adapters::matter::cover_cluster;
 using namespace mobmatter::driving_adapters::matter::cluster_stubs;
 using namespace mobmatter::matter;
@@ -149,54 +144,6 @@ std::unique_ptr<LogHandler> createLogHandler()
     return std::make_unique<StdioLogHandler>();
 }
 
-std::optional<MobilusDeviceId> getTestDeviceIdEnv()
-{
-    auto env = getenv("TEST_DEVICE_ID");
-
-    if (!env) {
-        return std::nullopt;
-    }
-
-    return static_cast<MobilusDeviceId>(atoi(env));
-}
-
-bool setupDevices(mobgtw::MqttMobilusGtwClient& mobilusGtwClient, CoverRepository& coverRepository, CoverEndpointService& coverEndpointService, EndpointIdGenerator& endpointIdGenerator, Logger& logger)
-{
-    auto covers = coverRepository.all();
-
-    for (auto& cover : covers) {
-        coverEndpointService.addEndpoint(cover.endpointId(), cover.specification());
-        logger.notice("Loaded cover at endpoint: %u", cover.endpointId());
-    }
-
-    if (covers.size()) {
-        return true;
-    }
-
-    // initiate if there are no persisted devices
-    MobilusCoverInitHandler coverInitHandler(coverRepository, endpointIdGenerator, logger);
-    MqttMobilusDeviceInitializer mobilusDeviceInitializer(mobilusGtwClient, logger);
-    mobilusDeviceInitializer.registerHandler(coverInitHandler);
-
-    auto testDeviceId = getTestDeviceIdEnv();
-    if (testDeviceId) {
-        mobilusDeviceInitializer.useTestDeviceOnly(*testDeviceId);
-    }
-
-    if (!mobilusDeviceInitializer.run()) {
-        logger.critical("Failed to initiate devices");
-        return false;
-    }
-
-    return true;
-}
-
-void syncDeviceStates(mobgtw::MqttMobilusGtwClient& mobilusGtwClient, MobilusDeviceEventHandler& eventHandler, Logger& logger)
-{
-    MqttMobilusDeviceStateSyncer mobilusDeviceStateSyncer(mobilusGtwClient, eventHandler, logger);
-    mobilusDeviceStateSyncer.run();
-}
-
 void showVersion()
 {
     printf("mobmatter v%s\n", CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
@@ -245,22 +192,21 @@ int main(int argc, char* argv[])
     // driving
     CoverClusterAdapter coverClusterAdapter(coverRepository, logger);
     ClusterStubsAdapter clusterStubsAdapter;
+    DeviceEndpointLoader deviceEndpointLoader(coverRepository, coverEndpointService, logger);
 
-    MobilusCoverNameHandler mobilusCoverNameHandler(coverRepository, logger);
-    MqttMobilusDeviceNameSyncer mobilusDeviceNameSyncer(*mobilusGtwClient, logger);
-    mobilusDeviceNameSyncer.registerHandler(mobilusCoverNameHandler);
-
-    MobilusCoverEventHandler mobilusCoverEventHandler(coverRepository, logger);
-    MobilusDeviceNameSyncerAdapter mobilusDeviceNameSyncerAdapter(mobilusDeviceNameSyncer);
-
-    CompositeMobilusDeviceEventHandler mobilusDeviceEventHandler;
-    mobilusDeviceEventHandler.registerHandler(mobilusCoverEventHandler);
-    mobilusDeviceEventHandler.registerHandler(mobilusDeviceNameSyncerAdapter);
-
-    MqttMobilusDeviceEventSubscriber mobilusDeviceEventSubscriber(*mobilusGtwClient, mobilusDeviceEventHandler);
+    MqttMobilusDeviceSyncer mobilusDeviceSyncer(*mobilusGtwClient, logger);
+    MqttMobilusDeviceInfoSyncer mobilusDeviceInfoSyncer(*mobilusGtwClient, logger);
+    MqttMobilusDeviceEventSubscriber mobilusDeviceEventSubscriber(*mobilusGtwClient);
+    MobilusCoverHandler mobilusCoverHandler(coverRepository, endpointIdGenerator, logger);
+    MobilusDeviceInfoSyncerAdapter mobilusDeviceInfoSyncerAdapter(mobilusDeviceInfoSyncer);
 
     signal(SIGINT, handleSignal);
     signal(SIGTERM, handleSignal);
+
+    mobilusDeviceEventSubscriber.registerHandler(mobilusCoverHandler);
+    mobilusDeviceEventSubscriber.registerHandler(mobilusDeviceInfoSyncerAdapter);
+    mobilusDeviceInfoSyncer.registerHandler(mobilusCoverHandler);
+    mobilusDeviceSyncer.registerHandler(mobilusCoverHandler);
 
     domainEventPublisher.subscribe(mobilusCoverControlSubscriber);
     domainEventPublisher.subscribe(chipCoverEndpointSubscriber);
@@ -271,19 +217,14 @@ int main(int argc, char* argv[])
     sChipApp.registerComponent(domainEventPublisherAdapter);
     sChipApp.registerComponent(coverClusterAdapter);
     sChipApp.registerComponent(clusterStubsAdapter);
+    sChipApp.registerComponent(deviceEndpointLoader); // must be before mobilusDeviceSyncer
+    sChipApp.registerComponent(mobilusDeviceSyncer);
     sChipApp.registerComponent(mobilusDeviceEventSubscriber);
 
     int rc = sChipApp.boot(logger, *mobilusGtwClient, persistentStorageDelegate);
     if (rc) {
         return rc;
     }
-
-    // after ZAP boot
-    if (!setupDevices(*mobilusGtwClient, coverRepository, coverEndpointService, endpointIdGenerator, logger)) {
-        return 1;
-    }
-
-    syncDeviceStates(*mobilusGtwClient, mobilusDeviceEventHandler, logger);
 
     sChipApp.run();
 
