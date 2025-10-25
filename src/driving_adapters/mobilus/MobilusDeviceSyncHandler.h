@@ -11,7 +11,7 @@ namespace proto = jungi::mobilus_gtw_client::proto;
 class MobilusDeviceSyncHandler {
 public:
     virtual ~MobilusDeviceSyncHandler() = default;
-    virtual HandlerResult handle(const proto::Device& deviceInfo, const proto::Event& currentState) = 0;
+    virtual HandlerResult handle(const proto::Device& deviceInfo, const proto::Event& lastEvent) = 0;
 };
 
 }

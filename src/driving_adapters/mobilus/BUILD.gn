@@ -1,22 +1,9 @@
-source_set("common") {
-  sources = [
-    "ConversionUtils.cpp",
-    "ConversionUtils.h",
-    "Log.h",
-  ]
-
-  deps = [ "//src/application" ]
-
-  configs += [ "//:app_includes" ]
-}
-
 source_set("device_syncer") {
   sources = [ "MqttMobilusDeviceSyncer.cpp" ]
 
   public = [ "MqttMobilusDeviceSyncer.h" ]
 
   deps = [
-    ":common",
     "//src/application",
     "//third_party/mobilus_gtw_client",
   ]
@@ -30,7 +17,6 @@ source_set("device_info_syncer") {
   public = [ "MqttMobilusDeviceInfoSyncer.h" ]
 
   deps = [
-    ":common",
     "//src/application",
     "//third_party/mobilus_gtw_client",
   ]
@@ -44,7 +30,6 @@ source_set("device_event_subscriber") {
   public = [ "MqttMobilusDeviceEventSubscriber.h" ]
 
   deps = [
-    ":common",
     "//src/application",
     "//third_party/mobilus_gtw_client",
   ]

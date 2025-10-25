@@ -1,9 +1,9 @@
 #include "MobilusCoverHandler.h"
 #include "application/model/MobilusDeviceId.h"
+#include "application/model/Percent.h"
 #include "application/model/window_covering/Cover.h"
 #include "application/model/window_covering/CoverSpecification.h"
 #include "application/model/window_covering/PositionState.h"
-#include "driving_adapters/mobilus/ConversionUtils.h"
 #include "driving_adapters/mobilus/Log.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 
@@ -25,13 +25,13 @@ MobilusCoverHandler::MobilusCoverHandler(driven_ports::CoverRepository& coverRep
 {
 }
 
-HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo, const proto::Event& currentState)
+HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo, const proto::Event& lastEvent)
 {
     auto cover = mCoverRepository.findOfMobilusDeviceId(deviceInfo.id());
 
     if (cover) {
         apply(*cover, deviceInfo);
-        apply(*cover, currentState);
+        apply(*cover, lastEvent);
 
         mCoverRepository.save(*cover);
         return HandlerResult::Handled;
@@ -43,7 +43,9 @@ HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo, const
         return HandlerResult::Unmatched;
     }
 
-    return init(std::move(*coverSpec), deviceInfo, currentState);
+    init(std::move(*coverSpec), deviceInfo, lastEvent);
+
+    return HandlerResult::Handled;
 }
 
 HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo)
@@ -90,15 +92,15 @@ HandlerResult MobilusCoverHandler::handle(const proto::Event& event)
     return HandlerResult::Handled;
 }
 
-HandlerResult MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device& deviceInfo, const proto::Event& currentState)
+void MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device& deviceInfo, const proto::Event& lastEvent)
 {
     std::optional<Position> liftPosition;
 
-    if (EventNumber::Sent == currentState.event_number() || EventNumber::Reached == currentState.event_number()) {
-        liftPosition = ConversionUtils::convertLiftPosition(currentState.value());
+    if (EventNumber::Sent == lastEvent.event_number() || EventNumber::Reached == lastEvent.event_number()) {
+        liftPosition = convertLiftPosition(lastEvent.value());
 
         if (!liftPosition) {
-            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, currentState.value().c_str(), deviceInfo.id());
+            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, lastEvent.value().c_str(), deviceInfo.id());
         }
     }
 
@@ -106,7 +108,7 @@ HandlerResult MobilusCoverHandler::init(CoverSpecification coverSpec, const prot
 
     if (!endpointId) {
         mLogger.error(LOG_TAG "Could not get next endpoint id" LOG_SUFFIX, deviceInfo.id());
-        return HandlerResult::Handled;
+        return;
     }
 
     auto cover = Cover::add(
@@ -118,7 +120,6 @@ HandlerResult MobilusCoverHandler::init(CoverSpecification coverSpec, const prot
     mCoverRepository.save(cover);
 
     mLogger.notice(LOG_TAG "Added cover" LOG_SUFFIX_EP, cover.endpointId(), deviceInfo.id());
-    return HandlerResult::Handled;
 }
 
 void MobilusCoverHandler::apply(Cover& cover, const proto::Device& deviceInfo)
@@ -132,7 +133,7 @@ void MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
 {
     switch (event.event_number()) {
     case EventNumber::Sent: {
-        auto position = ConversionUtils::convertLiftPosition(event.value());
+        auto position = convertLiftPosition(event.value());
 
         if (!position) {
             if ("STOP" == event.value()) {
@@ -151,7 +152,7 @@ void MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
         break;
     }
     case EventNumber::Reached: {
-        auto position = ConversionUtils::convertLiftPosition(event.value());
+        auto position = convertLiftPosition(event.value());
 
         if (!position) {
             mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
@@ -181,6 +182,29 @@ void MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
     default:
         mLogger.notice(LOG_TAG "Unknown event number");
     }
+}
+
+std::optional<Position> MobilusCoverHandler::convertLiftPosition(const std::string& value)
+{
+    uint8_t parsedPercent;
+
+    if ('%' == value.back() && 1 == sscanf(value.c_str(), "%hhu", &parsedPercent)) {
+        if (auto percent = Percent::from(parsedPercent)) {
+            return Position::open(*percent);
+        }
+
+        return std::nullopt;
+    }
+
+    if ("UP" == value) {
+        return Position::fullyOpen();
+    }
+
+    if ("DOWN" == value) {
+        return Position::fullyClosed();
+    }
+
+    return std::nullopt;
 }
 
 }

@@ -15,10 +15,7 @@ source_set("cover") {
 
   public = [ "MobilusCoverHandler.h" ]
 
-  deps = [
-    "//src/application",
-    "//src/driving_adapters/mobilus:common",
-  ]
+  deps = [ "//src/application" ]
 
   public_deps = [ "//third_party/mobilus_gtw_client" ]
 
