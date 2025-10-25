@@ -30,6 +30,8 @@ using testing::Values;
 
 namespace {
 
+constexpr MobilusDeviceId kMobilusDeviceId = 2;
+
 struct CoverExpectation {
     Position expectedLiftPosition;
     CoverSpecification expectedSpec;
@@ -40,7 +42,7 @@ struct CoverExpectation {
 
 auto coverStub()
 {
-    return Cover::add(1, 2, "Foo", PositionState::at(Position::fullyOpen()), CoverSpecification::Senso());
+    return Cover::add(1, kMobilusDeviceId, "Foo", PositionState::at(Position::fullyOpen()), CoverSpecification::Senso());
 }
 
 }
@@ -55,7 +57,7 @@ TEST(MobilusCoverHandlerTest, DeviceIsUnsupported)
     MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
 
     proto::Device device;
-    device.set_id(2);
+    device.set_id(kMobilusDeviceId);
     device.set_name("foo");
     device.set_type(static_cast<int>(MobilusDeviceType::Switch));
 
@@ -76,7 +78,7 @@ TEST_P(MobilusCoverInitHandlerTest, InitiateCovers)
     MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
 
     proto::Device device;
-    device.set_id(1);
+    device.set_id(kMobilusDeviceId);
     device.set_name("foo");
     device.set_type(static_cast<int>(GetParam().deviceType));
 
@@ -96,11 +98,99 @@ TEST_P(MobilusCoverInitHandlerTest, InitiateCovers)
     ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    ASSERT_TRUE(cover->liftState().targetPosition().has_value());
-    ASSERT_EQ(GetParam().expectedLiftPosition, *cover->liftState().targetPosition());
-    ASSERT_TRUE(cover->liftState().currentPosition().has_value());
-    ASSERT_EQ(GetParam().expectedLiftPosition, *cover->liftState().currentPosition());
+    ASSERT_EQ(GetParam().expectedLiftPosition, cover->liftState().targetPosition());
+    ASSERT_EQ(GetParam().expectedLiftPosition, cover->liftState().currentPosition());
     ASSERT_EQ(GetParam().expectedSpec, cover->specification());
+}
+
+TEST(MobilusCoverHandlerTest, SynchronizesCoverCurrentPosition)
+{
+    InMemoryCoverRepository coverRepository;
+    InMemoryEndpointIdGenerator endpointIdGenerator(1u);
+    MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
+    coverRepository.save(coverStub());
+
+    proto::Device device;
+    device.set_id(kMobilusDeviceId);
+    device.set_name("Foo");
+
+    proto::Event event;
+    event.set_device_id(device.id());
+    event.set_value("0%");
+    event.set_event_number(EventNumber::Reached);
+
+    ASSERT_EQ(HandlerResult::Handled, handler.handle(device, event));
+
+    auto cover = coverRepository.find(1u);
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(device.id(), cover->mobilusDeviceId());
+    ASSERT_EQ(device.name(), cover->name());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().currentPosition());
+}
+
+TEST(MobilusCoverHandlerTest, SynchronizesCoverTargetPosition)
+{
+    InMemoryCoverRepository coverRepository;
+    InMemoryEndpointIdGenerator endpointIdGenerator(1u);
+    MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
+    coverRepository.save(coverStub());
+
+    proto::Device device;
+    device.set_id(kMobilusDeviceId);
+    device.set_name("Foo");
+
+    proto::Event event;
+    event.set_device_id(device.id());
+    event.set_value("0%");
+    event.set_event_number(EventNumber::Sent);
+
+    ASSERT_EQ(HandlerResult::Handled, handler.handle(device, event));
+
+    auto cover = coverRepository.find(1u);
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(device.id(), cover->mobilusDeviceId());
+    ASSERT_EQ(device.name(), cover->name());
+    ASSERT_EQ(CoverMotion::Closing, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Moving, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::Closing, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
+}
+
+TEST(MobilusCoverHandlerTest, SynchronizesCoverName)
+{
+    InMemoryCoverRepository coverRepository;
+    InMemoryEndpointIdGenerator endpointIdGenerator(1u);
+    MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
+    coverRepository.save(coverStub());
+
+    proto::Device device;
+    device.set_id(kMobilusDeviceId);
+    device.set_name("Bar");
+
+    proto::Event event;
+    event.set_device_id(device.id());
+    event.set_value("100%");
+    event.set_event_number(EventNumber::Reached);
+
+    ASSERT_EQ(HandlerResult::Handled, handler.handle(device, event));
+
+    auto cover = coverRepository.find(1u);
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(device.id(), cover->mobilusDeviceId());
+    ASSERT_EQ(device.name(), cover->name());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverHandlerTest, HandlesStartedCoverLift)
@@ -111,7 +201,7 @@ TEST(MobilusCoverHandlerTest, HandlesStartedCoverLift)
     coverRepository.save(coverStub());
 
     proto::Event event;
-    event.set_device_id(2);
+    event.set_device_id(kMobilusDeviceId);
     event.set_value("0%");
     event.set_event_number(EventNumber::Sent);
 
@@ -123,8 +213,8 @@ TEST(MobilusCoverHandlerTest, HandlesStartedCoverLift)
     ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Moving, cover->liftState().status());
     ASSERT_EQ(CoverMotion::Closing, cover->liftState().motion());
-    ASSERT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverHandlerTest, HandlesCoverReachedPosition)
@@ -141,7 +231,7 @@ TEST(MobilusCoverHandlerTest, HandlesCoverReachedPosition)
     }
 
     proto::Event event;
-    event.set_device_id(2);
+    event.set_device_id(kMobilusDeviceId);
     event.set_value("0%");
     event.set_event_number(EventNumber::Reached);
 
@@ -153,8 +243,8 @@ TEST(MobilusCoverHandlerTest, HandlesCoverReachedPosition)
     ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    ASSERT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
-    ASSERT_EQ(Position::fullyClosed(), *cover->liftState().currentPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverHandlerTest, HandlesStop)
@@ -171,7 +261,7 @@ TEST(MobilusCoverHandlerTest, HandlesStop)
     }
 
     proto::Event event;
-    event.set_device_id(2);
+    event.set_device_id(kMobilusDeviceId);
     event.set_value("STOP");
     event.set_event_number(EventNumber::Sent);
 
@@ -183,8 +273,8 @@ TEST(MobilusCoverHandlerTest, HandlesStop)
     ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Stopping, cover->liftState().status());
     ASSERT_EQ(CoverMotion::Closing, cover->liftState().motion());
-    ASSERT_EQ(Position::fullyClosed(), *cover->liftState().targetPosition());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverHandlerTest, HandlesCoverFailure)
@@ -201,7 +291,7 @@ TEST(MobilusCoverHandlerTest, HandlesCoverFailure)
     }
 
     proto::Event event;
-    event.set_device_id(2);
+    event.set_device_id(kMobilusDeviceId);
     event.set_value("UNKNOWN");
     event.set_event_number(EventNumber::Error);
 
@@ -213,8 +303,8 @@ TEST(MobilusCoverHandlerTest, HandlesCoverFailure)
     ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverHandlerTest, HandlesNoConnection)
@@ -231,7 +321,7 @@ TEST(MobilusCoverHandlerTest, HandlesNoConnection)
     }
 
     proto::Event event;
-    event.set_device_id(2);
+    event.set_device_id(kMobilusDeviceId);
     event.set_value("NO_CONNECTION");
     event.set_event_number(EventNumber::Error);
 
@@ -244,8 +334,8 @@ TEST(MobilusCoverHandlerTest, HandlesNoConnection)
     ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverHandlerTest, HandlesRemovedCover)
@@ -262,7 +352,7 @@ TEST(MobilusCoverHandlerTest, HandlesRemovedCover)
     }
 
     proto::Event event;
-    event.set_device_id(2);
+    event.set_device_id(kMobilusDeviceId);
     event.set_value("REMOVE");
     event.set_event_number(EventNumber::Device);
 
@@ -280,7 +370,7 @@ TEST(MobilusCoverHandlerTest, IgnoresInvalidSentPosition)
     coverRepository.save(coverStub());
 
     proto::Event event;
-    event.set_device_id(2);
+    event.set_device_id(kMobilusDeviceId);
     event.set_value("INVALID");
     event.set_event_number(EventNumber::Sent);
 
@@ -292,8 +382,8 @@ TEST(MobilusCoverHandlerTest, IgnoresInvalidSentPosition)
     ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverHandlerTest, IgnoresInvalidReachedPosition)
@@ -305,7 +395,7 @@ TEST(MobilusCoverHandlerTest, IgnoresInvalidReachedPosition)
     coverRepository.save(coverStub());
 
     proto::Event event;
-    event.set_device_id(2);
+    event.set_device_id(kMobilusDeviceId);
     event.set_value("INVALID");
     event.set_event_number(EventNumber::Reached);
 
@@ -317,8 +407,8 @@ TEST(MobilusCoverHandlerTest, IgnoresInvalidReachedPosition)
     ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().targetPosition());
-    ASSERT_EQ(Position::fullyOpen(), *cover->liftState().currentPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
 TEST(MobilusCoverHandlerTest, IgnoresUnsupportedEvent)
@@ -343,15 +433,15 @@ TEST(MobilusCoverHandlerTest, RenamesCover)
     coverRepository.save(coverStub());
 
     proto::Device device;
-    device.set_id(2);
+    device.set_id(kMobilusDeviceId);
     device.set_name("Bar");
     device.set_type(static_cast<int>(MobilusDeviceType::Senso));
 
-    handler.handle(device);
+    ASSERT_EQ(HandlerResult::Handled, handler.handle(device));
 
     auto cover = coverRepository.find(1u);
     ASSERT_TRUE(cover.has_value());
-    ASSERT_EQ("Bar", cover->name());
+    ASSERT_EQ(device.name(), cover->name());
 }
 
 // clang-format off
