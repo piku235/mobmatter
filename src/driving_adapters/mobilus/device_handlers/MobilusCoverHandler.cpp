@@ -30,10 +30,10 @@ HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo, const
     auto cover = mCoverRepository.findOfMobilusDeviceId(deviceInfo.id());
 
     if (cover) {
-        apply(*cover, deviceInfo);
-        apply(*cover, lastEvent);
+        if (apply(*cover, deviceInfo) || apply(*cover, lastEvent)) {
+            mCoverRepository.save(*cover);
+        }
 
-        mCoverRepository.save(*cover);
         return HandlerResult::Handled;
     }
 
@@ -60,18 +60,7 @@ HandlerResult MobilusCoverHandler::handle(const proto::Event& event)
         return HandlerResult::Unmatched;
     }
 
-    switch (event.event_number()) {
-    case EventNumber::Device:
-        if ("REMOVE" == event.value()) {
-            cover->remove();
-            mCoverRepository.remove(*cover);
-
-            mLogger.notice(LOG_TAG "Removed cover" LOG_SUFFIX, cover->endpointId(), cover->mobilusDeviceId());
-        }
-
-        break;
-    default:
-        apply(*cover, event);
+    if (apply(*cover, event)) {
         mCoverRepository.save(*cover);
     }
 
@@ -108,14 +97,17 @@ void MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device
     mLogger.notice(LOG_TAG "Added cover" LOG_SUFFIX_EP, cover.endpointId(), deviceInfo.id());
 }
 
-void MobilusCoverHandler::apply(Cover& cover, const proto::Device& deviceInfo)
+bool MobilusCoverHandler::apply(Cover& cover, const proto::Device& deviceInfo)
 {
     if (Cover::Result::Ok == cover.rename(deviceInfo.name())) {
         mLogger.notice(LOG_TAG "Renamed cover to: %s" LOG_SUFFIX, deviceInfo.name().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+        return true;
     }
+
+    return false;
 }
 
-void MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
+bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
 {
     switch (event.event_number()) {
     case EventNumber::Sent: {
@@ -124,49 +116,54 @@ void MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
         if (!position) {
             if ("STOP" == event.value()) {
                 cover.initiateStopMotion();
-                break;
+                return true;
             }
 
             mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
-            break;
+            return false;
         }
 
         if (Cover::Result::Ok == cover.startLiftTo(*position)) {
             mLogger.notice(LOG_TAG "Started lifting cover to target position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+            return true;
         }
 
-        break;
+        return false;
     }
     case EventNumber::Reached: {
         auto position = convertLiftPosition(event.value());
 
         if (!position) {
             mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
-            break;
+            return false;
         }
 
         if (Cover::Result::Ok == cover.changeLiftPosition(*position)) {
             mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+            return true;
         }
 
-        break;
+        return false;
     }
     case EventNumber::Error:
         if ("NO_CONNECTION" == event.value()) {
             if (Cover::Result::Ok == cover.markAsUnreachable()) {
                 mLogger.notice(LOG_TAG "Cover marked as unreachable" LOG_SUFFIX, cover.endpointId(), cover.mobilusDeviceId());
+                return true;
             }
 
-            break;
+            return false;
         }
 
         if (Cover::Result::Ok == cover.failMotion()) {
             mLogger.notice(LOG_TAG "Cover motion failed: %s" LOG_SUFFIX, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+            return true;
         }
 
-        break;
+        return false;
     default:
         mLogger.notice(LOG_TAG "Unknown event number");
+        return false;
     }
 }
 

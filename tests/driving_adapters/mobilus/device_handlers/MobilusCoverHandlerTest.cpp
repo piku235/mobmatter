@@ -337,30 +337,6 @@ TEST(MobilusCoverHandlerTest, HandlesNoConnection)
     ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
-TEST(MobilusCoverHandlerTest, HandlesRemovedCover)
-{
-    InMemoryCoverRepository coverRepository;
-    InMemoryEndpointIdGenerator endpointIdGenerator(1u);
-    MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
-
-    {
-        auto cover = coverStub();
-        cover.startLiftTo(Position::fullyClosed());
-
-        coverRepository.save(cover);
-    }
-
-    proto::Event event;
-    event.set_device_id(kMobilusDeviceId);
-    event.set_value("REMOVE");
-    event.set_event_number(EventNumber::Device);
-
-    ASSERT_EQ(HandlerResult::Handled, handler.handle(event));
-    auto cover = coverRepository.find(1u);
-
-    ASSERT_FALSE(cover.has_value());
-}
-
 TEST(MobilusCoverHandlerTest, IgnoresInvalidSentPosition)
 {
     InMemoryCoverRepository coverRepository;

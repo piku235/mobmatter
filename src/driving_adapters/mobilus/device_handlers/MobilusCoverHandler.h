@@ -31,8 +31,8 @@ private:
     logging::Logger& mLogger;
 
     void init(model::window_covering::CoverSpecification coverSpec, const proto::Device& device, const proto::Event& lastEvent);
-    void apply(model::window_covering::Cover& cover, const proto::Device& deviceInfo);
-    void apply(model::window_covering::Cover& cover, const proto::Event& event);
+    bool apply(model::window_covering::Cover& cover, const proto::Device& deviceInfo);
+    bool apply(model::window_covering::Cover& cover, const proto::Event& event);
     std::optional<model::window_covering::Position> convertLiftPosition(const std::string& value);
 };
 
