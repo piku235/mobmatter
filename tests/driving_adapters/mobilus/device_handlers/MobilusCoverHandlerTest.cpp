@@ -67,7 +67,6 @@ TEST(MobilusCoverHandlerTest, DeviceIsUnsupported)
     event.set_event_number(EventNumber::Reached);
 
     ASSERT_EQ(HandlerResult::Unmatched, handler.handle(device, event));
-    ASSERT_EQ(HandlerResult::Unmatched, handler.handle(device));
     ASSERT_EQ(HandlerResult::Unmatched, handler.handle(event));
 }
 
@@ -422,26 +421,6 @@ TEST(MobilusCoverHandlerTest, IgnoresUnsupportedEvent)
     event.set_event_number(EventNumber::User);
 
     ASSERT_EQ(HandlerResult::Unmatched, handler.handle(event));
-}
-
-TEST(MobilusCoverHandlerTest, RenamesCover)
-{
-    InMemoryCoverRepository coverRepository;
-    InMemoryEndpointIdGenerator endpointIdGenerator(1u);
-    MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
-
-    coverRepository.save(coverStub());
-
-    proto::Device device;
-    device.set_id(kMobilusDeviceId);
-    device.set_name("Bar");
-    device.set_type(static_cast<int>(MobilusDeviceType::Senso));
-
-    ASSERT_EQ(HandlerResult::Handled, handler.handle(device));
-
-    auto cover = coverRepository.find(1u);
-    ASSERT_TRUE(cover.has_value());
-    ASSERT_EQ(device.name(), cover->name());
 }
 
 // clang-format off

@@ -48,20 +48,6 @@ HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo, const
     return HandlerResult::Handled;
 }
 
-HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo)
-{
-    auto cover = mCoverRepository.findOfMobilusDeviceId(deviceInfo.id());
-
-    if (!cover) {
-        return HandlerResult::Unmatched;
-    }
-
-    apply(*cover, deviceInfo);
-    mCoverRepository.save(*cover);
-
-    return HandlerResult::Handled;
-}
-
 HandlerResult MobilusCoverHandler::handle(const proto::Event& event)
 {
     if (!event.has_device_id()) {

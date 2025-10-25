@@ -11,19 +11,6 @@ source_set("device_syncer") {
   configs += [ "//:app_includes" ]
 }
 
-source_set("device_info_syncer") {
-  sources = [ "MqttMobilusDeviceInfoSyncer.cpp" ]
-
-  public = [ "MqttMobilusDeviceInfoSyncer.h" ]
-
-  deps = [
-    "//src/application",
-    "//third_party/mobilus_gtw_client",
-  ]
-
-  configs += [ "//:app_includes" ]
-}
-
 source_set("device_event_subscriber") {
   sources = [ "MqttMobilusDeviceEventSubscriber.cpp" ]
 

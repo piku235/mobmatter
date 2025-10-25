@@ -15,7 +15,6 @@ executable("tests") {
     "driven_adapters/persistence/sqlite",
     "driving_adapters/mobilus",
     "driving_adapters/mobilus/device_handlers:cover",
-    "driving_adapters/mobilus/device_handlers:generic",
     "//third_party/googletest:gtest_main",
   ]
 

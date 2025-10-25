@@ -7,7 +7,6 @@
 #include "application/model/window_covering/Position.h"
 #include "common/logging/Logger.h"
 #include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
-#include "driving_adapters/mobilus/MobilusDeviceInfoHandler.h"
 #include "driving_adapters/mobilus/MobilusDeviceSyncHandler.h"
 
 #include <optional>
@@ -19,13 +18,11 @@ namespace driven_ports = mobmatter::application::driven_ports;
 namespace logging = mobmatter::common::logging;
 
 class MobilusCoverHandler final : public MobilusDeviceSyncHandler,
-                                  public MobilusDeviceEventHandler,
-                                  public MobilusDeviceInfoHandler {
+                                  public MobilusDeviceEventHandler {
 public:
     MobilusCoverHandler(driven_ports::CoverRepository& coverRepository, driven_ports::EndpointIdGenerator& endpointIdGenerator, logging::Logger& logger);
 
     HandlerResult handle(const proto::Device& deviceInfo, const proto::Event& lastEvent) override;
-    HandlerResult handle(const proto::Device& deviceInfo) override;
     HandlerResult handle(const proto::Event& event) override;
 
 private:

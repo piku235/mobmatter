@@ -19,10 +19,8 @@
 #include "driving_adapters/matter/cluster_stubs/ClusterStubsAdapter.h"
 #include "driving_adapters/matter/cover_cluster/CoverClusterAdapter.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceEventSubscriber.h"
-#include "driving_adapters/mobilus/MqttMobilusDeviceInfoSyncer.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceSyncer.h"
 #include "driving_adapters/mobilus/device_handlers/MobilusCoverHandler.h"
-#include "driving_adapters/mobilus/device_handlers/MobilusDeviceInfoSyncerAdapter.h"
 #include "jungi/mobilus_gtw_client/MqttDsn.h"
 #include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
 #include "jungi/mobilus_gtw_client/proto/DeviceSettingsRequest.pb.h"
@@ -195,17 +193,13 @@ int main(int argc, char* argv[])
     DeviceEndpointLoader deviceEndpointLoader(coverRepository, coverEndpointService, logger);
 
     MqttMobilusDeviceSyncer mobilusDeviceSyncer(*mobilusGtwClient, logger);
-    MqttMobilusDeviceInfoSyncer mobilusDeviceInfoSyncer(*mobilusGtwClient, logger);
     MqttMobilusDeviceEventSubscriber mobilusDeviceEventSubscriber(*mobilusGtwClient);
     MobilusCoverHandler mobilusCoverHandler(coverRepository, endpointIdGenerator, logger);
-    MobilusDeviceInfoSyncerAdapter mobilusDeviceInfoSyncerAdapter(mobilusDeviceInfoSyncer);
 
     signal(SIGINT, handleSignal);
     signal(SIGTERM, handleSignal);
 
     mobilusDeviceEventSubscriber.registerHandler(mobilusCoverHandler);
-    mobilusDeviceEventSubscriber.registerHandler(mobilusDeviceInfoSyncerAdapter);
-    mobilusDeviceInfoSyncer.registerHandler(mobilusCoverHandler);
     mobilusDeviceSyncer.registerHandler(mobilusCoverHandler);
 
     domainEventPublisher.subscribe(mobilusCoverControlSubscriber);
