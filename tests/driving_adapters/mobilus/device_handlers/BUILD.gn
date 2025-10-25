@@ -1,8 +1,5 @@
 source_set("generic") {
-  sources = [
-    "MobilusDeviceInfoSyncerAdapterTest.cpp",
-    "MobilusDeviceSyncerAdapterTest.cpp",
-  ]
+  sources = [ "MobilusDeviceInfoSyncerAdapterTest.cpp" ]
 
   deps = [
     "//src/application",
