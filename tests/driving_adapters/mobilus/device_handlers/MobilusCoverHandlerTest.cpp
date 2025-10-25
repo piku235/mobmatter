@@ -192,6 +192,36 @@ TEST(MobilusCoverHandlerTest, SynchronizesCoverName)
     ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
 }
 
+TEST(MobilusCoverHandlerTest, SynchronizesMixChanges)
+{
+    InMemoryCoverRepository coverRepository;
+    InMemoryEndpointIdGenerator endpointIdGenerator(1u);
+    MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
+    coverRepository.save(coverStub());
+
+    proto::Device device;
+    device.set_id(kMobilusDeviceId);
+    device.set_name("Bar");
+
+    proto::Event event;
+    event.set_device_id(device.id());
+    event.set_value("0%");
+    event.set_event_number(EventNumber::Reached);
+
+    ASSERT_EQ(HandlerResult::Handled, handler.handle(device, event));
+
+    auto cover = coverRepository.find(1u);
+    ASSERT_TRUE(cover.has_value());
+    ASSERT_EQ(device.id(), cover->mobilusDeviceId());
+    ASSERT_EQ(device.name(), cover->name());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover->liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().targetPosition());
+    ASSERT_EQ(Position::fullyClosed(), cover->liftState().currentPosition());
+}
+
 TEST(MobilusCoverHandlerTest, HandlesStartedCoverLift)
 {
     InMemoryCoverRepository coverRepository;

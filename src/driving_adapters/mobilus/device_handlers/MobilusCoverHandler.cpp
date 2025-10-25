@@ -30,7 +30,7 @@ HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo, const
     auto cover = mCoverRepository.findOfMobilusDeviceId(deviceInfo.id());
 
     if (cover) {
-        if (apply(*cover, deviceInfo) || apply(*cover, lastEvent)) {
+        if (apply(*cover, deviceInfo) | apply(*cover, lastEvent)) {
             mCoverRepository.save(*cover);
         }
 
