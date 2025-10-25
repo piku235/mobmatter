@@ -19,7 +19,7 @@ public:
     {
     }
 
-    void boot()
+    void run() override
     {
         for (auto& cover : mCoveRepository.all()) {
             mCoverEndpointService.addEndpoint(cover.endpointId(), cover.specification());

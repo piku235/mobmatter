@@ -25,7 +25,7 @@ void MqttMobilusDeviceSyncer::registerHandler(MobilusDeviceSyncHandler& handler)
     mHandlers.push_back(handler);
 }
 
-void MqttMobilusDeviceSyncer::boot()
+void MqttMobilusDeviceSyncer::run()
 {
     proto::DevicesListResponse deviceList;
 

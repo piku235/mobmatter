@@ -1,9 +1,18 @@
 source_set("generic") {
-  sources = [ "MobilusDeviceInfoSyncerAdapter.cpp" ]
+  sources = [
+    "MobilusDeviceInfoSyncerAdapter.cpp",
+    "MobilusDeviceSyncerAdapter.cpp",
+  ]
 
-  public = [ "MobilusDeviceInfoSyncerAdapter.h" ]
+  public = [
+    "MobilusDeviceInfoSyncerAdapter.h",
+    "MobilusDeviceSyncerAdapter.h",
+  ]
 
-  deps = [ "//src/driving_adapters/mobilus:device_info_syncer" ]
+  deps = [
+    "//src/driving_adapters/mobilus:device_info_syncer",
+    "//src/driving_adapters/mobilus:device_syncer",
+  ]
 
   public_deps = [ "//third_party/mobilus_gtw_client" ]
 

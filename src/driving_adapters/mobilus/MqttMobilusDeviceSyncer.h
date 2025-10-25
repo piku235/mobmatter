@@ -17,7 +17,7 @@ public:
     MqttMobilusDeviceSyncer(jungi::mobilus_gtw_client::MqttMobilusGtwClient& client, logging::Logger& logger);
 
     void registerHandler(MobilusDeviceSyncHandler& handler);
-    void boot() override;
+    void run() override;
 
 private:
     jungi::mobilus_gtw_client::MqttMobilusGtwClient& mClient;

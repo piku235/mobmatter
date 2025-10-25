@@ -56,7 +56,7 @@ TEST(MqttMobilusDeviceSyncerTest, DoesNotDelegateDeviceEventPairIfNoHandlers)
     client.mockResponse(std::make_unique<proto::DevicesListResponse>());
     client.mockResponse(std::make_unique<proto::CurrentStateResponse>());
 
-    syncer.boot();
+    syncer.run();
 }
 
 TEST(MqttMobilusDeviceSyncerTest, DelegatesDeviceEventPairToHandler)
@@ -77,13 +77,13 @@ TEST(MqttMobilusDeviceSyncerTest, DelegatesDeviceEventPairToHandler)
 
     setupResponses(deviceList, currentState);
 
-    syncer.boot();
+    syncer.run();
     ASSERT_TRUE(unmatchedHandler.seenDeviceEventPairs().empty());
     ASSERT_TRUE(handledHandler.seenDeviceEventPairs().empty());
     ASSERT_TRUE(otherHandler.seenDeviceEventPairs().empty());
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceList));
-    syncer.boot();
+    syncer.run();
 
     ASSERT_TRUE(unmatchedHandler.seenDeviceEventPairs().empty());
     ASSERT_TRUE(handledHandler.seenDeviceEventPairs().empty());
@@ -91,7 +91,7 @@ TEST(MqttMobilusDeviceSyncerTest, DelegatesDeviceEventPairToHandler)
 
     client.mockResponse(std::make_unique<proto::DevicesListResponse>(deviceList));
     client.mockResponse(std::make_unique<proto::CurrentStateResponse>(currentState));
-    syncer.boot();
+    syncer.run();
 
     ASSERT_EQ(2, unmatchedHandler.seenDeviceEventPairs().size());
     ASSERT_EQ(2, handledHandler.seenDeviceEventPairs().size());
