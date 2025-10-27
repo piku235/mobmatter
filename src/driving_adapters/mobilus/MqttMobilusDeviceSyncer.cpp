@@ -1,5 +1,5 @@
 #include "MqttMobilusDeviceSyncer.h"
-#include "HandlerResult.h"
+#include "DeviceStateMap.h"
 #include "Log.h"
 #include "application/model/MobilusDeviceId.h"
 #include "jungi/mobilus_gtw_client/proto/CurrentStateRequest.pb.h"
@@ -41,46 +41,27 @@ void MqttMobilusDeviceSyncer::run()
         return;
     }
 
-    std::unordered_map<MobilusDeviceId, const proto::Event*> currentStateMap;
-
-    for (int i = 0; i < currentStateResponse.events_size(); i++) {
-        auto& currentState = currentStateResponse.events(i);
-
-        if (!currentState.has_device_id()) {
-            // should not happen
-            continue;
-        }
-
-        currentStateMap[currentState.device_id()] = &currentState;
-    }
+    DeviceStateMap devices;
+    devices.reserve(deviceList.devices_size());
 
     for (int i = 0; i < deviceList.devices_size(); i++) {
         auto& device = deviceList.devices(i);
 
-        if (!device.has_id()) {
-            // should not happen
-            continue;
+        if (device.has_id()) {
+            devices[device.id()].device.CheckTypeAndMergeFrom(device);
         }
+    }
 
-        auto it = currentStateMap.find(device.id());
+    for (int i = 0; i < currentStateResponse.events_size(); i++) {
+        auto& lastEvent = currentStateResponse.events(i);
 
-        if (it == currentStateMap.end()) {
-            mLogger.notice(LOG_TAG "Device: %s is missing current state, skipping [md=%" PRId64 "]", device.name().c_str(), device.id());
-            continue;
+        if (lastEvent.has_device_id()) {
+            devices[lastEvent.device_id()].lastEvent.CheckTypeAndMergeFrom(lastEvent);
         }
+    }
 
-        HandlerResult r;
-
-        for (MobilusDeviceSyncHandler& handler : mHandlers) {
-            r = handler.handle(device, *it->second);
-            if (HandlerResult::Unmatched != r) {
-                break;
-            }
-        }
-
-        if (HandlerResult::Unmatched == r) {
-            mLogger.notice(LOG_TAG "Device: %s is not supported [md=%" PRId64 "]", device.name().c_str(), device.id());
-        }
+    for (MobilusDeviceSyncHandler& handler : mHandlers) {
+        handler.sync(devices);
     }
 }
 

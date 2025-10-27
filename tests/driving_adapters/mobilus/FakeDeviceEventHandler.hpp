@@ -9,12 +9,12 @@ namespace proto = jungi::mobilus_gtw_client::proto;
 
 class FakeDeviceEventHandler final : public driving_adapter::MobilusDeviceEventHandler {
 public:
-    explicit FakeDeviceEventHandler(driving_adapter::HandlerResult result)
+    explicit FakeDeviceEventHandler(Result result)
         : mResult(result)
     {
     }
 
-    driving_adapter::HandlerResult handle(const proto::Event& event) override
+    Result handle(const proto::Event& event) override
     {
         mSeenEvents.push_back(event);
 
@@ -25,5 +25,5 @@ public:
 
 private:
     std::vector<proto::Event> mSeenEvents;
-    driving_adapter::HandlerResult mResult;
+    Result mResult;
 };

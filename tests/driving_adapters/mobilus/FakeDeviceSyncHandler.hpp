@@ -10,21 +10,13 @@ namespace proto = jungi::mobilus_gtw_client::proto;
 
 class FakeDeviceSyncHandler final : public driving_adapter::MobilusDeviceSyncHandler {
 public:
-    explicit FakeDeviceSyncHandler(driving_adapter::HandlerResult result)
-        : mResult(result)
+    void sync(const driving_adapter::DeviceStateMap& devices) override
     {
+        mDevices = devices;
     }
 
-    driving_adapter::HandlerResult handle(const proto::Device& deviceInfo, const proto::Event& currentState) override
-    {
-        mSeenDeviceEventPairs.push_back({ deviceInfo, currentState });
-
-        return mResult;
-    }
-
-    const std::vector<std::pair<proto::Device, proto::Event>>& seenDeviceEventPairs() const { return mSeenDeviceEventPairs; }
+    const driving_adapter::DeviceStateMap& syncedDevices() const { return mDevices; }
 
 private:
-    std::vector<std::pair<proto::Device, proto::Event>> mSeenDeviceEventPairs;
-    driving_adapter::HandlerResult mResult;
+    driving_adapter::DeviceStateMap mDevices;
 };

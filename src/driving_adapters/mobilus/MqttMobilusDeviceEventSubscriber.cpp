@@ -1,5 +1,4 @@
 #include "MqttMobilusDeviceEventSubscriber.h"
-#include "HandlerResult.h"
 #include "jungi/mobilus_gtw_client/MessageType.h"
 
 using namespace jungi::mobilus_gtw_client;
@@ -27,7 +26,7 @@ void MqttMobilusDeviceEventSubscriber::handle(const proto::CallEvents& callEvent
         auto& event = callEvents.events(i);
 
         for (MobilusDeviceEventHandler& handler : mHandlers) {
-            if (HandlerResult::Unmatched != handler.handle(event)) {
+            if (MobilusDeviceEventHandler::Result::Unmatched != handler.handle(event)) {
                 break;
             }
         }

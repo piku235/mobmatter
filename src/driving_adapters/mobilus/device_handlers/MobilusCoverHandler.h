@@ -22,8 +22,8 @@ class MobilusCoverHandler final : public MobilusDeviceSyncHandler,
 public:
     MobilusCoverHandler(driven_ports::CoverRepository& coverRepository, driven_ports::EndpointIdGenerator& endpointIdGenerator, logging::Logger& logger);
 
-    HandlerResult handle(const proto::Device& deviceInfo, const proto::Event& lastEvent) override;
-    HandlerResult handle(const proto::Event& event) override;
+    void sync(const DeviceStateMap& devices) override;
+    Result handle(const proto::Event& event) override;
 
 private:
     driven_ports::CoverRepository& mCoverRepository;

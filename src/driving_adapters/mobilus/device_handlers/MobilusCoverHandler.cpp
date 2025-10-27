@@ -25,46 +25,54 @@ MobilusCoverHandler::MobilusCoverHandler(driven_ports::CoverRepository& coverRep
 {
 }
 
-HandlerResult MobilusCoverHandler::handle(const proto::Device& deviceInfo, const proto::Event& lastEvent)
+void MobilusCoverHandler::sync(const DeviceStateMap& devices)
 {
-    auto cover = mCoverRepository.findOfMobilusDeviceId(deviceInfo.id());
+    // non-existing
+    for (auto& cover : mCoverRepository.all()) {
+        if (devices.end() == devices.find(cover.mobilusDeviceId())) {
+            mCoverRepository.remove(cover);
+        }
+    }
 
-    if (cover) {
-        if (apply(*cover, deviceInfo) | apply(*cover, lastEvent)) {
-            mCoverRepository.save(*cover);
+    // existing
+    for (auto& [deviceId, deviceState] : devices) {
+        auto coverSpec = CoverSpecification::findFor(static_cast<MobilusDeviceType>(deviceState.device.type()));
+
+        if (!coverSpec) {
+            continue;
         }
 
-        return HandlerResult::Handled;
+        auto cover = mCoverRepository.findOfMobilusDeviceId(deviceId);
+
+        if (cover) {
+            if (apply(*cover, deviceState.device) | apply(*cover, deviceState.lastEvent)) {
+                mCoverRepository.save(*cover);
+            }
+
+            continue;
+        }
+
+        init(std::move(*coverSpec), deviceState.device, deviceState.lastEvent);
     }
-
-    auto coverSpec = CoverSpecification::findFor(static_cast<MobilusDeviceType>(deviceInfo.type()));
-
-    if (!coverSpec) {
-        return HandlerResult::Unmatched;
-    }
-
-    init(std::move(*coverSpec), deviceInfo, lastEvent);
-
-    return HandlerResult::Handled;
 }
 
-HandlerResult MobilusCoverHandler::handle(const proto::Event& event)
+MobilusDeviceEventHandler::Result MobilusCoverHandler::handle(const proto::Event& event)
 {
     if (!event.has_device_id()) {
-        return HandlerResult::Unmatched;
+        return Result::Unmatched;
     }
 
     auto cover = mCoverRepository.findOfMobilusDeviceId(event.device_id());
 
     if (!cover) {
-        return HandlerResult::Unmatched;
+        return Result::Unmatched;
     }
 
     if (apply(*cover, event)) {
         mCoverRepository.save(*cover);
     }
 
-    return HandlerResult::Handled;
+    return Result::Handled;
 }
 
 void MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device& deviceInfo, const proto::Event& lastEvent)

@@ -1,3 +1,16 @@
+source_set("device_syncer") {
+  sources = [ "MobilusDeviceSyncerAdapterTest.cpp" ]
+
+  deps = [
+    "//src/application",
+    "//src/driving_adapters/mobilus:device_syncer",
+    "//src/driving_adapters/mobilus/device_handlers:device_syncer",
+    "//third_party/googletest:gtest",
+  ]
+
+  configs += [ "//tests:tests_include" ]
+}
+
 source_set("cover") {
   sources = [ "MobilusCoverHandlerTest.cpp" ]
 

@@ -1,3 +1,15 @@
+source_set("device_syncer") {
+  sources = [ "MobilusDeviceSyncerAdapter.cpp" ]
+
+  public = [ "MobilusDeviceSyncerAdapter.h" ]
+
+  deps = [ "//src/driving_adapters/mobilus:device_syncer" ]
+
+  public_deps = [ "//third_party/mobilus_gtw_client" ]
+
+  configs += [ "//:app_includes" ]
+}
+
 source_set("cover") {
   sources = [ "MobilusCoverHandler.cpp" ]
 

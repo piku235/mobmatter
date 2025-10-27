@@ -1,6 +1,6 @@
 #include "driving_adapters/mobilus/MqttMobilusDeviceEventSubscriber.h"
+#include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
 #include "FakeDeviceEventHandler.hpp"
-#include "driving_adapters/mobilus/HandlerResult.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
@@ -47,9 +47,9 @@ TEST(MqttMobilusDeviceEventSubscriberTest, DelegatesEventsToHandler)
     MockMqttMobilusGtwClient client;
     MqttMobilusDeviceEventSubscriber eventSubscriber(client);
 
-    FakeDeviceEventHandler unmatchedHandler(HandlerResult::Unmatched);
-    FakeDeviceEventHandler handledHandler(HandlerResult::Handled);
-    FakeDeviceEventHandler otherHandler(HandlerResult::Unmatched);
+    FakeDeviceEventHandler unmatchedHandler(MobilusDeviceEventHandler::Result::Unmatched);
+    FakeDeviceEventHandler handledHandler(MobilusDeviceEventHandler::Result::Handled);
+    FakeDeviceEventHandler otherHandler(MobilusDeviceEventHandler::Result::Unmatched);
 
     eventSubscriber.registerHandler(unmatchedHandler);
     eventSubscriber.registerHandler(handledHandler);
