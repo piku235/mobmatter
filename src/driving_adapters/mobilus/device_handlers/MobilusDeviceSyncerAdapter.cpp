@@ -14,7 +14,10 @@ MobilusDeviceEventHandler::Result MobilusDeviceSyncerAdapter::handle(const proto
 {
     if (EventNumber::Device == event.event_number() && ("ADD" == event.value() || "MODIFY" == event.value() || "REMOVE" == event.value())) {
         mSyncer.run();
+        return Result::Handled;
     }
+
+    return Result::Unmatched;
 }
 
 }

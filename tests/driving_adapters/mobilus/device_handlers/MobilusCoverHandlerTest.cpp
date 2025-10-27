@@ -50,8 +50,7 @@ auto coverStub()
 
 }
 
-class MobilusCoverInitHandlerTest : public TestWithParam<CoverExpectation> {
-};
+class MobilusCoverHandlerInitTest : public TestWithParam<CoverExpectation> { };
 
 TEST(MobilusCoverHandlerTest, EventIsNotSupported)
 {
@@ -87,7 +86,7 @@ TEST(MobilusCoverHandlerTest, DoesNotSyncUnsupportedDevice)
     ASSERT_TRUE(coverRepository.all().empty());
 }
 
-TEST_P(MobilusCoverInitHandlerTest, SynchronizesNewCover)
+TEST_P(MobilusCoverHandlerInitTest, SynchronizesNewCover)
 {
     InMemoryCoverRepository coverRepository;
     InMemoryEndpointIdGenerator endpointIdGenerator(1u);
@@ -458,7 +457,7 @@ TEST(MobilusCoverHandlerTest, IgnoresInvalidReachedPosition)
 }
 
 // clang-format off
-INSTANTIATE_TEST_SUITE_P(PossibleDevices, MobilusCoverInitHandlerTest, Values(
+INSTANTIATE_TEST_SUITE_P(PossibleDevices, MobilusCoverHandlerInitTest, Values(
     CoverExpectation { Position::fullyOpen(), CoverSpecification::Senso(), MobilusDeviceType::Senso, "100%", EventNumber::Reached },
     CoverExpectation { Position::fullyOpen(), CoverSpecification::Senso(), MobilusDeviceType::Senso, "UP", EventNumber::Reached },
     CoverExpectation { Position::fullyClosed(), CoverSpecification::Cosmo(), MobilusDeviceType::Cosmo, "0%", EventNumber::Sent },

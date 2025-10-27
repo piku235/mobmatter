@@ -1,12 +1,12 @@
 #include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
 #include "application/model/window_covering/Position.h"
+#include "common/logging/Logger.h"
 #include "jungi/mobilus_gtw_client/EventNumber.h"
 #include "jungi/mobilus_gtw_client/MessageType.h"
 #include "jungi/mobilus_gtw_client/Platform.h"
 #include "jungi/mobilus_gtw_client/ProtoUtils.h"
 #include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
-#include "common/logging/Logger.h"
 
 #include <gtest/gtest.h>
 
@@ -23,9 +23,9 @@ using testing::TestWithParam;
 using testing::Values;
 using ExpectedPosition = std::tuple<std::string, uint16_t>;
 
-class MqttMobilusCoverControlServiceTest : public TestWithParam<ExpectedPosition> { };
+class MqttMobilusCoverControlServiceParamTest : public TestWithParam<ExpectedPosition> { };
 
-TEST_P(MqttMobilusCoverControlServiceTest, LiftsCover)
+TEST_P(MqttMobilusCoverControlServiceParamTest, LiftsCover)
 {
     MockMqttMobilusGtwClient client;
     MqttMobilusCoverControlService coverControlService(client, Logger::noop());
@@ -71,7 +71,7 @@ TEST(MqttMobilusCoverControlServiceTest, StopsCoverMotion)
 }
 
 // clang-format off
-INSTANTIATE_TEST_SUITE_P(PossiblePositions, MqttMobilusCoverControlServiceTest, Values(
+INSTANTIATE_TEST_SUITE_P(PossiblePositions, MqttMobilusCoverControlServiceParamTest, Values(
     ExpectedPosition { "UP", 10000 },
     ExpectedPosition { "DOWN", 0 },
     ExpectedPosition { "23%", 2300 },
