@@ -2,7 +2,6 @@
 
 #include <cinttypes>
 #include <cstdint>
-#include <cstdio>
 #include <sys/time.h>
 
 namespace mobmatter::common::logging::handlers {
@@ -11,9 +10,21 @@ void StdioLogHandler::log(LogLevel level, const char* message)
 {
     timeval tv;
     gettimeofday(&tv, nullptr);
+    FILE* stream = logStream(level);
 
-    printf("[%" PRIu64 ".%06" PRIu64 "][%s] %s\n", static_cast<uint64_t>(tv.tv_sec), static_cast<uint64_t>(tv.tv_usec), levelName(level), message);
-    fflush(stdout);
+    fprintf(stream, "[%" PRIu64 ".%06" PRIu64 "][%s] %s\n", static_cast<uint64_t>(tv.tv_sec), static_cast<uint64_t>(tv.tv_usec), levelName(level), message);
+    fflush(stream);
+}
+
+FILE* StdioLogHandler::logStream(LogLevel level)
+{
+    switch (level) {
+    case LogLevel::Critical:
+    case LogLevel::Error:
+        return stderr;
+    default:
+        return stdout;
+    }
 }
 
 const char* StdioLogHandler::levelName(LogLevel level)
