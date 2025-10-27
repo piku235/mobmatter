@@ -5,6 +5,7 @@ source_set("device_syncer") {
     "//src/application",
     "//src/driving_adapters/mobilus:device_syncer",
     "//src/driving_adapters/mobilus/device_handlers:device_syncer",
+    "//third_party/googletest:gmock",
     "//third_party/googletest:gtest",
   ]
 
