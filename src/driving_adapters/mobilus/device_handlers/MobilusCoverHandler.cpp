@@ -30,7 +30,10 @@ void MobilusCoverHandler::sync(const DeviceStateMap& devices)
     // non-existing
     for (auto& cover : mCoverRepository.all()) {
         if (devices.end() == devices.find(cover.mobilusDeviceId())) {
+            cover.remove();
             mCoverRepository.remove(cover);
+
+            mLogger.notice(LOG_TAG "Removed cover" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
         }
     }
 
