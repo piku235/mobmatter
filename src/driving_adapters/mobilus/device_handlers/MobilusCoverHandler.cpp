@@ -111,7 +111,7 @@ void MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device
 bool MobilusCoverHandler::apply(Cover& cover, const proto::Device& deviceInfo)
 {
     if (Cover::Result::Ok == cover.rename(deviceInfo.name())) {
-        mLogger.notice(LOG_TAG "Renamed cover to: %s" LOG_SUFFIX, deviceInfo.name().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+        mLogger.notice(LOG_TAG "Renamed cover to: %s" LOG_SUFFIX_EP, deviceInfo.name().c_str(), cover.endpointId(), cover.mobilusDeviceId());
         return true;
     }
 
@@ -130,12 +130,12 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
                 return true;
             }
 
-            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
             return false;
         }
 
         if (Cover::Result::Ok == cover.startLiftTo(*position)) {
-            mLogger.notice(LOG_TAG "Started lifting cover to target position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+            mLogger.notice(LOG_TAG "Started lifting cover to target position: %d%%" LOG_SUFFIX_EP, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
             return true;
         }
 
@@ -145,12 +145,12 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
         auto position = convertLiftPosition(event.value());
 
         if (!position) {
-            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
             return false;
         }
 
         if (Cover::Result::Ok == cover.changeLiftPosition(*position)) {
-            mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+            mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX_EP, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
             return true;
         }
 
@@ -159,7 +159,7 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
     case EventNumber::Error:
         if ("NO_CONNECTION" == event.value()) {
             if (Cover::Result::Ok == cover.markAsUnreachable()) {
-                mLogger.notice(LOG_TAG "Cover marked as unreachable" LOG_SUFFIX, cover.endpointId(), cover.mobilusDeviceId());
+                mLogger.notice(LOG_TAG "Cover marked as unreachable" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
                 return true;
             }
 
@@ -167,7 +167,7 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
         }
 
         if (Cover::Result::Ok == cover.failMotion()) {
-            mLogger.notice(LOG_TAG "Cover motion failed: %s" LOG_SUFFIX, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+            mLogger.notice(LOG_TAG "Cover motion failed: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
             return true;
         }
 

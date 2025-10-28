@@ -29,6 +29,8 @@ void MqttMobilusDeviceSyncer::run()
 {
     proto::DevicesListResponse deviceList;
 
+    mLogger.info(LOG_TAG "Syncing devices");
+
     if (!mClient.sendRequest(proto::DevicesListRequest(), deviceList)) {
         mLogger.error(LOG_TAG "Failed to get device list from mobilus");
         return;
