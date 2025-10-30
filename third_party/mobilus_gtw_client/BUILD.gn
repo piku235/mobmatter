@@ -2,7 +2,7 @@ import("//build_overrides/build.gni")
 import("${build_root}/config/linux/pkg_config.gni")
 
 protobuf_dir = "//third_party/protobuf/repo"
-mobilus_proto_dir = "repo/include/jungi/mobilus_gtw_client/proto"
+mobilus_proto_dir = "repo/proto"
 mobilus_proto_outdir = "${target_gen_dir}/jungi/mobilus_gtw_client/proto"
 
 config("protobuf_config") {
@@ -126,6 +126,7 @@ static_library("mobilus_gtw_client") {
     "repo/src/MqttMobilusGtwClient.cpp",
     "repo/src/MqttMobilusGtwClientImpl.cpp",
     "repo/src/ProtoUtils.cpp",
+    "repo/src/Qos.h",
     "repo/src/SelectCondition.cpp",
     "repo/src/SelectCondition.h",
     "repo/src/TimeUtils.cpp",
