@@ -15,14 +15,14 @@ jobs:
       matrix:
         include:
           # gcc
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             cc: gcc
             cxx: g++
             is_clang: false
 
           # clang
           # temp fix: v21.0.0 bugged with gtest parametrized tests
-          - os: ubuntu-22.04
+          - os: ubuntu-latest
             cc: /usr/bin/clang
             cxx: /usr/bin/clang++
             is_clang: true

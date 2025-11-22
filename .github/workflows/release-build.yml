@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       OPENWRT_VERSION: "24.10.3"
       GCC_VERSION: "13.3.0"
