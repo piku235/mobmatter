@@ -106,6 +106,7 @@ source_set("crypto") {
   public = [
     "repo/src/crypto/Aes256Encryptor.h",
     "repo/src/crypto/Encryptor.h",
+    "repo/src/crypto/bytes.h",
     "repo/src/crypto/hash.h",
     "repo/src/crypto/utils.h",
   ]
@@ -129,7 +130,6 @@ static_library("mobilus_gtw_client") {
     "repo/src/Qos.h",
     "repo/src/SelectCondition.cpp",
     "repo/src/SelectCondition.h",
-    "repo/src/TimeUtils.cpp",
     "repo/src/TimeUtils.h",
     "repo/src/io/SelectEventLoop.cpp",
   ]
