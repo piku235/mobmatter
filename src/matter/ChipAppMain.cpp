@@ -14,14 +14,12 @@
 #include <platform/PlatformManager.h>
 
 #include <app/SimpleSubscriptionResumptionStorage.h>
-#include <app/TimerDelegates.h>
 #include <app/clusters/network-commissioning/network-commissioning.h>
 #include <app/reporting/ReportSchedulerImpl.h>
 #include <app/server/AclStorage.h>
 #include <app/server/DefaultAclStorage.h>
 #include <app/server/Server.h>
 #include <app/util/af-types.h>
-#include <app/util/persistence/DefaultAttributePersistenceProvider.h>
 #include <credentials/DeviceAttestationCredsProvider.h>
 #include <credentials/GroupDataProviderImpl.h>
 #include <credentials/PersistentStorageOpCertStore.h>
@@ -59,7 +57,6 @@ static chip::SimpleSessionResumptionStorage sSessionResumptionStorage;
 static chip::app::DefaultAclStorage sAclStorage;
 static chip::app::SimpleSubscriptionResumptionStorage sSubscriptionResumptionStorage;
 static chip::DeviceLayer::NetworkCommissioning::LinuxEthernetDriver sEthernetDriver;
-static chip::app::DefaultAttributePersistenceProvider sAttributePersistenceProvider;
 static chip::app::Clusters::NetworkCommissioning::Instance sEthernetNetworkCommissioningInstance(chip::kRootEndpointId, &sEthernetDriver);
 
 namespace mobmatter::matter {
@@ -76,9 +73,6 @@ int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, ch
     RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = sCommissionableDataProvider.Init();
-    RETURN_CHIP_ERROR_ON_FAILURE(err);
-
-    err = sAttributePersistenceProvider.Init(&persistentStorageDelegate);
     RETURN_CHIP_ERROR_ON_FAILURE(err);
 
     err = sOperationalKeystore.Init(&persistentStorageDelegate);
@@ -103,7 +97,6 @@ int ChipAppMain::boot(Logger& logger, MqttMobilusGtwClient& mobilusGtwClient, ch
     chip::DeviceLayer::SetDeviceInstanceInfoProvider(&sDeviceInstanceInfoProvider);
     chip::DeviceLayer::SetCommissionableDataProvider(&sCommissionableDataProvider);
     chip::Credentials::SetDeviceAttestationCredentialsProvider(&sDacProvider);
-    chip::app::SetAttributePersistenceProvider(&sAttributePersistenceProvider);
 
     if (auto r = mobilusGtwClient.connect(); !r) {
         // on startup, it might be mobilus process has not yet connected to MQTT broker

@@ -55,11 +55,4 @@ CHIP_ERROR DeviceInstanceInfoProviderImpl::GetHardwareVersionString(char* buf, s
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR DeviceInstanceInfoProviderImpl::GetSoftwareVersionString(char* buf, size_t bufSize)
-{
-    VerifyOrReturnError(bufSize >= sizeof(CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING), CHIP_ERROR_BUFFER_TOO_SMALL);
-    strcpy(buf, CHIP_DEVICE_CONFIG_DEVICE_SOFTWARE_VERSION_STRING);
-    return CHIP_NO_ERROR;
-}
-
 }

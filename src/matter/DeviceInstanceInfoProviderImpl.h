@@ -19,7 +19,6 @@ public:
     CHIP_ERROR GetManufacturingDate(uint16_t& year, uint8_t& month, uint8_t& day) override { return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE; };
     CHIP_ERROR GetHardwareVersion(uint16_t& hardwareVersion) override;
     CHIP_ERROR GetHardwareVersionString(char* buf, size_t bufSize) override;
-    CHIP_ERROR GetSoftwareVersionString(char* buf, size_t bufSize) override;
     CHIP_ERROR GetRotatingDeviceIdUniqueId(chip::MutableByteSpan& uniqueIdSpan) override { return CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE; };
 
 private:
