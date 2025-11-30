@@ -99,13 +99,13 @@ source_set("proto") {
 
 source_set("crypto") {
   sources = [
-    "repo/src/crypto/Aes256Encryptor.cpp",
+    "repo/src/crypto/EvpEncryptor.cpp",
     "repo/src/crypto/hash.cpp",
     "repo/src/crypto/utils.cpp",
   ]
   public = [
-    "repo/src/crypto/Aes256Encryptor.h",
     "repo/src/crypto/Encryptor.h",
+    "repo/src/crypto/EvpEncryptor.h",
     "repo/src/crypto/bytes.h",
     "repo/src/crypto/hash.h",
     "repo/src/crypto/utils.h",
