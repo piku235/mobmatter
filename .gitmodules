@@ -4,12 +4,12 @@
 [submodule "third_party/connectedhomeip"]
 	path = third_party/connectedhomeip
 	url = https://github.com/project-chip/connectedhomeip.git
-[submodule "third_party/mobilus_gtw_client/repo"]
-	path = third_party/mobilus_gtw_client/repo
-	url = https://github.com/piku235/mobilus-gtw-client.git
 [submodule "third_party/tl_expected/repo"]
 	path = third_party/tl_expected/repo
 	url = https://github.com/TartanLlama/expected.git
 [submodule "third_party/googletest/repo"]
 	path = third_party/googletest/repo
 	url = https://github.com/google/googletest.git
+[submodule "third_party/mobgtw/repo"]
+	path = third_party/mobgtw/repo
+	url = https://github.com/piku235/mobgtw.git

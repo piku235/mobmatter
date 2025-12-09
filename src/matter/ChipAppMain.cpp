@@ -39,8 +39,8 @@
 
 using namespace mobmatter::common::logging;
 using namespace mobmatter::matter::logging;
-using jungi::mobilus_gtw_client::ErrorCode;
-using jungi::mobilus_gtw_client::MqttMobilusGtwClient;
+using jungi::mobgtw::ErrorCode;
+using jungi::mobgtw::MqttMobilusGtwClient;
 
 static mobmatter::matter::CommissionableDataProviderImpl sCommissionableDataProvider;
 static mobmatter::matter::DeviceInfoProviderImpl sDeviceInfoProvider;

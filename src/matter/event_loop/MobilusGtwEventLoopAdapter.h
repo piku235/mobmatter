@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jungi/mobilus_gtw_client/io/EventLoop.h"
+#include "jungi/mobgtw/io/EventLoop.h"
 #include "matter/AppComponent.h"
 
 #include <system/SocketEvents.h>
@@ -12,7 +12,7 @@
 
 namespace mobmatter::matter::event_loop {
 
-namespace mobio = jungi::mobilus_gtw_client::io;
+namespace mobio = jungi::mobgtw::io;
 
 class MobilusGtwEventLoopAdapter final : public mobio::EventLoop,
                                          public chip::System::EventLoopHandler,
@@ -33,7 +33,7 @@ public:
 
     // EventLoopHandler
     chip::System::Clock::Timestamp PrepareEvents(chip::System::Clock::Timestamp now) override;
-    void HandleEvents() override {};
+    void HandleEvents() override { };
 
 private:
     struct SocketWatch {

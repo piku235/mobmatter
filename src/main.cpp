@@ -22,9 +22,9 @@
 #include "driving_adapters/mobilus/MqttMobilusDeviceSyncer.h"
 #include "driving_adapters/mobilus/device_handlers/MobilusCoverHandler.h"
 #include "driving_adapters/mobilus/device_handlers/MobilusDeviceSyncerAdapter.h"
-#include "jungi/mobilus_gtw_client/MqttDsn.h"
-#include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
-#include "jungi/mobilus_gtw_client/proto/DeviceSettingsRequest.pb.h"
+#include "jungi/mobgtw/MqttDsn.h"
+#include "jungi/mobgtw/MqttMobilusGtwClient.h"
+#include "jungi/mobgtw/proto/DeviceSettingsRequest.pb.h"
 #include "matter/ChipAppMain.h"
 #include "matter/DeviceEndpointLoader.hpp"
 #include "matter/event_loop/DomainEventPublisherAdapter.h"
@@ -62,12 +62,12 @@ using namespace mobmatter::driving_adapters::matter::cluster_stubs;
 using namespace mobmatter::matter;
 using namespace mobmatter::matter::event_loop;
 using namespace mobmatter::matter::persistence;
+using namespace jungi::mobgtw;
 using mobmatter::application::model::MobilusDeviceId;
-namespace mobgtw = jungi::mobilus_gtw_client;
 
 static ChipAppMain sChipApp;
 
-class MqttMobilusGtwClientLoggerAdapter : public mobgtw::logging::Logger {
+class MqttMobilusGtwClientLoggerAdapter : public jungi::mobgtw::logging::Logger {
 public:
     // clang-format off
     MqttMobilusGtwClientLoggerAdapter(::Logger& logger): mLogger(logger) {}
@@ -93,10 +93,10 @@ const char* getEnvOr(const char* name, const char* defaultValue)
     return value ? value : defaultValue;
 }
 
-std::unique_ptr<mobgtw::MqttMobilusGtwClient> createMobilusGtwClient(mobgtw::io::EventLoop* loop, mobgtw::logging::Logger* logger)
+std::unique_ptr<MqttMobilusGtwClient> createMobilusGtwClient(jungi::mobgtw::io::EventLoop* loop, jungi::mobgtw::logging::Logger* logger)
 {
-    return mobgtw::MqttMobilusGtwClient::builder()
-        .dsn(mobgtw::MqttDsn::from(MOBILUS_DSN).value())
+    return MqttMobilusGtwClient::builder()
+        .dsn(MqttDsn::from(MOBILUS_DSN).value())
         .login({ getEnvOr("MOBILUS_USERNAME", "admin"), getEnvOr("MOBILUS_PASSWORD", "admin") })
         .useKeepAliveMessage(std::make_unique<proto::DeviceSettingsRequest>())
         .useLogger(logger)

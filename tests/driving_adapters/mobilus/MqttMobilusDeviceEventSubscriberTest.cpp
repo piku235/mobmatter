@@ -1,13 +1,13 @@
 #include "driving_adapters/mobilus/MqttMobilusDeviceEventSubscriber.h"
-#include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
 #include "FakeDeviceEventHandler.hpp"
-#include "jungi/mobilus_gtw_client/EventNumber.h"
-#include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
+#include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
+#include "jungi/mobgtw/EventNumber.h"
+#include "jungi/mobgtw/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 using namespace mobmatter::driving_adapters::mobilus;
 using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 

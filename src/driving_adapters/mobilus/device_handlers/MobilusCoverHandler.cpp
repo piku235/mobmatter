@@ -5,14 +5,14 @@
 #include "application/model/window_covering/CoverSpecification.h"
 #include "application/model/window_covering/PositionState.h"
 #include "driving_adapters/mobilus/Log.h"
-#include "jungi/mobilus_gtw_client/EventNumber.h"
+#include "jungi/mobgtw/EventNumber.h"
 
 #include <cinttypes>
 
 #define LOG_SUFFIX " [md=%" PRId64 "]"
 #define LOG_SUFFIX_EP " [ep=%u, md=%" PRId64 "]"
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 using namespace mobmatter::application::model;
 using namespace mobmatter::application::model::window_covering;
 

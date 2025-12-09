@@ -6,7 +6,7 @@
 #include <vector>
 
 namespace driving_adapter = mobmatter::driving_adapters::mobilus;
-namespace proto = jungi::mobilus_gtw_client::proto;
+namespace proto = jungi::mobgtw::proto;
 
 class FakeDeviceSyncHandler final : public driving_adapter::MobilusDeviceSyncHandler {
 public:

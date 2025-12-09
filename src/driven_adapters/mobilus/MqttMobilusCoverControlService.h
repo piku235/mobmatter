@@ -2,11 +2,11 @@
 
 #include "application/driven_ports/CoverControlService.h"
 #include "common/logging/Logger.h"
-#include "jungi/mobilus_gtw_client/MqttMobilusGtwClient.h"
+#include "jungi/mobgtw/MqttMobilusGtwClient.h"
 
 #include <string>
 
-namespace jungi::mobilus_gtw_client::proto {
+namespace jungi::mobgtw::proto {
 
 class CallEvents;
 
@@ -14,19 +14,19 @@ class CallEvents;
 
 namespace mobmatter::driven_adapters::mobilus {
 
-namespace proto = jungi::mobilus_gtw_client::proto;
+namespace proto = jungi::mobgtw::proto;
 namespace model = mobmatter::application::model;
 namespace logging = mobmatter::common::logging;
 
 class MqttMobilusCoverControlService : public mobmatter::application::driven_ports::CoverControlService {
 public:
-    MqttMobilusCoverControlService(jungi::mobilus_gtw_client::MqttMobilusGtwClient& client, logging::Logger& logger);
+    MqttMobilusCoverControlService(jungi::mobgtw::MqttMobilusGtwClient& client, logging::Logger& logger);
 
     void liftCover(model::MobilusDeviceId deviceId, model::window_covering::Position position) override;
     void stopCoverMotion(model::MobilusDeviceId deviceId) override;
 
 private:
-    jungi::mobilus_gtw_client::MqttMobilusGtwClient& mClient;
+    jungi::mobgtw::MqttMobilusGtwClient& mClient;
     logging::Logger& mLogger;
 
     proto::CallEvents callEventsFor(model::MobilusDeviceId deviceId, const std::string& eventValue) const;

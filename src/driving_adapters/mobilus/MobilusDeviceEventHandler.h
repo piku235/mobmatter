@@ -1,10 +1,10 @@
 #pragma once
 
-#include "jungi/mobilus_gtw_client/proto/Event.pb.h"
+#include "jungi/mobgtw/proto/Event.pb.h"
 
 namespace mobmatter::driving_adapters::mobilus {
 
-namespace proto = jungi::mobilus_gtw_client::proto;
+namespace proto = jungi::mobgtw::proto;
 
 class MobilusDeviceEventHandler {
 public:

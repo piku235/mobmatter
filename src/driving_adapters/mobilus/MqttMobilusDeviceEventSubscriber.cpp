@@ -1,7 +1,6 @@
 #include "MqttMobilusDeviceEventSubscriber.h"
-#include "jungi/mobilus_gtw_client/MessageType.h"
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 
 namespace mobmatter::driving_adapters::mobilus {
 
@@ -17,7 +16,7 @@ void MqttMobilusDeviceEventSubscriber::registerHandler(MobilusDeviceEventHandler
 
 void MqttMobilusDeviceEventSubscriber::boot()
 {
-    mClient.messageBus().subscribe<proto::CallEvents>(MessageType::CallEvents, [this](auto& message) { handle(message); });
+    mClient.messageBus().subscribe<proto::CallEvents>([this](const auto& message) { handle(message); });
 }
 
 void MqttMobilusDeviceEventSubscriber::handle(const proto::CallEvents& callEvents)

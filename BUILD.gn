@@ -51,7 +51,7 @@ executable("mobmatter") {
     "//src/matter/event_loop",
     "//src/matter/logging",
     "//src/matter/persistence:sqlite",
-    "//third_party/mobilus_gtw_client",
+    "//third_party/mobgtw",
   ]
 
   include_dirs = [

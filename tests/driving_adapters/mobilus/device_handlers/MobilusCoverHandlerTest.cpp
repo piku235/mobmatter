@@ -12,16 +12,16 @@
 #include "driven_adapters/persistence/in_memory/InMemoryEndpointIdGenerator.h"
 #include "driving_adapters/mobilus/DeviceStateMap.h"
 #include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
-#include "jungi/mobilus_gtw_client/EventNumber.h"
-#include "jungi/mobilus_gtw_client/proto/Device.pb.h"
-#include "jungi/mobilus_gtw_client/proto/Event.pb.h"
+#include "jungi/mobgtw/EventNumber.h"
+#include "jungi/mobgtw/proto/Device.pb.h"
+#include "jungi/mobgtw/proto/Event.pb.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <string>
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 using namespace mobmatter::tests::driven_adapters::persistence::in_memory;
 using namespace mobmatter::application::model;
 using namespace mobmatter::application::model::window_covering;

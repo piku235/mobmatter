@@ -5,7 +5,7 @@ source_set("cover_control") {
 
   deps = [
     "//src/application",
-    "//third_party/mobilus_gtw_client",
+    "//third_party/mobgtw",
   ]
 
   configs += [ "//:app_includes" ]
@@ -18,7 +18,7 @@ source_set("device_management") {
 
   deps = [
     "//src/application",
-    "//third_party/mobilus_gtw_client",
+    "//third_party/mobgtw",
   ]
 
   configs += [ "//:app_includes" ]

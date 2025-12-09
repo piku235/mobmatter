@@ -1,14 +1,14 @@
 #include "MqttMobilusCoverControlService.h"
-#include "jungi/mobilus_gtw_client/EventNumber.h"
-#include "jungi/mobilus_gtw_client/Platform.h"
-#include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
+#include "jungi/mobgtw/EventNumber.h"
+#include "jungi/mobgtw/Platform.h"
+#include "jungi/mobgtw/proto/CallEvents.pb.h"
 
 #include <cinttypes>
 
 #define LOG_TAG "GTW: "
 #define LOG_SUFFIX " [md=%" PRId64 "]"
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 using namespace mobmatter::application::model;
 using namespace mobmatter::application::model::window_covering;
 

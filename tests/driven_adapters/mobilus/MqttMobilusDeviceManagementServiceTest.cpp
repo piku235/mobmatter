@@ -1,10 +1,10 @@
 #include "driven_adapters/mobilus/MqttMobilusDeviceManagementService.h"
 #include "application/model/MobilusDeviceType.h"
 #include "common/logging/Logger.h"
-#include "jungi/mobilus_gtw_client/OperationType.h"
-#include "jungi/mobilus_gtw_client/proto/DevicesListResponse.pb.h"
-#include "jungi/mobilus_gtw_client/proto/UpdateDeviceRequest.pb.h"
-#include "jungi/mobilus_gtw_client/proto/UpdateDeviceResponse.pb.h"
+#include "jungi/mobgtw/OperationType.h"
+#include "jungi/mobgtw/proto/DevicesListResponse.pb.h"
+#include "jungi/mobgtw/proto/UpdateDeviceRequest.pb.h"
+#include "jungi/mobgtw/proto/UpdateDeviceResponse.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gmock/gmock.h>
@@ -12,7 +12,7 @@
 
 #include <memory>
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 using mobmatter::application::model::MobilusDeviceType;
 using mobmatter::common::logging::Logger;
 using mobmatter::driven_adapters::mobilus::MqttMobilusDeviceManagementService;

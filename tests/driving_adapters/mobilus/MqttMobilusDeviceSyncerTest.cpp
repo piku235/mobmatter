@@ -3,15 +3,15 @@
 #include "application/model/MobilusDeviceType.h"
 #include "common/logging/Logger.h"
 #include "driving_adapters/mobilus/MobilusDeviceSyncHandler.h"
-#include "jungi/mobilus_gtw_client/EventNumber.h"
-#include "jungi/mobilus_gtw_client/proto/CurrentStateResponse.pb.h"
-#include "jungi/mobilus_gtw_client/proto/DevicesListResponse.pb.h"
-#include "jungi/mobilus_gtw_client/proto/Event.pb.h"
+#include "jungi/mobgtw/EventNumber.h"
+#include "jungi/mobgtw/proto/CurrentStateResponse.pb.h"
+#include "jungi/mobgtw/proto/DevicesListResponse.pb.h"
+#include "jungi/mobgtw/proto/Event.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 using namespace mobmatter::driving_adapters::mobilus;
 using mobmatter::application::model::MobilusDeviceType;
 using mobmatter::common::logging::Logger;

@@ -2,14 +2,14 @@
 #include "DeviceStateMap.h"
 #include "Log.h"
 #include "application/model/MobilusDeviceId.h"
-#include "jungi/mobilus_gtw_client/proto/CurrentStateRequest.pb.h"
-#include "jungi/mobilus_gtw_client/proto/CurrentStateResponse.pb.h"
-#include "jungi/mobilus_gtw_client/proto/DevicesListRequest.pb.h"
-#include "jungi/mobilus_gtw_client/proto/DevicesListResponse.pb.h"
+#include "jungi/mobgtw/proto/CurrentStateRequest.pb.h"
+#include "jungi/mobgtw/proto/CurrentStateResponse.pb.h"
+#include "jungi/mobgtw/proto/DevicesListRequest.pb.h"
+#include "jungi/mobgtw/proto/DevicesListResponse.pb.h"
 
 #include <unordered_map>
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 using namespace mobmatter::application::model;
 
 namespace mobmatter::driving_adapters::mobilus {

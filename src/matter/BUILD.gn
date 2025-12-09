@@ -23,7 +23,7 @@ source_set("matter") {
     "${chip_root}/src/app/server",
     "${chip_root}/src/lib",
     "${chip_root}/src/platform/logging:default",
-    "//third_party/mobilus_gtw_client",
+    "//third_party/mobgtw",
   ]
 
   public_deps = [ "//:mobgtw-zap" ]

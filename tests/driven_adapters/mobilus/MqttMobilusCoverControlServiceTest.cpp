@@ -1,11 +1,11 @@
 #include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
 #include "application/model/window_covering/Position.h"
 #include "common/logging/Logger.h"
-#include "jungi/mobilus_gtw_client/EventNumber.h"
-#include "jungi/mobilus_gtw_client/MessageType.h"
-#include "jungi/mobilus_gtw_client/Platform.h"
-#include "jungi/mobilus_gtw_client/ProtoUtils.h"
-#include "jungi/mobilus_gtw_client/proto/CallEvents.pb.h"
+#include "jungi/mobgtw/EventNumber.h"
+#include "jungi/mobgtw/MessageType.h"
+#include "jungi/mobgtw/Platform.h"
+#include "jungi/mobgtw/ProtoUtils.h"
+#include "jungi/mobgtw/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <tuple>
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 using mobmatter::application::model::Percent;
 using mobmatter::application::model::window_covering::Position;
 using mobmatter::common::logging::Logger;

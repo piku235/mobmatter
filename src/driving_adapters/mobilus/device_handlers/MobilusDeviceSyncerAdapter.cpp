@@ -1,7 +1,7 @@
 #include "MobilusDeviceSyncerAdapter.h"
-#include "jungi/mobilus_gtw_client/EventNumber.h"
+#include "jungi/mobgtw/EventNumber.h"
 
-using namespace jungi::mobilus_gtw_client;
+using namespace jungi::mobgtw;
 
 namespace mobmatter::driving_adapters::mobilus::device_handlers {
 

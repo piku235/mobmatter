@@ -3,7 +3,7 @@ import("${build_root}/config/linux/pkg_config.gni")
 
 protobuf_dir = "//third_party/protobuf/repo"
 mobilus_proto_dir = "repo/proto"
-mobilus_proto_outdir = "${target_gen_dir}/jungi/mobilus_gtw_client/proto"
+mobilus_proto_outdir = "${target_gen_dir}/jungi/mobgtw/proto"
 
 config("protobuf_config") {
   include_dirs = [
@@ -114,7 +114,7 @@ source_set("crypto") {
   configs += [ ":openssl_config" ]
 }
 
-static_library("mobilus_gtw_client") {
+static_library("mobgtw") {
   output_name = "libmobgtw"
 
   sources = [
@@ -135,25 +135,25 @@ static_library("mobilus_gtw_client") {
   ]
 
   public = [
-    "repo/include/jungi/mobilus_gtw_client/Action.h",
-    "repo/include/jungi/mobilus_gtw_client/Envelope.h",
-    "repo/include/jungi/mobilus_gtw_client/Error.h",
-    "repo/include/jungi/mobilus_gtw_client/ErrorCode.h",
-    "repo/include/jungi/mobilus_gtw_client/EventNumber.h",
-    "repo/include/jungi/mobilus_gtw_client/MessageBus.h",
-    "repo/include/jungi/mobilus_gtw_client/MessageType.h",
-    "repo/include/jungi/mobilus_gtw_client/MobilusCredentials.h",
-    "repo/include/jungi/mobilus_gtw_client/MqttDsn.h",
-    "repo/include/jungi/mobilus_gtw_client/MqttMobilusGtwClient.h",
-    "repo/include/jungi/mobilus_gtw_client/OperationType.h",
-    "repo/include/jungi/mobilus_gtw_client/Platform.h",
-    "repo/include/jungi/mobilus_gtw_client/ProtoUtils.h",
-    "repo/include/jungi/mobilus_gtw_client/SessionInformation.h",
-    "repo/include/jungi/mobilus_gtw_client/io/EventLoop.h",
-    "repo/include/jungi/mobilus_gtw_client/io/NullEventLoop.h",
-    "repo/include/jungi/mobilus_gtw_client/io/SelectEventLoop.h",
-    "repo/include/jungi/mobilus_gtw_client/io/SocketEventHandler.h",
-    "repo/include/jungi/mobilus_gtw_client/io/SocketEvents.h",
+    "repo/include/jungi/mobgtw/Action.h",
+    "repo/include/jungi/mobgtw/Envelope.h",
+    "repo/include/jungi/mobgtw/Error.h",
+    "repo/include/jungi/mobgtw/ErrorCode.h",
+    "repo/include/jungi/mobgtw/EventNumber.h",
+    "repo/include/jungi/mobgtw/MessageBus.h",
+    "repo/include/jungi/mobgtw/MessageType.h",
+    "repo/include/jungi/mobgtw/MobilusCredentials.h",
+    "repo/include/jungi/mobgtw/MqttDsn.h",
+    "repo/include/jungi/mobgtw/MqttMobilusGtwClient.h",
+    "repo/include/jungi/mobgtw/OperationType.h",
+    "repo/include/jungi/mobgtw/Platform.h",
+    "repo/include/jungi/mobgtw/ProtoUtils.h",
+    "repo/include/jungi/mobgtw/SessionInformation.h",
+    "repo/include/jungi/mobgtw/io/EventLoop.h",
+    "repo/include/jungi/mobgtw/io/NullEventLoop.h",
+    "repo/include/jungi/mobgtw/io/SelectEventLoop.h",
+    "repo/include/jungi/mobgtw/io/SocketEventHandler.h",
+    "repo/include/jungi/mobgtw/io/SocketEvents.h",
   ]
 
   include_dirs = [ "repo/src" ]

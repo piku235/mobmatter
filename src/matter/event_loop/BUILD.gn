@@ -14,7 +14,7 @@ source_set("event_loop") {
   deps = [
     "${chip_root}/src/lib",
     "//src/common/domain",
-    "//third_party/mobilus_gtw_client",
+    "//third_party/mobgtw",
   ]
 
   configs += [ "//:app_includes" ]
