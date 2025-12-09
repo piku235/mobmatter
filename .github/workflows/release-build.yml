@@ -41,7 +41,7 @@ jobs:
 
       - name: Download target sysroot
         run: |
-          TARGET_SYSROOT_URL=$(curl -s https://api.github.com/repos/piku235/mobilus-gtw-runtime/releases/latest | jq -r '.assets[] | select(.name=="target-sysroot.tar.gz") | .browser_download_url')
+          TARGET_SYSROOT_URL=$(curl -s https://api.github.com/repos/piku235/mobgtw-runtime/releases/latest | jq -r '.assets[] | select(.name=="target-sysroot.tar.gz") | .browser_download_url')
           wget -q "$TARGET_SYSROOT_URL"
           tar -xf target-sysroot.tar.gz
 
