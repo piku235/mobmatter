@@ -1,9 +1,10 @@
 #include "MqttMobilusDeviceManagementService.h"
-#include "jungi/mobgtw/OperationType.h"
-#include "jungi/mobgtw/proto/DevicesListRequest.pb.h"
-#include "jungi/mobgtw/proto/DevicesListResponse.pb.h"
-#include "jungi/mobgtw/proto/UpdateDeviceRequest.pb.h"
-#include "jungi/mobgtw/proto/UpdateDeviceResponse.pb.h"
+
+#include <jungi/mobgtw/OperationType.h>
+#include <jungi/mobgtw/proto/DevicesListRequest.pb.h>
+#include <jungi/mobgtw/proto/DevicesListResponse.pb.h>
+#include <jungi/mobgtw/proto/UpdateDeviceRequest.pb.h>
+#include <jungi/mobgtw/proto/UpdateDeviceResponse.pb.h>
 
 using namespace jungi::mobgtw;
 using mobmatter::application::model::MobilusDeviceId;

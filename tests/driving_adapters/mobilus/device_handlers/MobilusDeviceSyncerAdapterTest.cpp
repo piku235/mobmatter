@@ -4,14 +4,15 @@
 #include "driving_adapters/mobilus/FakeDeviceSyncHandler.hpp"
 #include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceSyncer.h"
-#include "jungi/mobgtw/EventNumber.h"
-#include "jungi/mobgtw/proto/CurrentStateResponse.pb.h"
-#include "jungi/mobgtw/proto/DevicesListResponse.pb.h"
-#include "jungi/mobgtw/proto/Event.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <jungi/mobgtw/EventNumber.h>
+#include <jungi/mobgtw/proto/CurrentStateResponse.pb.h>
+#include <jungi/mobgtw/proto/DevicesListResponse.pb.h>
+#include <jungi/mobgtw/proto/Event.pb.h>
+
 #include <string>
 
 using namespace mobmatter::driving_adapters::mobilus;

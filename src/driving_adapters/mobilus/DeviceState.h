@@ -1,7 +1,7 @@
 #pragma once
 
-#include "jungi/mobgtw/proto/Device.pb.h"
-#include "jungi/mobgtw/proto/Event.pb.h"
+#include <jungi/mobgtw/proto/Device.pb.h>
+#include <jungi/mobgtw/proto/Event.pb.h>
 
 namespace mobmatter::driving_adapters::mobilus {
 

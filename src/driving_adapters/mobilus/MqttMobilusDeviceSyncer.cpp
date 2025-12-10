@@ -2,10 +2,11 @@
 #include "DeviceStateMap.h"
 #include "Log.h"
 #include "application/model/MobilusDeviceId.h"
-#include "jungi/mobgtw/proto/CurrentStateRequest.pb.h"
-#include "jungi/mobgtw/proto/CurrentStateResponse.pb.h"
-#include "jungi/mobgtw/proto/DevicesListRequest.pb.h"
-#include "jungi/mobgtw/proto/DevicesListResponse.pb.h"
+
+#include <jungi/mobgtw/proto/CurrentStateRequest.pb.h>
+#include <jungi/mobgtw/proto/CurrentStateResponse.pb.h>
+#include <jungi/mobgtw/proto/DevicesListRequest.pb.h>
+#include <jungi/mobgtw/proto/DevicesListResponse.pb.h>
 
 #include <unordered_map>
 

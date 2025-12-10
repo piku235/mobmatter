@@ -1,14 +1,14 @@
 #include "driven_adapters/mobilus/MqttMobilusDeviceManagementService.h"
 #include "application/model/MobilusDeviceType.h"
 #include "common/logging/Logger.h"
-#include "jungi/mobgtw/OperationType.h"
-#include "jungi/mobgtw/proto/DevicesListResponse.pb.h"
-#include "jungi/mobgtw/proto/UpdateDeviceRequest.pb.h"
-#include "jungi/mobgtw/proto/UpdateDeviceResponse.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <jungi/mobgtw/OperationType.h>
+#include <jungi/mobgtw/proto/DevicesListResponse.pb.h>
+#include <jungi/mobgtw/proto/UpdateDeviceRequest.pb.h>
+#include <jungi/mobgtw/proto/UpdateDeviceResponse.pb.h>
 
 #include <memory>
 

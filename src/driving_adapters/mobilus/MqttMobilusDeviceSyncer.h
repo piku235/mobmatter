@@ -2,8 +2,9 @@
 
 #include "MobilusDeviceSyncHandler.h"
 #include "common/logging/Logger.h"
-#include "jungi/mobgtw/MqttMobilusGtwClient.h"
 #include "matter/AppComponent.h"
+
+#include <jungi/mobgtw/MqttMobilusGtwClient.h>
 
 #include <functional>
 #include <vector>

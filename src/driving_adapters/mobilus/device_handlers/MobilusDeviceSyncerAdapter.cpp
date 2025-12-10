@@ -1,5 +1,6 @@
 #include "MobilusDeviceSyncerAdapter.h"
-#include "jungi/mobgtw/EventNumber.h"
+
+#include <jungi/mobgtw/EventNumber.h>
 
 using namespace jungi::mobgtw;
 

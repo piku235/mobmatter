@@ -12,12 +12,12 @@
 #include "driven_adapters/persistence/in_memory/InMemoryEndpointIdGenerator.h"
 #include "driving_adapters/mobilus/DeviceStateMap.h"
 #include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
-#include "jungi/mobgtw/EventNumber.h"
-#include "jungi/mobgtw/proto/Device.pb.h"
-#include "jungi/mobgtw/proto/Event.pb.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <jungi/mobgtw/EventNumber.h>
+#include <jungi/mobgtw/proto/Device.pb.h>
+#include <jungi/mobgtw/proto/Event.pb.h>
 
 #include <string>
 

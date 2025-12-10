@@ -2,8 +2,8 @@
 
 #include "AppComponent.h"
 #include "common/logging/Logger.h"
-#include "jungi/mobgtw/MqttMobilusGtwClient.h"
 
+#include <jungi/mobgtw/MqttMobilusGtwClient.h>
 #include <lib/core/CHIPError.h>
 #include <lib/core/CHIPPersistentStorageDelegate.h>
 #include <platform/DeviceInstanceInfoProvider.h>

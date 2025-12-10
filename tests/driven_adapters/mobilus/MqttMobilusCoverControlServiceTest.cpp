@@ -1,14 +1,14 @@
 #include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
 #include "application/model/window_covering/Position.h"
 #include "common/logging/Logger.h"
-#include "jungi/mobgtw/EventNumber.h"
-#include "jungi/mobgtw/MessageType.h"
-#include "jungi/mobgtw/Platform.h"
-#include "jungi/mobgtw/ProtoUtils.h"
-#include "jungi/mobgtw/proto/CallEvents.pb.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
+#include <jungi/mobgtw/EventNumber.h>
+#include <jungi/mobgtw/MessageType.h>
+#include <jungi/mobgtw/Platform.h>
+#include <jungi/mobgtw/ProtoUtils.h>
+#include <jungi/mobgtw/proto/CallEvents.pb.h>
 
 #include <cstdint>
 #include <tuple>

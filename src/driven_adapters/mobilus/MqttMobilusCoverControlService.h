@@ -2,7 +2,8 @@
 
 #include "application/driven_ports/CoverControlService.h"
 #include "common/logging/Logger.h"
-#include "jungi/mobgtw/MqttMobilusGtwClient.h"
+
+#include <jungi/mobgtw/MqttMobilusGtwClient.h>
 
 #include <string>
 

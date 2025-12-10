@@ -22,15 +22,15 @@
 #include "driving_adapters/mobilus/MqttMobilusDeviceSyncer.h"
 #include "driving_adapters/mobilus/device_handlers/MobilusCoverHandler.h"
 #include "driving_adapters/mobilus/device_handlers/MobilusDeviceSyncerAdapter.h"
-#include "jungi/mobgtw/MqttDsn.h"
-#include "jungi/mobgtw/MqttMobilusGtwClient.h"
-#include "jungi/mobgtw/proto/DeviceSettingsRequest.pb.h"
 #include "matter/ChipAppMain.h"
 #include "matter/DeviceEndpointLoader.hpp"
 #include "matter/event_loop/DomainEventPublisherAdapter.h"
 #include "matter/event_loop/MobilusGtwEventLoopAdapter.h"
 #include "matter/persistence/SqlitePersistentStorageDelegate.h"
 
+#include <jungi/mobgtw/MqttDsn.h>
+#include <jungi/mobgtw/MqttMobilusGtwClient.h>
+#include <jungi/mobgtw/proto/DeviceSettingsRequest.pb.h>
 #include <platform/CHIPDeviceLayer.h>
 #include <tl/expected.hpp>
 

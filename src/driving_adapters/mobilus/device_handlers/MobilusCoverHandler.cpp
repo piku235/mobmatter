@@ -5,7 +5,8 @@
 #include "application/model/window_covering/CoverSpecification.h"
 #include "application/model/window_covering/PositionState.h"
 #include "driving_adapters/mobilus/Log.h"
-#include "jungi/mobgtw/EventNumber.h"
+
+#include <jungi/mobgtw/EventNumber.h>
 
 #include <cinttypes>
 
