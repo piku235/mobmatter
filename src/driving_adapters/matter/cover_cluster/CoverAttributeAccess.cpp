@@ -44,7 +44,7 @@ CHIP_ERROR CoverAttributeAccess::Read(const ConcreteReadAttributePath& path, Att
     case ConfigStatus::Id:
         return encoder.Encode(ConvertToConfigStatus(cover->specification().featureFlags()));
     case OperationalStatus::Id:
-        return encoder.Encode(ConvertToOperationalStatus(cover->operationalStatus()));
+        return encoder.Encode(ConvertToOperationalStatus(cover->liftState().motion()));
     case Mode::Id:
         return encoder.Encode(kWindowCoveringMode);
     case TargetPositionLiftPercent100ths::Id: {
@@ -119,13 +119,12 @@ WindowCovering::OperationalState CoverAttributeAccess::ConvertToOperationalState
     }
 }
 
-BitMask<WindowCovering::OperationalStatus> CoverAttributeAccess::ConvertToOperationalStatus(const CoverOperationalStatus& operationalStatus)
+BitMask<WindowCovering::OperationalStatus> CoverAttributeAccess::ConvertToOperationalStatus(CoverMotion liftMotion)
 {
     BitMask<WindowCovering::OperationalStatus> bitMask;
 
-    bitMask.SetField(WindowCovering::OperationalStatus::kGlobal, static_cast<uint8_t>(ConvertToOperationalState(operationalStatus.global())));
-    bitMask.SetField(WindowCovering::OperationalStatus::kLift, static_cast<uint8_t>(ConvertToOperationalState(operationalStatus.lift())));
-    bitMask.SetField(WindowCovering::OperationalStatus::kTilt, static_cast<uint8_t>(ConvertToOperationalState(operationalStatus.tilt())));
+    bitMask.SetField(WindowCovering::OperationalStatus::kLift, static_cast<uint8_t>(ConvertToOperationalState(liftMotion)));
+    bitMask.SetField(WindowCovering::OperationalStatus::kGlobal, bitMask.GetField(WindowCovering::OperationalStatus::kLift));
 
     return bitMask;
 }

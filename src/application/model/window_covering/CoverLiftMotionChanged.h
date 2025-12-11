@@ -1,23 +1,23 @@
 #pragma once
 
-#include "CoverOperationalStatus.h"
+#include "CoverMotion.h"
 #include "application/model/EndpointId.h"
 #include "application/model/MobilusDeviceId.h"
 #include "common/domain/DomainEvent.h"
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverOperationalStatusChanged : public mobmatter::common::domain::DomainEvent {
-    static constexpr char kEventName[] = "cover_operational_status_changed";
+struct CoverLiftMotionChanged : public mobmatter::common::domain::DomainEvent {
+    static constexpr char kEventName[] = "cover_lift_motion_changed";
 
     const EndpointId endpointId;
     const MobilusDeviceId mobilusDeviceId;
-    const CoverOperationalStatus operationalStatus;
+    const CoverMotion motion;
 
-    CoverOperationalStatusChanged(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId, CoverOperationalStatus aOperationalStatus)
+    CoverLiftMotionChanged(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId, CoverMotion aMotion)
         : endpointId(aEndpointId)
         , mobilusDeviceId(aMobilusDeviceId)
-        , operationalStatus(aOperationalStatus)
+        , motion(aMotion)
     {
     }
 

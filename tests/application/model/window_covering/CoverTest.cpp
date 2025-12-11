@@ -1,18 +1,18 @@
 #include "application/model/window_covering/Cover.h"
 #include "application/model/window_covering/CoverAdded.h"
 #include "application/model/window_covering/CoverLiftCurrentPositionChanged.h"
+#include "application/model/window_covering/CoverLiftMotionChanged.h"
 #include "application/model/window_covering/CoverLiftRequested.h"
 #include "application/model/window_covering/CoverLiftTargetPositionChanged.h"
 #include "application/model/window_covering/CoverMarkedAsReachable.h"
 #include "application/model/window_covering/CoverMarkedAsUnreachable.h"
-#include "application/model/window_covering/CoverOperationalStatusChanged.h"
 #include "application/model/window_covering/CoverRemoved.h"
 #include "application/model/window_covering/CoverStopMotionRequested.h"
 #include "common/domain/DomainEventQueue.h"
 
-#include <optional>
-
 #include <gtest/gtest.h>
+
+#include <optional>
 
 using namespace mobmatter::common::domain;
 using namespace mobmatter::application::model;
@@ -337,22 +337,20 @@ TEST(CoverTest, ReportsLiftToClosePosition)
     auto r = cover.reportLiftTo(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_EQ(CoverMotion::Closing, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Moving, cover.liftState().status());
     ASSERT_EQ(CoverMotion::Closing, cover.liftState().motion());
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
     ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
     ASSERT_EQ(2u, events.size());
-    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftMotionChanged::kEventName, events.peek()->eventName());
 
     {
-        auto& event = static_cast<const CoverOperationalStatusChanged&>(*events.peek());
+        auto& event = static_cast<const CoverLiftMotionChanged&>(*events.peek());
 
         ASSERT_EQ(cover.endpointId(), event.endpointId);
         ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        ASSERT_EQ(cover.operationalStatus(), event.operationalStatus);
+        ASSERT_EQ(cover.liftState().motion(), event.motion);
     }
 
     (void)events.pop();
@@ -384,22 +382,20 @@ TEST(CoverTest, ReportsLiftToOpenPosition)
     auto r = cover.reportLiftTo(Position::fullyOpen());
 
     ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_EQ(CoverMotion::Opening, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Moving, cover.liftState().status());
     ASSERT_EQ(CoverMotion::Opening, cover.liftState().motion());
     ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
     ASSERT_EQ(2u, events.size());
-    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftMotionChanged::kEventName, events.peek()->eventName());
 
     {
-        auto& event = static_cast<const CoverOperationalStatusChanged&>(*events.peek());
+        auto& event = static_cast<const CoverLiftMotionChanged&>(*events.peek());
 
         ASSERT_EQ(cover.endpointId(), event.endpointId);
         ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        ASSERT_EQ(cover.operationalStatus(), event.operationalStatus);
+        ASSERT_EQ(cover.liftState().motion(), event.motion);
     }
 
     (void)events.pop();
@@ -432,21 +428,19 @@ TEST(CoverTest, ReportsLiftToPositionAfterRequest)
     auto r = cover.reportLiftTo(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_EQ(CoverMotion::Closing, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Moving, cover.liftState().status());
     ASSERT_EQ(CoverMotion::Closing, cover.liftState().motion());
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
     ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
     ASSERT_EQ(1u, events.size());
-    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftMotionChanged::kEventName, events.peek()->eventName());
 
-    auto& event = static_cast<const CoverOperationalStatusChanged&>(*events.peek());
+    auto& event = static_cast<const CoverLiftMotionChanged&>(*events.peek());
 
     ASSERT_EQ(cover.endpointId(), event.endpointId);
     ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-    ASSERT_EQ(cover.operationalStatus(), event.operationalStatus);
+    ASSERT_EQ(cover.liftState().motion(), event.motion);
 
     (void)events.pop();
 }
@@ -475,8 +469,6 @@ TEST(CoverTest, SyncesLiftPosition)
     auto r = cover.reportLiftPosition(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
@@ -522,22 +514,20 @@ TEST(CoverTest, ChangesLiftPositionAfterMoveStarted)
     auto r = cover.reportLiftPosition(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
     ASSERT_EQ(2u, events.size());
-    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftMotionChanged::kEventName, events.peek()->eventName());
 
     {
-        auto& event = static_cast<const CoverOperationalStatusChanged&>(*events.peek());
+        auto& event = static_cast<const CoverLiftMotionChanged&>(*events.peek());
 
         ASSERT_EQ(cover.endpointId(), event.endpointId);
         ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-        ASSERT_EQ(cover.operationalStatus(), event.operationalStatus);
+        ASSERT_EQ(cover.liftState().motion(), event.motion);
     }
 
     (void)events.pop();
@@ -565,8 +555,6 @@ TEST(CoverTest, ChangesLiftPositionAfterMoveRequest)
     auto r = cover.reportLiftPosition(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
@@ -595,8 +583,6 @@ TEST(CoverTest, ChangesLiftPositionToPrevious)
     auto r = cover.reportLiftPosition(*cover.liftState().currentPosition());
 
     ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
     ASSERT_EQ(cover.liftState().currentPosition(), cover.liftState().targetPosition());
@@ -651,8 +637,6 @@ TEST(CoverTest, ReportsCoverIsUnreachableAndStopsMoving)
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_FALSE(cover.isReachable());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
     ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
@@ -663,7 +647,7 @@ TEST(CoverTest, ReportsCoverIsUnreachableAndStopsMoving)
     ASSERT_STREQ(CoverMarkedAsUnreachable::kEventName, events.peek()->eventName());
     (void)events.pop();
 
-    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftMotionChanged::kEventName, events.peek()->eventName());
     (void)events.pop();
 
     ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
@@ -710,8 +694,6 @@ TEST(CoverTest, ReportsCoverIsReachableAndSyncesLiftPosition)
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_TRUE(cover.isReachable());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().targetPosition());
@@ -740,8 +722,6 @@ TEST(CoverTest, ReportsMotionFailure)
     auto r = cover.reportMotionFailure();
 
     ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
     ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
     ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
     ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
@@ -749,7 +729,7 @@ TEST(CoverTest, ReportsMotionFailure)
 
     ASSERT_EQ(2u, events.size());
 
-    ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
+    ASSERT_STREQ(CoverLiftMotionChanged::kEventName, events.peek()->eventName());
     (void)events.pop();
 
     ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());

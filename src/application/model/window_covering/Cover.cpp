@@ -1,13 +1,13 @@
 #include "Cover.h"
 #include "CoverAdded.h"
 #include "CoverLiftCurrentPositionChanged.h"
+#include "CoverLiftMotionChanged.h"
 #include "CoverLiftRequested.h"
 #include "CoverLiftTargetPositionChanged.h"
 #include "CoverMarkedAsReachable.h"
 #include "CoverMarkedAsUnreachable.h"
 #include "CoverMotion.h"
 #include "CoverNameChanged.h"
-#include "CoverOperationalStatusChanged.h"
 #include "CoverRemoved.h"
 #include "CoverRenameRequested.h"
 #include "CoverStopMotionRequested.h"
@@ -231,11 +231,6 @@ const std::string& Cover::name() const
     return mName;
 }
 
-CoverOperationalStatus Cover::operationalStatus() const
-{
-    return { mLiftState.motion(), CoverMotion::NotMoving };
-}
-
 const PositionState& Cover::liftState() const
 {
     return mLiftState;
@@ -249,7 +244,7 @@ const CoverSpecification& Cover::specification() const
 void Cover::replaceLiftState(PositionState&& liftState)
 {
     if (liftState.motion() != mLiftState.motion()) {
-        raise(std::make_unique<CoverOperationalStatusChanged>(mEndpointId, mMobilusDeviceId, CoverOperationalStatus(liftState.motion(), CoverMotion::NotMoving)));
+        raise(std::make_unique<CoverLiftMotionChanged>(mEndpointId, mMobilusDeviceId, liftState.motion()));
     }
 
     if (liftState.targetPosition() != mLiftState.targetPosition()) {

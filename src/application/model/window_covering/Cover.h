@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CoverOperationalStatus.h"
 #include "CoverSpecification.h"
 #include "Position.h"
 #include "PositionState.h"
@@ -47,7 +46,6 @@ public:
     MobilusDeviceId mobilusDeviceId() const;
     const UniqueId& uniqueId() const;
     const std::string& name() const;
-    CoverOperationalStatus operationalStatus() const;
     const PositionState& liftState() const;
     const CoverSpecification& specification() const;
 
