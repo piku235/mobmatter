@@ -294,7 +294,7 @@ TEST(MobilusCoverHandlerTest, HandlesCoverReachedPositionEvent)
 
     {
         auto cover = coverStub();
-        cover.startLiftTo(Position::fullyClosed());
+        cover.reportLiftTo(Position::fullyClosed());
 
         coverRepository.save(cover);
     }
@@ -324,7 +324,7 @@ TEST(MobilusCoverHandlerTest, HandlesStopMotionEvent)
 
     {
         auto cover = coverStub();
-        cover.startLiftTo(Position::fullyClosed());
+        cover.reportLiftTo(Position::fullyClosed());
 
         coverRepository.save(cover);
     }
@@ -354,7 +354,7 @@ TEST(MobilusCoverHandlerTest, HandlesCoverFailureEvent)
 
     {
         auto cover = coverStub();
-        cover.startLiftTo(Position::fullyClosed());
+        cover.reportLiftTo(Position::fullyClosed());
 
         coverRepository.save(cover);
     }
@@ -384,7 +384,7 @@ TEST(MobilusCoverHandlerTest, HandlesNoConnectionEvent)
 
     {
         auto cover = coverStub();
-        cover.startLiftTo(Position::fullyClosed());
+        cover.reportLiftTo(Position::fullyClosed());
 
         coverRepository.save(cover);
     }

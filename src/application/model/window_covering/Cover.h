@@ -16,7 +16,7 @@ namespace mobmatter::application::model::window_covering {
 
 class Cover final : public mobmatter::common::domain::Entity {
 public:
-    enum class Result: uint8_t {
+    enum class Result : uint8_t {
         Ok = 0,
         NoChange = 1,
         LiftNotSupported = 2,
@@ -33,13 +33,13 @@ public:
     Result requestRename(std::string name);
 
     /* mobilus specific */
-    Result startLiftTo(Position position);
-    Result changeLiftPosition(Position position);
-    Result initiateStopMotion();
-    Result failMotion();
-    Result markAsUnreachable();
-    Result rename(std::string name);
-    void remove();
+    Result reportLiftTo(Position position);
+    Result reportLiftPosition(Position position);
+    Result reportStopMotion();
+    Result reportMotionFailure();
+    Result reportUnreachable();
+    Result reportRenamedTo(std::string name);
+    void reportRemoved();
 
     bool operator==(const Cover& other) const;
     bool isReachable() const;
@@ -62,7 +62,6 @@ private:
 
     Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, bool reachable, std::string name, PositionState liftState, CoverSpecification specification);
     void replaceLiftState(PositionState&& liftState);
-    void markAsReachable();
 };
 
 }

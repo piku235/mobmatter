@@ -89,6 +89,7 @@ TEST(CoverTest, EqualsAndDoesNotEqual)
 TEST(CoverTest, RequestsLiftToPosition)
 {
     auto cover = coverStub();
+
     auto& events = DomainEventQueue::instance();
     events.clear();
 
@@ -133,6 +134,7 @@ TEST(CoverTest, RequestsLiftToPosition)
 TEST(CoverTest, RequestsLiftToPositionFailsForNonLiftCover)
 {
     auto cover = nonLiftCoverStub();
+
     auto& events = DomainEventQueue::instance();
     events.clear();
 
@@ -146,6 +148,7 @@ TEST(CoverTest, RequestsLiftToPositionFailsForNonLiftCover)
 TEST(CoverTest, RequestsOpen)
 {
     auto cover = coverStub(Position::fullyClosed());
+
     auto& events = DomainEventQueue::instance();
     events.clear();
 
@@ -188,6 +191,7 @@ TEST(CoverTest, RequestsOpen)
 TEST(CoverTest, RequestsClose)
 {
     auto cover = coverStub();
+
     auto& events = DomainEventQueue::instance();
     events.clear();
 
@@ -230,7 +234,7 @@ TEST(CoverTest, RequestsClose)
 TEST(CoverTest, RequestsStopMotion)
 {
     auto cover = coverStub();
-    ASSERT_EQ(Cover::Result::Ok, cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_EQ(Cover::Result::Ok, cover.reportLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
@@ -305,15 +309,15 @@ TEST(CoverTest, RequestsStopMotionDoesNothingIfNotInMotion)
     ASSERT_EQ(0u, events.size());
 }
 
-TEST(CoverTest, InitiatesStopMotion)
+TEST(CoverTest, ReportsStopMotion)
 {
     auto cover = coverStub();
-    ASSERT_EQ(Cover::Result::Ok, cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_EQ(Cover::Result::Ok, cover.reportLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.initiateStopMotion();
+    auto r = cover.reportStopMotion();
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_EQ(PositionStatus::Stopping, cover.liftState().status());
@@ -323,14 +327,14 @@ TEST(CoverTest, InitiatesStopMotion)
     ASSERT_EQ(0u, events.size());
 }
 
-TEST(CoverTest, StartsLiftToClosePosition)
+TEST(CoverTest, ReportsLiftToClosePosition)
 {
     auto cover = coverStub();
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.startLiftTo(Position::fullyClosed());
+    auto r = cover.reportLiftTo(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_EQ(CoverMotion::Closing, cover.operationalStatus().lift());
@@ -364,20 +368,20 @@ TEST(CoverTest, StartsLiftToClosePosition)
 
     (void)events.pop();
 
-    auto otherR = cover.startLiftTo(*cover.liftState().targetPosition());
+    auto otherR = cover.reportLiftTo(*cover.liftState().targetPosition());
 
     ASSERT_EQ(Cover::Result::NoChange, otherR);
     ASSERT_EQ(0u, events.size());
 }
 
-TEST(CoverTest, StartsLiftToOpenPosition)
+TEST(CoverTest, ReportsLiftToOpenPosition)
 {
     auto cover = coverStub(Position::fullyClosed());
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.startLiftTo(Position::fullyOpen());
+    auto r = cover.reportLiftTo(Position::fullyOpen());
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_EQ(CoverMotion::Opening, cover.operationalStatus().lift());
@@ -411,13 +415,13 @@ TEST(CoverTest, StartsLiftToOpenPosition)
 
     (void)events.pop();
 
-    auto otherR = cover.startLiftTo(*cover.liftState().targetPosition());
+    auto otherR = cover.reportLiftTo(*cover.liftState().targetPosition());
 
     ASSERT_EQ(Cover::Result::NoChange, otherR);
     ASSERT_EQ(0u, events.size());
 }
 
-TEST(CoverTest, StartsLiftToPositionAfterRequest)
+TEST(CoverTest, ReportsLiftToPositionAfterRequest)
 {
     auto cover = coverStub();
     ASSERT_EQ(Cover::Result::Ok, cover.requestClose());
@@ -425,7 +429,7 @@ TEST(CoverTest, StartsLiftToPositionAfterRequest)
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.startLiftTo(Position::fullyClosed());
+    auto r = cover.reportLiftTo(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_EQ(CoverMotion::Closing, cover.operationalStatus().lift());
@@ -447,14 +451,14 @@ TEST(CoverTest, StartsLiftToPositionAfterRequest)
     (void)events.pop();
 }
 
-TEST(CoverTest, StartLiftToPositionFailsForNonLiftCover)
+TEST(CoverTest, ReportLiftToPositionFailsForNonLiftCover)
 {
     auto cover = nonLiftCoverStub();
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.startLiftTo(Position::fullyClosed());
+    auto r = cover.reportLiftTo(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::LiftNotSupported, r);
     ASSERT_EQ(PositionStatus::Unavailable, cover.liftState().status());
@@ -464,10 +468,11 @@ TEST(CoverTest, StartLiftToPositionFailsForNonLiftCover)
 TEST(CoverTest, SyncesLiftPosition)
 {
     auto cover = coverStub();
+
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.changeLiftPosition(Position::fullyClosed());
+    auto r = cover.reportLiftPosition(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
@@ -501,20 +506,20 @@ TEST(CoverTest, SyncesLiftPosition)
 
     (void)events.pop();
 
-    auto otherR = cover.changeLiftPosition(*cover.liftState().currentPosition());
+    auto otherR = cover.reportLiftPosition(*cover.liftState().currentPosition());
     ASSERT_EQ(Cover::Result::NoChange, otherR);
     ASSERT_EQ(0u, events.size());
 }
 
-TEST(CoverTest, ChangesLiftPositionAfterStartedMoving)
+TEST(CoverTest, ChangesLiftPositionAfterMoveStarted)
 {
     auto cover = coverStub();
-    ASSERT_EQ(Cover::Result::Ok, cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_EQ(Cover::Result::Ok, cover.reportLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.changeLiftPosition(Position::fullyClosed());
+    auto r = cover.reportLiftPosition(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
@@ -557,7 +562,7 @@ TEST(CoverTest, ChangesLiftPositionAfterMoveRequest)
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.changeLiftPosition(Position::fullyClosed());
+    auto r = cover.reportLiftPosition(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
@@ -579,15 +584,70 @@ TEST(CoverTest, ChangesLiftPositionAfterMoveRequest)
     (void)events.pop();
 }
 
-TEST(CoverTest, MarksAsUnreachable)
+TEST(CoverTest, ChangesLiftPositionToPrevious)
 {
     auto cover = coverStub();
-    ASSERT_EQ(Cover::Result::Ok, cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_EQ(Cover::Result::Ok, cover.requestLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.markAsUnreachable();
+    auto r = cover.reportLiftPosition(*cover.liftState().currentPosition());
+
+    ASSERT_EQ(Cover::Result::Ok, r);
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().tilt());
+    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
+    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
+    ASSERT_EQ(cover.liftState().currentPosition(), cover.liftState().targetPosition());
+
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
+
+    auto& event = static_cast<const CoverLiftTargetPositionChanged&>(*events.peek());
+
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+    ASSERT_EQ(*cover.liftState().targetPosition(), event.position);
+
+    (void)events.pop();
+}
+
+TEST(CoverTest, ReportsCoverIsUnreachable)
+{
+    auto cover = coverStub();
+
+    auto& events = DomainEventQueue::instance();
+    events.clear();
+
+    auto r = cover.reportUnreachable();
+
+    ASSERT_EQ(Cover::Result::Ok, r);
+    ASSERT_FALSE(cover.isReachable());
+
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverMarkedAsUnreachable::kEventName, events.peek()->eventName());
+
+    auto& event = static_cast<const CoverMarkedAsUnreachable&>(*events.peek());
+
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+
+    (void)events.pop();
+
+    ASSERT_EQ(Cover::Result::NoChange, cover.reportUnreachable());
+    ASSERT_EQ(0u, events.size());
+}
+
+TEST(CoverTest, ReportsCoverIsUnreachableAndStopsMoving)
+{
+    auto cover = coverStub();
+    ASSERT_EQ(Cover::Result::Ok, cover.reportLiftTo(Position::fullyClosed()));
+
+    auto& events = DomainEventQueue::instance();
+    events.clear();
+
+    auto r = cover.reportUnreachable();
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_FALSE(cover.isReachable());
@@ -599,36 +659,54 @@ TEST(CoverTest, MarksAsUnreachable)
     ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
     ASSERT_EQ(3u, events.size());
+
     ASSERT_STREQ(CoverMarkedAsUnreachable::kEventName, events.peek()->eventName());
-
-    auto& event = static_cast<const CoverMarkedAsUnreachable&>(*events.peek());
-
-    ASSERT_EQ(cover.endpointId(), event.endpointId);
-    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-
     (void)events.pop();
+
     ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
-
     (void)events.pop();
+
     ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
-
     (void)events.pop();
-
-    ASSERT_EQ(Cover::Result::NoChange, cover.markAsUnreachable());
-    ASSERT_EQ(0u, events.size());
 }
 
-TEST(CoverTest, MarksAsReachableAfterLiftPositionChanged)
+TEST(CoverTest, ReportsCoverIsReachable)
 {
     auto cover = coverStub();
 
-    ASSERT_EQ(Cover::Result::Ok, cover.markAsUnreachable());
+    ASSERT_EQ(Cover::Result::Ok, cover.reportUnreachable());
     ASSERT_FALSE(cover.isReachable());
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.changeLiftPosition(Position::fullyClosed());
+    auto r = cover.reportLiftPosition(*cover.liftState().currentPosition());
+
+    ASSERT_EQ(Cover::Result::Ok, r);
+    ASSERT_TRUE(cover.isReachable());
+
+    ASSERT_EQ(1u, events.size());
+    ASSERT_STREQ(CoverMarkedAsReachable::kEventName, events.peek()->eventName());
+
+    auto& event = static_cast<const CoverMarkedAsReachable&>(*events.peek());
+
+    ASSERT_EQ(cover.endpointId(), event.endpointId);
+    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
+
+    (void)events.pop();
+}
+
+TEST(CoverTest, ReportsCoverIsReachableAndSyncesLiftPosition)
+{
+    auto cover = coverStub();
+
+    ASSERT_EQ(Cover::Result::Ok, cover.reportUnreachable());
+    ASSERT_FALSE(cover.isReachable());
+
+    auto& events = DomainEventQueue::instance();
+    events.clear();
+
+    auto r = cover.reportLiftPosition(Position::fullyClosed());
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_TRUE(cover.isReachable());
@@ -640,31 +718,26 @@ TEST(CoverTest, MarksAsReachableAfterLiftPositionChanged)
     ASSERT_EQ(Position::fullyClosed(), cover.liftState().currentPosition());
 
     ASSERT_EQ(3u, events.size());
+
     ASSERT_STREQ(CoverMarkedAsReachable::kEventName, events.peek()->eventName());
-
-    auto& event = static_cast<const CoverMarkedAsReachable&>(*events.peek());
-
-    ASSERT_EQ(cover.endpointId(), event.endpointId);
-    ASSERT_EQ(cover.mobilusDeviceId(), event.mobilusDeviceId);
-
     (void)events.pop();
+
     ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
-
     (void)events.pop();
-    ASSERT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
 
+    ASSERT_STREQ(CoverLiftCurrentPositionChanged::kEventName, events.peek()->eventName());
     (void)events.pop();
 }
 
-TEST(CoverTest, FailMotionResetsLiftState)
+TEST(CoverTest, ReportsMotionFailure)
 {
     auto cover = coverStub();
-    ASSERT_EQ(Cover::Result::Ok, cover.startLiftTo(Position::fullyClosed()));
+    ASSERT_EQ(Cover::Result::Ok, cover.reportLiftTo(Position::fullyClosed()));
 
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    auto r = cover.failMotion();
+    auto r = cover.reportMotionFailure();
 
     ASSERT_EQ(Cover::Result::Ok, r);
     ASSERT_EQ(CoverMotion::NotMoving, cover.operationalStatus().lift());
@@ -675,21 +748,34 @@ TEST(CoverTest, FailMotionResetsLiftState)
     ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
 
     ASSERT_EQ(2u, events.size());
+
     ASSERT_STREQ(CoverOperationalStatusChanged::kEventName, events.peek()->eventName());
-
     (void)events.pop();
-    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
 
+    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
     (void)events.pop();
 }
 
-TEST(CoverTest, Removes)
+TEST(CoverTest, ReportMotionFailureDoesNothingIfNotMoving)
+{
+    auto cover = coverStub();
+
+    auto& events = DomainEventQueue::instance();
+    events.clear();
+
+    auto r = cover.reportMotionFailure();
+
+    ASSERT_EQ(Cover::Result::NoChange, r);
+    ASSERT_EQ(0u, events.size());
+}
+
+TEST(CoverTest, ReportsRemoved)
 {
     auto cover = coverStub();
     auto& events = DomainEventQueue::instance();
     events.clear();
 
-    cover.remove();
+    cover.reportRemoved();
 
     ASSERT_EQ(1u, events.size());
     ASSERT_STREQ(CoverRemoved::kEventName, events.peek()->eventName());

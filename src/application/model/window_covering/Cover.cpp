@@ -80,7 +80,7 @@ Cover::Result Cover::requestClose()
     return requestLiftTo(Position::fullyClosed());
 }
 
-Cover::Result Cover::startLiftTo(Position position)
+Cover::Result Cover::reportLiftTo(Position position)
 {
     if (PositionStatus::Unavailable == mLiftState.status()) {
         return Result::LiftNotSupported;
@@ -93,21 +93,29 @@ Cover::Result Cover::startLiftTo(Position position)
     return Result::Ok;
 }
 
-Cover::Result Cover::changeLiftPosition(Position position)
+Cover::Result Cover::reportLiftPosition(Position position)
 {
     if (PositionStatus::Unavailable == mLiftState.status()) {
         return Result::LiftNotSupported;
     }
 
-    // no other feedback once device becomes reachable again
-    markAsReachable();
+    auto result = Result::NoChange;
 
-    if (PositionStatus::Idle == mLiftState.status() && position == mLiftState.currentPosition()) {
-        return Result::NoChange;
+    // this is the only feedback once device becomes reachable again
+    if (!mReachable) {
+        mReachable = true;
+        raise(std::make_unique<CoverMarkedAsReachable>(mEndpointId, mMobilusDeviceId));
+
+        result = Result::Ok;
     }
 
-    replaceLiftState(PositionState::at(position));
-    return Result::Ok;
+    if (position != mLiftState.currentPosition() || position != mLiftState.targetPosition()) {
+        replaceLiftState(PositionState::at(position));
+
+        result = Result::Ok;
+    }
+
+    return result;
 }
 
 Cover::Result Cover::requestStopMotion()
@@ -136,7 +144,7 @@ Cover::Result Cover::requestRename(std::string name)
     return Result::Ok;
 }
 
-Cover::Result Cover::initiateStopMotion()
+Cover::Result Cover::reportStopMotion()
 {
     if (PositionStatus::Moving == mLiftState.status()) {
         replaceLiftState(mLiftState.stop());
@@ -146,7 +154,7 @@ Cover::Result Cover::initiateStopMotion()
     return Result::NoChange;
 }
 
-Cover::Result Cover::failMotion()
+Cover::Result Cover::reportMotionFailure()
 {
     if (PositionStatus::Moving == mLiftState.status()) {
         replaceLiftState(mLiftState.reset());
@@ -156,26 +164,27 @@ Cover::Result Cover::failMotion()
     return Result::NoChange;
 }
 
-Cover::Result Cover::markAsUnreachable()
+Cover::Result Cover::reportUnreachable()
 {
-    bool changed = false;
+    Result result = Result::NoChange;
 
     if (mReachable) {
         mReachable = false;
         raise(std::make_unique<CoverMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
 
-        changed = true;
+        result = Result::Ok;
     }
 
     if (PositionStatus::Moving == mLiftState.status()) {
         replaceLiftState(mLiftState.reset());
-        changed = true;
+
+        result = Result::Ok;
     }
 
-    return changed ? Result::Ok : Result::NoChange;
+    return result;
 }
 
-Cover::Result Cover::rename(std::string name)
+Cover::Result Cover::reportRenamedTo(std::string name)
 {
     if (mName == name) {
         return Result::NoChange;
@@ -187,7 +196,7 @@ Cover::Result Cover::rename(std::string name)
     return Result::Ok;
 }
 
-void Cover::remove()
+void Cover::reportRemoved()
 {
     raise(std::make_unique<CoverRemoved>(mEndpointId, mMobilusDeviceId));
 }
@@ -252,16 +261,6 @@ void Cover::replaceLiftState(PositionState&& liftState)
     }
 
     mLiftState = std::move(liftState);
-}
-
-void Cover::markAsReachable()
-{
-    if (mReachable) {
-        return;
-    }
-
-    mReachable = true;
-    raise(std::make_unique<CoverMarkedAsReachable>(mEndpointId, mMobilusDeviceId));
 }
 
 }
