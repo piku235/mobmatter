@@ -80,6 +80,32 @@ Cover::Result Cover::requestClose()
     return requestLiftTo(Position::fullyClosed());
 }
 
+Cover::Result Cover::requestStopMotion()
+{
+    if (PositionStatus::Requested == mLiftState.status() || PositionStatus::Moving == mLiftState.status()) {
+        replaceLiftState(mLiftState.stop());
+        raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
+
+        return Result::Ok;
+    }
+
+    return Result::NoChange;
+}
+
+Cover::Result Cover::requestRename(std::string name)
+{
+    if (mName == name) {
+        return Result::NoChange;
+    }
+
+    mName = std::move(name);
+
+    raise(std::make_unique<CoverNameChanged>(mEndpointId, mMobilusDeviceId, mName));
+    raise(std::make_unique<CoverRenameRequested>(mEndpointId, mMobilusDeviceId, mName));
+
+    return Result::Ok;
+}
+
 Cover::Result Cover::reportLiftTo(Position position)
 {
     if (PositionStatus::Unavailable == mLiftState.status()) {
@@ -116,32 +142,6 @@ Cover::Result Cover::reportLiftPosition(Position position)
     }
 
     return result;
-}
-
-Cover::Result Cover::requestStopMotion()
-{
-    if (PositionStatus::Requested == mLiftState.status() || PositionStatus::Moving == mLiftState.status()) {
-        replaceLiftState(mLiftState.stop());
-        raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
-
-        return Result::Ok;
-    }
-
-    return Result::NoChange;
-}
-
-Cover::Result Cover::requestRename(std::string name)
-{
-    if (mName == name) {
-        return Result::NoChange;
-    }
-
-    mName = std::move(name);
-
-    raise(std::make_unique<CoverNameChanged>(mEndpointId, mMobilusDeviceId, mName));
-    raise(std::make_unique<CoverRenameRequested>(mEndpointId, mMobilusDeviceId, mName));
-
-    return Result::Ok;
 }
 
 Cover::Result Cover::reportStopMotion()
