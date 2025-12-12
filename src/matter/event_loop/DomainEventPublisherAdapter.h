@@ -9,15 +9,14 @@ class DomainEventPublisherAdapter final : public mobmatter::matter::AppComponent
                                           public chip::System::EventLoopHandler {
 public:
     DomainEventPublisherAdapter(chip::System::LayerSocketsLoop& systemLayer);
-    ~DomainEventPublisherAdapter();
 
     void boot() override;
     void shutdown() override;
 
+    // EventLoopHandler
     void HandleEvents() override;
 
 private:
-    bool mRegistered = false;
     chip::System::LayerSocketsLoop& mSystemLayer;
 };
 

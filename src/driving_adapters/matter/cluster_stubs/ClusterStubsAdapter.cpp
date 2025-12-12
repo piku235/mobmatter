@@ -7,11 +7,6 @@ using namespace chip::app;
 
 namespace mobmatter::driving_adapters::matter::cluster_stubs {
 
-ClusterStubsAdapter::~ClusterStubsAdapter()
-{
-    shutdown();
-}
-
 void ClusterStubsAdapter::boot()
 {
     auto& commandHandlerRegistry = CommandHandlerInterfaceRegistry::Instance();

@@ -15,11 +15,6 @@ CoverClusterAdapter::CoverClusterAdapter(CoverRepository& coverRepository, loggi
 {
 }
 
-CoverClusterAdapter::~CoverClusterAdapter()
-{
-    shutdown();
-}
-
 void CoverClusterAdapter::boot()
 {
     auto& commandHandlerRegistry = CommandHandlerInterfaceRegistry::Instance();
