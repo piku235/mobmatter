@@ -10,25 +10,29 @@ MobilusGtwEventLoopAdapter::MobilusGtwEventLoopAdapter(chip::System::LayerSocket
 {
 }
 
-MobilusGtwEventLoopAdapter::~MobilusGtwEventLoopAdapter()
-{
-    shutdown();
-}
-
 void MobilusGtwEventLoopAdapter::boot()
 {
-    if (!mLoopHandlerRegistered) {
-        mSystemLayer.AddLoopHandler(*this);
-        mLoopHandlerRegistered = true;
-    }
+    mSystemLayer.AddLoopHandler(*this);
 }
 
 void MobilusGtwEventLoopAdapter::shutdown()
 {
-    if (mLoopHandlerRegistered) {
-        mSystemLayer.RemoveLoopHandler(*this);
-        mLoopHandlerRegistered = false;
+    for (auto& [_, socketWatch] : mSocketWatchList) {
+        mSystemLayer.StopWatchingSocket(&socketWatch.token);
     }
+
+    mSocketWatchList.clear();
+
+    for (auto& timer : mTimers) {
+        if (nullptr == timer.callback) {
+            continue;
+        }
+
+        mSystemLayer.CancelTimer(timerCallback, &timer);
+        timer = {};
+    }
+
+    mSystemLayer.RemoveLoopHandler(*this);
 }
 
 mobio::EventLoop::TimerId MobilusGtwEventLoopAdapter::startTimer(std::chrono::milliseconds delay, TimerCallback callback, void* callbackData)

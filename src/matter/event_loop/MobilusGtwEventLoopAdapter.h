@@ -19,7 +19,6 @@ class MobilusGtwEventLoopAdapter final : public mobio::EventLoop,
                                          public mobmatter::matter::AppComponent {
 public:
     MobilusGtwEventLoopAdapter(chip::System::LayerSocketsLoop& systemLayer);
-    ~MobilusGtwEventLoopAdapter();
 
     // EventLoop
     TimerId startTimer(std::chrono::milliseconds delay, TimerCallback callback, void* callbackData) override;
@@ -49,7 +48,6 @@ private:
     chip::System::LayerSocketsLoop& mSystemLayer;
     std::unordered_map<int, SocketWatch> mSocketWatchList;
     Timer mTimers[CHIP_SYSTEM_CONFIG_NUM_TIMERS];
-    bool mLoopHandlerRegistered = false;
 
     static void socketWatchCallback(chip::System::SocketEvents events, intptr_t data);
     static void timerCallback(chip::System::Layer* aLayer, void* appState);
