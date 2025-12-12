@@ -81,7 +81,7 @@ private:
     ::Logger& mLogger;
 };
 
-void handleSignal(int signal)
+void handleShutdownSignal(int)
 {
     sChipApp.shutdown();
 }
@@ -198,9 +198,6 @@ int main(int argc, char* argv[])
     MobilusDeviceSyncerAdapter mobilusDeviceSyncerAdapter(mobilusDeviceSyncer);
     MobilusCoverHandler mobilusCoverHandler(coverRepository, endpointIdGenerator, logger);
 
-    signal(SIGINT, handleSignal);
-    signal(SIGTERM, handleSignal);
-
     mobilusDeviceEventSubscriber.registerHandler(mobilusCoverHandler);
     mobilusDeviceEventSubscriber.registerHandler(mobilusDeviceSyncerAdapter);
     mobilusDeviceSyncer.registerHandler(mobilusCoverHandler);
@@ -222,6 +219,12 @@ int main(int argc, char* argv[])
     if (rc) {
         return rc;
     }
+
+    struct sigaction sa = {};
+    sa.sa_handler = handleShutdownSignal;
+    sa.sa_flags = SA_RESETHAND;
+    sigaction(SIGINT, &sa, nullptr);
+    sigaction(SIGTERM, &sa, nullptr);
 
     sChipApp.run();
 
