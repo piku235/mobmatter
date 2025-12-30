@@ -1,8 +1,8 @@
-# 🏠 mobmatter - Matter Bridge for Mobilus Cosmo GTW
+# 🏠 mobmatter
 
 [![CI](https://github.com/piku235/mobmatter/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/piku235/mobmatter/actions/workflows/continuous-integration.yml)
 
-An **uncertified** matter bridge built on the official [Matter SDK](https://github.com/project-chip/connectedhomeip), designed to connect, control and subscribe to events from devices connected to **Mobilus Cosmo GTW** via the Matter protocol.
+An uncertified Matter bridge built on the official [Matter SDK](https://github.com/project-chip/connectedhomeip) that exposes **Mobilus Cosmo GTW** and its connected devices to the Matter ecosystem.
 
 ## Overview
 
