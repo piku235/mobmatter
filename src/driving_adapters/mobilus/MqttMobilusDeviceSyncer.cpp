@@ -58,8 +58,12 @@ void MqttMobilusDeviceSyncer::run()
     for (int i = 0; i < currentStateResponse.events_size(); i++) {
         auto& lastEvent = currentStateResponse.events(i);
 
-        if (lastEvent.has_device_id()) {
-            devices[lastEvent.device_id()].lastEvent.CheckTypeAndMergeFrom(lastEvent);
+        if (!lastEvent.has_device_id()) {
+            continue;
+        }
+
+        if (auto it = devices.find(lastEvent.device_id()); it != devices.end()) {
+            it->second.lastEvent.CheckTypeAndMergeFrom(lastEvent);
         }
     }
 

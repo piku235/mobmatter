@@ -26,10 +26,20 @@ void setupResponses(proto::DevicesListResponse& deviceList, proto::CurrentStateR
     switchDev->set_name("switch");
     switchDev->set_type(static_cast<int>(MobilusDeviceType::Switch));
 
+    auto switchState = currentState.add_events();
+    switchState->set_device_id(switchDev->id());
+    switchState->set_value("ON");
+    switchState->set_event_number(EventNumber::Reached);
+
     auto sensoDev = deviceList.add_devices();
     sensoDev->set_id(2);
     sensoDev->set_name("senso");
     sensoDev->set_type(static_cast<int>(MobilusDeviceType::Senso));
+
+    auto sensoState = currentState.add_events();
+    sensoState->set_device_id(sensoDev->id());
+    sensoState->set_value("100%");
+    sensoState->set_event_number(EventNumber::Triggered);
 
     // missing current state
     auto cmrDev = deviceList.add_devices();
@@ -37,15 +47,11 @@ void setupResponses(proto::DevicesListResponse& deviceList, proto::CurrentStateR
     cmrDev->set_name("cmr");
     cmrDev->set_type(static_cast<int>(MobilusDeviceType::Cmr));
 
-    auto sensoState = currentState.add_events();
-    sensoState->set_device_id(sensoDev->id());
-    sensoState->set_value("100%");
-    sensoState->set_event_number(EventNumber::Triggered);
-
-    auto switchState = currentState.add_events();
-    switchState->set_device_id(switchDev->id());
-    switchState->set_value("ON");
-    switchState->set_event_number(EventNumber::Reached);
+    // missing device
+    auto cmrState = currentState.add_events();
+    cmrState->set_device_id(0);
+    cmrState->set_value("100%");
+    cmrState->set_event_number(EventNumber::Reached);
 }
 
 }
@@ -97,12 +103,12 @@ TEST(MqttMobilusDeviceSyncerTest, DelegatesDevicesToHandlers)
     const auto& switchDev = handler.syncedDevices().at(deviceList.devices(0).id());
 
     ASSERT_EQ(deviceList.devices(0).SerializeAsString(), switchDev.device.SerializeAsString());
-    ASSERT_EQ(currentState.events(1).SerializeAsString(), switchDev.lastEvent.SerializeAsString());
+    ASSERT_EQ(currentState.events(0).SerializeAsString(), switchDev.lastEvent.SerializeAsString());
 
     const auto& sensoDev = handler.syncedDevices().at(deviceList.devices(1).id());
 
     ASSERT_EQ(deviceList.devices(1).SerializeAsString(), sensoDev.device.SerializeAsString());
-    ASSERT_EQ(currentState.events(0).SerializeAsString(), sensoDev.lastEvent.SerializeAsString());
+    ASSERT_EQ(currentState.events(1).SerializeAsString(), sensoDev.lastEvent.SerializeAsString());
 
     const auto& cmrDev = handler.syncedDevices().at(deviceList.devices(2).id());
 
