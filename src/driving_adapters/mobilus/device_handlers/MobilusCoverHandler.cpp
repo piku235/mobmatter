@@ -164,22 +164,21 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
 
         return result;
     }
-    case EventNumber::Error:
-        if ("NO_CONNECTION" == event.value()) {
-            if (Cover::Result::Ok == cover.reportUnreachable()) {
-                mLogger.notice(LOG_TAG "Cover marked as unreachable" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
-                return true;
-            }
+    case EventNumber::Error: {
+        bool result = false;
 
-            return false;
+        if ("NO_CONNECTION" == event.value() && Cover::Result::Ok == cover.reportUnreachable()) {
+            mLogger.notice(LOG_TAG "Cover marked as unreachable" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
+            result = true;
         }
 
         if (Cover::Result::Ok == cover.reportMotionFailure()) {
             mLogger.notice(LOG_TAG "Cover motion failed: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
-            return true;
+            result = true;
         }
 
-        return false;
+        return result;
+    }
     default:
         mLogger.notice(LOG_TAG "Unknown event number");
         return false;

@@ -625,35 +625,6 @@ TEST(CoverTest, ReportsCoverIsUnreachable)
     ASSERT_TRUE(events.empty());
 }
 
-TEST(CoverTest, ReportsCoverIsUnreachableAndStopsMoving)
-{
-    auto cover = coverStub();
-    ASSERT_EQ(Cover::Result::Ok, cover.reportLiftTo(Position::fullyClosed()));
-
-    auto& events = DomainEventQueue::instance();
-    events.clear();
-
-    auto r = cover.reportUnreachable();
-
-    ASSERT_EQ(Cover::Result::Ok, r);
-    ASSERT_FALSE(cover.isReachable());
-    ASSERT_EQ(PositionStatus::Idle, cover.liftState().status());
-    ASSERT_EQ(CoverMotion::NotMoving, cover.liftState().motion());
-    ASSERT_EQ(Position::fullyOpen(), cover.liftState().targetPosition());
-    ASSERT_EQ(Position::fullyOpen(), cover.liftState().currentPosition());
-
-    ASSERT_EQ(3u, events.size());
-
-    ASSERT_STREQ(CoverMarkedAsUnreachable::kEventName, events.peek()->eventName());
-    (void)events.pop();
-
-    ASSERT_STREQ(CoverLiftMotionChanged::kEventName, events.peek()->eventName());
-    (void)events.pop();
-
-    ASSERT_STREQ(CoverLiftTargetPositionChanged::kEventName, events.peek()->eventName());
-    (void)events.pop();
-}
-
 TEST(CoverTest, ReportsCoverIsReachable)
 {
     auto cover = coverStub();

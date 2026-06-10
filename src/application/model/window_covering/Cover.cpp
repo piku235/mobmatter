@@ -167,22 +167,14 @@ Cover::Result Cover::reportReachable()
 
 Cover::Result Cover::reportUnreachable()
 {
-    Result result = Result::NoChange;
-
-    if (mReachable) {
-        mReachable = false;
-        raise(std::make_unique<CoverMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
-
-        result = Result::Ok;
+    if (!mReachable) {
+        return Result::NoChange;
     }
 
-    if (PositionStatus::Moving == mLiftState.status()) {
-        replaceLiftState(mLiftState.reset());
+    mReachable = false;
+    raise(std::make_unique<CoverMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
 
-        result = Result::Ok;
-    }
-
-    return result;
+    return Result::Ok;
 }
 
 Cover::Result Cover::reportRenamedTo(std::string name)
