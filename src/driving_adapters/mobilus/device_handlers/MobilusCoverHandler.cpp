@@ -150,12 +150,19 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
             return false;
         }
 
-        if (Cover::Result::Ok == cover.reportLiftPosition(*position)) {
-            mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX_EP, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
-            return true;
+        bool result = false;
+
+        if (Cover::Result::Ok == cover.reportReachable()) {
+            mLogger.notice(LOG_TAG "Cover marked as reachable" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
+            result = true;
         }
 
-        return false;
+        if (Cover::Result::Ok == cover.reportLiftPosition(*position)) {
+            mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX_EP, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+            result = true;
+        }
+
+        return result;
     }
     case EventNumber::Error:
         if ("NO_CONNECTION" == event.value()) {

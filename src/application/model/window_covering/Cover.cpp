@@ -124,24 +124,13 @@ Cover::Result Cover::reportLiftPosition(Position position)
     if (PositionStatus::Unavailable == mLiftState.status()) {
         return Result::LiftNotSupported;
     }
-
-    auto result = Result::NoChange;
-
-    // this is the only feedback once device becomes reachable again
-    if (!mReachable) {
-        mReachable = true;
-        raise(std::make_unique<CoverMarkedAsReachable>(mEndpointId, mMobilusDeviceId));
-
-        result = Result::Ok;
+    if (position == mLiftState.currentPosition() && position == mLiftState.targetPosition()) {
+        return Result::NoChange;
     }
 
-    if (position != mLiftState.currentPosition() || position != mLiftState.targetPosition()) {
-        replaceLiftState(PositionState::at(position));
+    replaceLiftState(PositionState::at(position));
 
-        result = Result::Ok;
-    }
-
-    return result;
+    return Result::Ok;
 }
 
 Cover::Result Cover::reportStopMotion()
@@ -162,6 +151,18 @@ Cover::Result Cover::reportMotionFailure()
     }
 
     return Result::NoChange;
+}
+
+Cover::Result Cover::reportReachable()
+{
+    if (mReachable) {
+        return Result::NoChange;
+    }
+
+    mReachable = true;
+    raise(std::make_unique<CoverMarkedAsReachable>(mEndpointId, mMobilusDeviceId));
+
+    return Result::Ok;
 }
 
 Cover::Result Cover::reportUnreachable()

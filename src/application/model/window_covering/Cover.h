@@ -36,6 +36,7 @@ public:
     Result reportLiftPosition(Position position);
     Result reportStopMotion();
     Result reportMotionFailure();
+    Result reportReachable();
     Result reportUnreachable();
     Result reportRenamedTo(std::string name);
     void reportRemoved();
