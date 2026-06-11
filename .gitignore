@@ -1,3 +1,4 @@
 out/
 build/local.gni
 third_party/protobuf/bin
+compile_commands.json
