@@ -6,9 +6,10 @@ namespace mobmatter::application::model::window_covering {
 
 enum class CoverFeature : uint8_t {
     Lift = 0x1,
-    PositionAwareLift = 0x2,
-    EdgePositionAwareLift = 0x4, // non existing in matter
-    // todo: tilt in later development
+    Tilt = 0x2,
+    PositionAwareLift = 0x4,
+    PositionAwareTilt = 0x8,
+    EdgePositionAwareLift = 0x10, // non existing in matter
 };
 
 }

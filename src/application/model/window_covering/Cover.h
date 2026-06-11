@@ -8,32 +8,32 @@
 #include "application/model/UniqueId.h"
 #include "common/domain/Entity.h"
 
-#include <cstdint>
-#include <optional>
-
 namespace mobmatter::application::model::window_covering {
 
 class Cover final : public mobmatter::common::domain::Entity {
 public:
-    enum class Result : uint8_t {
-        Ok = 0,
-        NoChange = 1,
-        LiftNotSupported = 2,
+    enum class Result {
+        Ok,
+        NoChange,
+        NotSupported,
     };
 
-    static Cover add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, PositionState liftState, CoverSpecification specification);
-    static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, bool reachable, std::string name, PositionState liftState, CoverSpecification specification);
+    static Cover add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, std::string name, PositionState liftState, PositionState tiltState);
+    static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
 
     /* chip specific */
-    Result requestLiftTo(Position position);
     Result requestOpen();
     Result requestClose();
+    Result requestLiftTo(Position position);
+    Result requestTiltTo(Position position);
     Result requestStopMotion();
     Result requestRename(std::string name);
 
     /* mobilus specific */
     Result reportLiftTo(Position position);
     Result reportLiftPosition(Position position);
+    Result reportTiltTo(Position position);
+    Result reportTiltPosition(Position position);
     Result reportStopMotion();
     Result reportMotionFailure();
     Result reportReachable();
@@ -46,9 +46,10 @@ public:
     EndpointId endpointId() const;
     MobilusDeviceId mobilusDeviceId() const;
     const UniqueId& uniqueId() const;
+    const CoverSpecification& specification() const;
     const std::string& name() const;
     const PositionState& liftState() const;
-    const CoverSpecification& specification() const;
+    const PositionState& tiltState() const;
 
 private:
     /* const */ EndpointId mEndpointId;
@@ -58,9 +59,14 @@ private:
     bool mReachable;
     std::string mName;
     PositionState mLiftState;
+    PositionState mTiltState;
 
-    Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, bool reachable, std::string name, PositionState liftState, CoverSpecification specification);
+    Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
     void replaceLiftState(PositionState&& liftState);
+    void replaceTiltState(PositionState&& tiltState);
+
+    template <typename Event>
+    Result requestLiftAndTiltTo(Position position);
 };
 
 }

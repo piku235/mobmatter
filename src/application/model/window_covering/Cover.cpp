@@ -1,5 +1,6 @@
 #include "Cover.h"
 #include "CoverAdded.h"
+#include "CoverCloseRequested.h"
 #include "CoverLiftCurrentPositionChanged.h"
 #include "CoverLiftMotionChanged.h"
 #include "CoverLiftRequested.h"
@@ -8,15 +9,20 @@
 #include "CoverMarkedAsUnreachable.h"
 #include "CoverMotion.h"
 #include "CoverNameChanged.h"
+#include "CoverOpenRequested.h"
 #include "CoverRemoved.h"
 #include "CoverRenameRequested.h"
 #include "CoverStopMotionRequested.h"
+#include "CoverTiltCurrentPositionChanged.h"
+#include "CoverTiltMotionChanged.h"
+#include "CoverTiltRequested.h"
+#include "CoverTiltTargetPositionChanged.h"
 
 using namespace mobmatter::common::domain;
 
 namespace mobmatter::application::model::window_covering {
 
-Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, PositionState liftState, CoverSpecification specification)
+Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, std::string name, PositionState liftState, PositionState tiltState)
 {
     raise(std::make_unique<CoverAdded>(endpointId, mobilusDeviceId, specification));
 
@@ -24,27 +30,29 @@ Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::st
         endpointId,
         mobilusDeviceId,
         UniqueId::random(),
+        std::move(specification),
         true,
         std::move(name),
         std::move(liftState),
-        std::move(specification),
+        std::move(tiltState),
     };
 }
 
-Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, bool reachable, std::string name, PositionState liftState, CoverSpecification specification)
+Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
 {
     return {
         endpointId,
         mobilusDeviceId,
         std::move(uniqueId),
+        std::move(specification),
         reachable,
         std::move(name),
         std::move(liftState),
-        std::move(specification),
+        std::move(tiltState),
     };
 }
 
-Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, bool reachable, std::string name, PositionState liftState, CoverSpecification specification)
+Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
     : mEndpointId(endpointId)
     , mMobilusDeviceId(mobilusDeviceId)
     , mUniqueId(std::move(uniqueId))
@@ -52,13 +60,24 @@ Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId un
     , mReachable(reachable)
     , mName(std::move(name))
     , mLiftState(std::move(liftState))
+    , mTiltState(std::move(tiltState))
 {
+}
+
+Cover::Result Cover::requestOpen()
+{
+    return requestLiftAndTiltTo<CoverOpenRequested>(Position::fullyOpen());
+}
+
+Cover::Result Cover::requestClose()
+{
+    return requestLiftAndTiltTo<CoverCloseRequested>(Position::fullyClosed());
 }
 
 Cover::Result Cover::requestLiftTo(Position position)
 {
     if (PositionStatus::Unavailable == mLiftState.status()) {
-        return Result::LiftNotSupported;
+        return Result::NotSupported;
     }
     if (position == mLiftState.targetPosition()) {
         return Result::NoChange;
@@ -70,26 +89,40 @@ Cover::Result Cover::requestLiftTo(Position position)
     return Result::Ok;
 }
 
-Cover::Result Cover::requestOpen()
+Cover::Result Cover::requestTiltTo(Position position)
 {
-    return requestLiftTo(Position::fullyOpen());
-}
+    if (PositionStatus::Unavailable == mTiltState.status()) {
+        return Result::NotSupported;
+    }
+    if (position == mTiltState.targetPosition()) {
+        return Result::NoChange;
+    }
 
-Cover::Result Cover::requestClose()
-{
-    return requestLiftTo(Position::fullyClosed());
+    replaceTiltState(mTiltState.requestMoveTo(position));
+    raise(std::make_unique<CoverTiltRequested>(mEndpointId, mMobilusDeviceId, position));
+
+    return Result::Ok;
 }
 
 Cover::Result Cover::requestStopMotion()
 {
-    if (PositionStatus::Requested == mLiftState.status() || PositionStatus::Moving == mLiftState.status()) {
-        replaceLiftState(mLiftState.stop());
-        raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
+    bool liftMovement = PositionStatus::Requested == mLiftState.status() || PositionStatus::Moving == mLiftState.status();
+    bool tiltMovement = PositionStatus::Requested == mTiltState.status() || PositionStatus::Moving == mTiltState.status();
 
-        return Result::Ok;
+    if (!liftMovement && !tiltMovement) {
+        return Result::NoChange;
     }
 
-    return Result::NoChange;
+    if (liftMovement) {
+        replaceLiftState(mLiftState.stop());
+    }
+    if (tiltMovement) {
+        replaceTiltState(mTiltState.stop());
+    }
+
+    raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
+
+    return Result::Ok;
 }
 
 Cover::Result Cover::requestRename(std::string name)
@@ -109,20 +142,21 @@ Cover::Result Cover::requestRename(std::string name)
 Cover::Result Cover::reportLiftTo(Position position)
 {
     if (PositionStatus::Unavailable == mLiftState.status()) {
-        return Result::LiftNotSupported;
+        return Result::NotSupported;
     }
     if (position == mLiftState.targetPosition() && PositionStatus::Moving == mLiftState.status()) {
         return Result::NoChange;
     }
 
     replaceLiftState(mLiftState.movingTo(position));
+
     return Result::Ok;
 }
 
 Cover::Result Cover::reportLiftPosition(Position position)
 {
     if (PositionStatus::Unavailable == mLiftState.status()) {
-        return Result::LiftNotSupported;
+        return Result::NotSupported;
     }
     if (position == mLiftState.currentPosition() && position == mLiftState.targetPosition()) {
         return Result::NoChange;
@@ -133,24 +167,70 @@ Cover::Result Cover::reportLiftPosition(Position position)
     return Result::Ok;
 }
 
-Cover::Result Cover::reportStopMotion()
+Cover::Result Cover::reportTiltTo(Position position)
 {
-    if (PositionStatus::Moving == mLiftState.status()) {
-        replaceLiftState(mLiftState.stop());
-        return Result::Ok;
+    if (PositionStatus::Unavailable == mTiltState.status()) {
+        return Result::NotSupported;
+    }
+    if (position == mTiltState.targetPosition() && PositionStatus::Moving == mTiltState.status()) {
+        return Result::NoChange;
     }
 
-    return Result::NoChange;
+    replaceTiltState(mTiltState.movingTo(position));
+
+    return Result::Ok;
+}
+
+Cover::Result Cover::reportTiltPosition(Position position)
+{
+    if (PositionStatus::Unavailable == mTiltState.status()) {
+        return Result::NotSupported;
+    }
+    if (position == mTiltState.currentPosition() && position == mTiltState.targetPosition()) {
+        return Result::NoChange;
+    }
+
+    replaceTiltState(PositionState::at(position));
+
+    return Result::Ok;
+}
+
+Cover::Result Cover::reportStopMotion()
+{
+    bool liftMovement = PositionStatus::Moving == mLiftState.status();
+    bool tiltMovement = PositionStatus::Moving == mTiltState.status();
+
+    if (!liftMovement && !tiltMovement) {
+        return Result::NoChange;
+    }
+
+    if (liftMovement) {
+        replaceLiftState(mLiftState.stop());
+    }
+    if (tiltMovement) {
+        replaceTiltState(mTiltState.stop());
+    }
+
+    return Result::Ok;
 }
 
 Cover::Result Cover::reportMotionFailure()
 {
-    if (PositionStatus::Moving == mLiftState.status()) {
-        replaceLiftState(mLiftState.reset());
-        return Result::Ok;
+    bool liftMovement = PositionStatus::Moving == mLiftState.status();
+    bool tiltMovement = PositionStatus::Moving == mTiltState.status();
+
+    if (!liftMovement && !tiltMovement) {
+        return Result::NoChange;
     }
 
-    return Result::NoChange;
+    if (liftMovement) {
+        replaceLiftState(mLiftState.reset());
+    }
+    if (tiltMovement) {
+        replaceTiltState(mTiltState.reset());
+    }
+
+    return Result::Ok;
 }
 
 Cover::Result Cover::reportReachable()
@@ -219,6 +299,11 @@ const UniqueId& Cover::uniqueId() const
     return mUniqueId;
 }
 
+const CoverSpecification& Cover::specification() const
+{
+    return mSpecification;
+}
+
 const std::string& Cover::name() const
 {
     return mName;
@@ -229,9 +314,9 @@ const PositionState& Cover::liftState() const
     return mLiftState;
 }
 
-const CoverSpecification& Cover::specification() const
+const PositionState& Cover::tiltState() const
 {
-    return mSpecification;
+    return mTiltState;
 }
 
 void Cover::replaceLiftState(PositionState&& liftState)
@@ -249,6 +334,45 @@ void Cover::replaceLiftState(PositionState&& liftState)
     }
 
     mLiftState = std::move(liftState);
+}
+
+void Cover::replaceTiltState(PositionState&& tiltState)
+{
+    if (tiltState.motion() != mTiltState.motion()) {
+        raise(std::make_unique<CoverTiltMotionChanged>(mEndpointId, mMobilusDeviceId, tiltState.motion()));
+    }
+
+    if (tiltState.targetPosition() != mTiltState.targetPosition()) {
+        raise(std::make_unique<CoverTiltTargetPositionChanged>(mEndpointId, mMobilusDeviceId, *tiltState.targetPosition()));
+    }
+
+    if (tiltState.currentPosition() != mTiltState.currentPosition()) {
+        raise(std::make_unique<CoverTiltCurrentPositionChanged>(mEndpointId, mMobilusDeviceId, *tiltState.currentPosition()));
+    }
+
+    mTiltState = std::move(tiltState);
+}
+
+template <typename Event>
+Cover::Result Cover::requestLiftAndTiltTo(Position position)
+{
+    bool liftPositionDiffers = PositionStatus::Unavailable != mLiftState.status() && position != mLiftState.targetPosition();
+    bool tiltPositionDiffers = PositionStatus::Unavailable != mTiltState.status() && position != mTiltState.targetPosition();
+
+    if (!liftPositionDiffers && !tiltPositionDiffers) {
+        return Result::NoChange;
+    }
+
+    if (liftPositionDiffers) {
+        replaceLiftState(mLiftState.requestMoveTo(position));
+    }
+    if (tiltPositionDiffers) {
+        replaceTiltState(mTiltState.requestMoveTo(position));
+    }
+
+    raise(std::make_unique<Event>(mEndpointId, mMobilusDeviceId));
+
+    return Result::Ok;
 }
 
 }

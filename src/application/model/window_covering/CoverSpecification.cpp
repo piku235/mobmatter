@@ -6,11 +6,13 @@ std::optional<CoverSpecification> CoverSpecification::findFor(MobilusDeviceType 
 {
     switch (mobilusDeviceType) {
     case MobilusDeviceType::Senso:
-        return CoverSpecification::Senso();
+        return Senso();
+    case MobilusDeviceType::SensoZ:
+        return SensoZ();
     case MobilusDeviceType::Cosmo:
-        return CoverSpecification::Cosmo();
+        return Cosmo();
     case MobilusDeviceType::Cmr:
-        return CoverSpecification::Cmr();
+        return Cmr();
     default:
         return std::nullopt;
     }
@@ -25,6 +27,21 @@ CoverSpecification CoverSpecification::Senso()
         {
             CoverFeature::Lift,
             CoverFeature::PositionAwareLift,
+        }
+    };
+}
+
+CoverSpecification CoverSpecification::SensoZ()
+{
+    return {
+        "SensoZ",
+        MobilusDeviceType::SensoZ,
+        CoverEndProductType::VenetianBlind,
+        {
+            CoverFeature::Lift,
+            CoverFeature::Tilt,
+            CoverFeature::PositionAwareLift,
+            CoverFeature::PositionAwareTilt,
         }
     };
 }
@@ -52,16 +69,6 @@ CoverSpecification CoverSpecification::Cmr()
             CoverFeature::Lift,
             CoverFeature::EdgePositionAwareLift,
         }
-    };
-}
-
-CoverSpecification CoverSpecification::TestCzr()
-{
-    return {
-        "Test",
-        MobilusDeviceType::CosmoCzr,
-        CoverEndProductType::RollerShutter,
-        {}
     };
 }
 

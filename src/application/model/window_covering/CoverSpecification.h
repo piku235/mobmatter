@@ -14,9 +14,9 @@ class CoverSpecification final {
 public:
     static std::optional<CoverSpecification> findFor(MobilusDeviceType mobilusDeviceType);
     static CoverSpecification Senso();
+    static CoverSpecification SensoZ();
     static CoverSpecification Cosmo();
     static CoverSpecification Cmr();
-    static CoverSpecification TestCzr(); // internal
 
     const std::string& model() const { return mModel; }
     MobilusDeviceType mobilusDeviceType() const { return mMobilusDeviceType; }
