@@ -1,6 +1,5 @@
 #include "MobilusCoverHandler.h"
-#include "application/model/MobilusDeviceId.h"
-#include "application/model/Percent.h"
+#include "MobilusCoverPositionState.h"
 #include "application/model/window_covering/Cover.h"
 #include "application/model/window_covering/CoverSpecification.h"
 #include "application/model/window_covering/PositionState.h"
@@ -81,13 +80,25 @@ MobilusDeviceEventHandler::Result MobilusCoverHandler::handle(const proto::Event
 
 void MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device& deviceInfo, const proto::Event& lastEvent)
 {
-    std::optional<Position> liftPosition;
+    auto liftState = coverSpec.featureFlags().has(CoverFeature::Lift)
+        ? PositionState::at(Position::fullyClosed())
+        : PositionState::unavailable();
+    auto tiltState = coverSpec.featureFlags().has(CoverFeature::Tilt)
+        ? PositionState::at(Position::fullyClosed())
+        : PositionState::unavailable();
 
-    if (EventNumber::Sent == lastEvent.event_number() || EventNumber::Reached == lastEvent.event_number()) {
-        liftPosition = convertLiftPosition(lastEvent.value());
+    if (EventNumber::Reached == lastEvent.event_number()) {
+        auto result = MobilusCoverPositionState::parse(lastEvent.value());
 
-        if (!liftPosition) {
-            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX, lastEvent.value().c_str(), deviceInfo.id());
+        if (!result.isValid()) {
+            mLogger.error(LOG_TAG "Invalid cover position: %s" LOG_SUFFIX, lastEvent.value().c_str(), deviceInfo.id());
+        }
+
+        if (result.liftPosition) {
+            liftState = PositionState::at(*result.liftPosition);
+        }
+        if (result.tiltPosition) {
+            tiltState = PositionState::at(*result.tiltPosition);
         }
     }
 
@@ -101,9 +112,10 @@ void MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device
     auto cover = Cover::add(
         *endpointId,
         deviceInfo.id(),
+        std::move(coverSpec),
         deviceInfo.name(),
-        PositionState::at(liftPosition.value_or(Position::fullyClosed())),
-        std::move(coverSpec));
+        std::move(liftState),
+        std::move(tiltState));
     mCoverRepository.save(cover);
 
     mLogger.notice(LOG_TAG "Added cover" LOG_SUFFIX_EP, cover.endpointId(), deviceInfo.id());
@@ -123,30 +135,37 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
 {
     switch (event.event_number()) {
     case EventNumber::Sent: {
-        auto position = convertLiftPosition(event.value());
+        auto positionState = MobilusCoverPositionState::parse(event.value());
 
-        if (!position) {
+        if (!positionState.isValid()) {
             if ("STOP" == event.value()) {
                 cover.reportStopMotion();
                 return true;
             }
 
-            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+            mLogger.error(LOG_TAG "Invalid cover position: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
             return false;
         }
 
-        if (Cover::Result::Ok == cover.reportLiftTo(*position)) {
-            mLogger.notice(LOG_TAG "Started lifting cover to target position: %d%%" LOG_SUFFIX_EP, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
-            return true;
+        bool result = false;
+
+        if (positionState.liftPosition && Cover::Result::Ok == cover.reportLiftTo(*positionState.liftPosition)) {
+            mLogger.notice(LOG_TAG "Started cover lift to target position: %d%%" LOG_SUFFIX_EP, positionState.liftPosition->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+            result = true;
         }
 
-        return false;
+        if (positionState.tiltPosition && Cover::Result::Ok == cover.reportTiltTo(*positionState.tiltPosition)) {
+            mLogger.notice(LOG_TAG "Started cover tilt to target position: %d%%" LOG_SUFFIX_EP, positionState.tiltPosition->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+            result = true;
+        }
+
+        return result;
     }
     case EventNumber::Reached: {
-        auto position = convertLiftPosition(event.value());
+        auto positionState = MobilusCoverPositionState::parse(event.value());
 
-        if (!position) {
-            mLogger.error(LOG_TAG "Invalid cover lift position: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+        if (!positionState.isValid()) {
+            mLogger.error(LOG_TAG "Invalid cover position: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
             return false;
         }
 
@@ -157,8 +176,13 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
             result = true;
         }
 
-        if (Cover::Result::Ok == cover.reportLiftPosition(*position)) {
-            mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX_EP, position->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+        if (positionState.liftPosition && Cover::Result::Ok == cover.reportLiftPosition(*positionState.liftPosition)) {
+            mLogger.notice(LOG_TAG "Changed cover lift position: %d%%" LOG_SUFFIX_EP, positionState.liftPosition->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
+            result = true;
+        }
+
+        if (positionState.tiltPosition && Cover::Result::Ok == cover.reportTiltPosition(*positionState.tiltPosition)) {
+            mLogger.notice(LOG_TAG "Changed cover tilt position: %d%%" LOG_SUFFIX_EP, positionState.tiltPosition->closedPercent().value(), cover.endpointId(), cover.mobilusDeviceId());
             result = true;
         }
 
@@ -183,29 +207,6 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
         mLogger.notice(LOG_TAG "Unknown event number");
         return false;
     }
-}
-
-std::optional<Position> MobilusCoverHandler::convertLiftPosition(const std::string& value)
-{
-    uint8_t parsedPercent;
-
-    if ('%' == value.back() && 1 == sscanf(value.c_str(), "%hhu", &parsedPercent)) {
-        if (auto percent = Percent::from(parsedPercent)) {
-            return Position::open(*percent);
-        }
-
-        return std::nullopt;
-    }
-
-    if ("UP" == value) {
-        return Position::fullyOpen();
-    }
-
-    if ("DOWN" == value) {
-        return Position::fullyClosed();
-    }
-
-    return std::nullopt;
 }
 
 }

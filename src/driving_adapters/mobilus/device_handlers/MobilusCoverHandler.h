@@ -4,12 +4,9 @@
 #include "application/driven_ports/EndpointIdGenerator.h"
 #include "application/model/window_covering/Cover.h"
 #include "application/model/window_covering/CoverSpecification.h"
-#include "application/model/window_covering/Position.h"
 #include "common/logging/Logger.h"
 #include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
 #include "driving_adapters/mobilus/MobilusDeviceSyncHandler.h"
-
-#include <optional>
 
 namespace mobmatter::driving_adapters::mobilus::device_handlers {
 
@@ -33,7 +30,6 @@ private:
     void init(model::window_covering::CoverSpecification coverSpec, const proto::Device& device, const proto::Event& lastEvent);
     bool apply(model::window_covering::Cover& cover, const proto::Device& deviceInfo);
     bool apply(model::window_covering::Cover& cover, const proto::Event& event);
-    std::optional<model::window_covering::Position> convertLiftPosition(const std::string& value);
 };
 
 }

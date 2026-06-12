@@ -1,29 +1,32 @@
 source_set("device_syncer") {
-  sources = [ "MobilusDeviceSyncerAdapterTest.cpp" ]
+    sources = [ "MobilusDeviceSyncerAdapterTest.cpp" ]
 
-  deps = [
-    "//src/application",
-    "//src/common/logging",
-    "//src/driving_adapters/mobilus:device_syncer",
-    "//src/driving_adapters/mobilus/device_handlers:device_syncer",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest",
-  ]
+    deps = [
+        "//src/application",
+        "//src/common/logging",
+        "//src/driving_adapters/mobilus:device_syncer",
+        "//src/driving_adapters/mobilus/device_handlers:device_syncer",
+        "//third_party/googletest:gmock",
+        "//third_party/googletest:gtest",
+    ]
 
-  configs += [ "//tests:tests_include" ]
+    configs += [ "//tests:tests_include" ]
 }
 
 source_set("cover") {
-  sources = [ "MobilusCoverHandlerTest.cpp" ]
+    sources = [
+        "MobilusCoverPositionStateTest.cpp",
+        "MobilusCoverHandlerTest.cpp"
+    ]
 
-  deps = [
-    "//src/application",
-    "//src/common/logging",
-    "//src/driving_adapters/mobilus/device_handlers:cover",
-    "//tests/driven_adapters/persistence/in_memory",
-    "//third_party/googletest:gmock",
-    "//third_party/googletest:gtest",
-  ]
+    deps = [
+        "//src/application",
+        "//src/common/logging",
+        "//src/driving_adapters/mobilus/device_handlers:cover",
+        "//tests/driven_adapters/persistence/in_memory",
+        "//third_party/googletest:gmock",
+        "//third_party/googletest:gtest",
+    ]
 
-  configs += [ "//tests:tests_include" ]
+    configs += [ "//tests:tests_include" ]
 }

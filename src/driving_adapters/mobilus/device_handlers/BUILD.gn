@@ -11,7 +11,11 @@ source_set("device_syncer") {
 }
 
 source_set("cover") {
-  sources = [ "MobilusCoverHandler.cpp" ]
+  sources = [
+    "MobilusCoverPositionState.cpp",
+    "MobilusCoverPositionState.hpp",
+    "MobilusCoverHandler.cpp"
+  ]
 
   public = [ "MobilusCoverHandler.h" ]
 
