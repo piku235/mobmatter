@@ -1,7 +1,6 @@
 #include "ZclDeviceEndpoint.h"
 
 #include <app/util/attribute-storage-detail.h>
-#include <app/util/attribute-storage-null-handling.h>
 #include <app/util/attribute-storage.h>
 #include <lib/support/logging/CHIPLogging.h>
 
@@ -36,7 +35,7 @@ void addDeviceEndpoint(EndpointId id, const EmberAfEndpointType* ep, Span<const 
     }
 
     auto dataVersion = new DataVersion[ep->clusterCount];
-    CHIP_ERROR err = emberAfSetDynamicEndpoint(index, id, ep, Span<DataVersion>(dataVersion, ep->clusterCount), deviceTypeList, parentEndpointId);
+    CHIP_ERROR err = emberAfSetDynamicEndpoint(index, id, ep, Span(dataVersion, ep->clusterCount), deviceTypeList, parentEndpointId);
 
     if (CHIP_NO_ERROR != err) {
         delete[] dataVersion;

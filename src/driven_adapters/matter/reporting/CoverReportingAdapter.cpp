@@ -19,6 +19,26 @@ void CoverReportingAdapter::handle(const CoverLiftTargetPositionChanged& event)
     MatterReportingAttributeChangeCallback(event.endpointId, WindowCovering::Id, WindowCovering::Attributes::TargetPositionLiftPercent100ths::Id);
 }
 
+void CoverReportingAdapter::handle(const CoverLiftMotionChanged& event)
+{
+    MatterReportingAttributeChangeCallback(event.endpointId, WindowCovering::Id, WindowCovering::Attributes::OperationalStatus::Id);
+}
+
+void CoverReportingAdapter::handle(const CoverTiltCurrentPositionChanged& event)
+{
+    MatterReportingAttributeChangeCallback(event.endpointId, WindowCovering::Id, WindowCovering::Attributes::CurrentPositionTiltPercent100ths::Id);
+}
+
+void CoverReportingAdapter::handle(const CoverTiltTargetPositionChanged& event)
+{
+    MatterReportingAttributeChangeCallback(event.endpointId, WindowCovering::Id, WindowCovering::Attributes::TargetPositionTiltPercent100ths::Id);
+}
+
+void CoverReportingAdapter::handle(const CoverTiltMotionChanged& event)
+{
+    MatterReportingAttributeChangeCallback(event.endpointId, WindowCovering::Id, WindowCovering::Attributes::OperationalStatus::Id);
+}
+
 void CoverReportingAdapter::handle(const CoverMarkedAsReachable& event)
 {
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::Reachable::Id);
@@ -29,12 +49,7 @@ void CoverReportingAdapter::handle(const CoverMarkedAsUnreachable& event)
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::Reachable::Id);
 }
 
-void CoverReportingAdapter::handle(const CoverLiftMotionChanged& event)
-{
-    MatterReportingAttributeChangeCallback(event.endpointId, WindowCovering::Id, WindowCovering::Attributes::OperationalStatus::Id);
-}
-
-void CoverReportingAdapter::handle(const wc::CoverNameChanged& event)
+void CoverReportingAdapter::handle(const CoverNameChanged& event)
 {
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::NodeLabel::Id);
 }

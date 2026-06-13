@@ -47,7 +47,7 @@ DECLARE_DYNAMIC_ATTRIBUTE(BridgedDeviceBasicInformation::Attributes::VendorID::I
     DECLARE_DYNAMIC_ATTRIBUTE(BridgedDeviceBasicInformation::Attributes::FeatureMap::Id, BITMAP32, 4, 0),
     DECLARE_DYNAMIC_ATTRIBUTE_LIST_END(); /* ClusterRevision */
 
-DECLARE_DYNAMIC_ATTRIBUTE_LIST_BEGIN(coverAttributes)
+DECLARE_DYNAMIC_ATTRIBUTE_LIST_BEGIN(liftCoverAttributes)
 DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::Type::Id, ENUM8, 1, 0),
     DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::EndProductType::Id, ENUM8, 1, 0),
     DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::ConfigStatus::Id, BITMAP8, 1, 0),
@@ -58,12 +58,34 @@ DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::Type::Id, ENUM8, 1, 0),
     DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::FeatureMap::Id, BITMAP32, 4, 0),
     DECLARE_DYNAMIC_ATTRIBUTE_LIST_END(); /* ClusterRevision */
 
+DECLARE_DYNAMIC_ATTRIBUTE_LIST_BEGIN(liftAndTiltCoverAttributes)
+DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::Type::Id, ENUM8, 1, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::EndProductType::Id, ENUM8, 1, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::ConfigStatus::Id, BITMAP8, 1, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::OperationalStatus::Id, BITMAP8, 1, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::CurrentPositionLiftPercent100ths::Id, PERCENT100THS, PERCENT100THS_SIZE, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::TargetPositionLiftPercent100ths::Id, PERCENT100THS, PERCENT100THS_SIZE, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::CurrentPositionTiltPercent100ths::Id, PERCENT100THS, PERCENT100THS_SIZE, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::TargetPositionTiltPercent100ths::Id, PERCENT100THS, PERCENT100THS_SIZE, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::Mode::Id, BITMAP8, 1, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(WindowCovering::Attributes::FeatureMap::Id, BITMAP32, 4, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE_LIST_END(); /* ClusterRevision */
+
 constexpr CommandId identifyCommands[] = {
     Identify::Commands::Identify::Id,
     kInvalidCommandId,
 };
 
-constexpr CommandId coverPositionAwareLiftCommands[] = {
+constexpr CommandId liftAndTiltCoverCommands[] = {
+    WindowCovering::Commands::UpOrOpen::Id,
+    WindowCovering::Commands::DownOrClose::Id,
+    WindowCovering::Commands::StopMotion::Id,
+    WindowCovering::Commands::GoToLiftPercentage::Id,
+    WindowCovering::Commands::GoToTiltPercentage::Id,
+    kInvalidCommandId,
+};
+
+constexpr CommandId liftCoverCommands[] = {
     WindowCovering::Commands::UpOrOpen::Id,
     WindowCovering::Commands::DownOrClose::Id,
     WindowCovering::Commands::StopMotion::Id,
@@ -71,32 +93,39 @@ constexpr CommandId coverPositionAwareLiftCommands[] = {
     kInvalidCommandId,
 };
 
-DECLARE_DYNAMIC_CLUSTER_LIST_BEGIN(coverPositionAwareLiftClusters)
-DECLARE_DYNAMIC_CLUSTER(Identify::Id, identifyAttributes, ZAP_CLUSTER_MASK(SERVER), identifyCommands, nullptr),
-    DECLARE_DYNAMIC_CLUSTER(Descriptor::Id, descriptorAttributes, ZAP_CLUSTER_MASK(SERVER), nullptr, nullptr),
-    DECLARE_DYNAMIC_CLUSTER(BridgedDeviceBasicInformation::Id, bridgedDeviceBasicInfoAttributes, ZAP_CLUSTER_MASK(SERVER), nullptr, nullptr),
-    DECLARE_DYNAMIC_CLUSTER(WindowCovering::Id, coverAttributes, ZAP_CLUSTER_MASK(SERVER), coverPositionAwareLiftCommands, nullptr),
-    DECLARE_DYNAMIC_CLUSTER_LIST_END;
-
-DECLARE_DYNAMIC_ENDPOINT(coverPositionAwareLiftEndpoint, coverPositionAwareLiftClusters);
-
-constexpr CommandId coverEdgePositionAwareLiftCommands[] = {
+constexpr CommandId basicCoverCommands[] = {
     WindowCovering::Commands::UpOrOpen::Id,
     WindowCovering::Commands::DownOrClose::Id,
     WindowCovering::Commands::StopMotion::Id,
     kInvalidCommandId,
 };
 
-DECLARE_DYNAMIC_CLUSTER_LIST_BEGIN(coverEdgePositionAwareLiftClusters)
+DECLARE_DYNAMIC_CLUSTER_LIST_BEGIN(liftAndTiltCoverClusters)
 DECLARE_DYNAMIC_CLUSTER(Identify::Id, identifyAttributes, ZAP_CLUSTER_MASK(SERVER), identifyCommands, nullptr),
     DECLARE_DYNAMIC_CLUSTER(Descriptor::Id, descriptorAttributes, ZAP_CLUSTER_MASK(SERVER), nullptr, nullptr),
     DECLARE_DYNAMIC_CLUSTER(BridgedDeviceBasicInformation::Id, bridgedDeviceBasicInfoAttributes, ZAP_CLUSTER_MASK(SERVER), nullptr, nullptr),
-    DECLARE_DYNAMIC_CLUSTER(WindowCovering::Id, coverAttributes, ZAP_CLUSTER_MASK(SERVER), coverEdgePositionAwareLiftCommands, nullptr),
+    DECLARE_DYNAMIC_CLUSTER(WindowCovering::Id, liftAndTiltCoverAttributes, ZAP_CLUSTER_MASK(SERVER), liftAndTiltCoverCommands, nullptr),
     DECLARE_DYNAMIC_CLUSTER_LIST_END;
 
-DECLARE_DYNAMIC_ENDPOINT(coverEdgePositionAwareLiftEndpoint, coverEdgePositionAwareLiftClusters);
+DECLARE_DYNAMIC_CLUSTER_LIST_BEGIN(liftCoverClusters)
+DECLARE_DYNAMIC_CLUSTER(Identify::Id, identifyAttributes, ZAP_CLUSTER_MASK(SERVER), identifyCommands, nullptr),
+    DECLARE_DYNAMIC_CLUSTER(Descriptor::Id, descriptorAttributes, ZAP_CLUSTER_MASK(SERVER), nullptr, nullptr),
+    DECLARE_DYNAMIC_CLUSTER(BridgedDeviceBasicInformation::Id, bridgedDeviceBasicInfoAttributes, ZAP_CLUSTER_MASK(SERVER), nullptr, nullptr),
+    DECLARE_DYNAMIC_CLUSTER(WindowCovering::Id, liftCoverAttributes, ZAP_CLUSTER_MASK(SERVER), liftCoverCommands, nullptr),
+    DECLARE_DYNAMIC_CLUSTER_LIST_END;
 
-const EmberAfDeviceType coverDeviceTypes[] = {
+DECLARE_DYNAMIC_CLUSTER_LIST_BEGIN(liftCoverEdgeClusters)
+DECLARE_DYNAMIC_CLUSTER(Identify::Id, identifyAttributes, ZAP_CLUSTER_MASK(SERVER), identifyCommands, nullptr),
+    DECLARE_DYNAMIC_CLUSTER(Descriptor::Id, descriptorAttributes, ZAP_CLUSTER_MASK(SERVER), nullptr, nullptr),
+    DECLARE_DYNAMIC_CLUSTER(BridgedDeviceBasicInformation::Id, bridgedDeviceBasicInfoAttributes, ZAP_CLUSTER_MASK(SERVER), nullptr, nullptr),
+    DECLARE_DYNAMIC_CLUSTER(WindowCovering::Id, liftCoverAttributes, ZAP_CLUSTER_MASK(SERVER), basicCoverCommands, nullptr),
+    DECLARE_DYNAMIC_CLUSTER_LIST_END;
+
+DECLARE_DYNAMIC_ENDPOINT(liftAndTiltCoverEndpoint, liftAndTiltCoverClusters);
+DECLARE_DYNAMIC_ENDPOINT(liftCoverEndpoint, liftCoverClusters);
+DECLARE_DYNAMIC_ENDPOINT(liftCoverEdgeEndpoint, liftCoverEdgeClusters);
+
+constexpr EmberAfDeviceType coverDeviceTypes[] = {
     { DEVICE_TYPE_WINDOW_COVERING, DEVICE_VERSION_DEFAULT },
     { DEVICE_TYPE_BRIDGED_NODE, DEVICE_VERSION_DEFAULT },
 };
@@ -110,15 +139,15 @@ ZclCoverEndpointService::ZclCoverEndpointService(EndpointId aggregatorEndpointId
 {
 }
 
-void ZclCoverEndpointService::addEndpoint(EndpointId endpointId, const wc::CoverSpecification& specification)
+void ZclCoverEndpointService::addEndpoint(EndpointId endpointId, const CoverSpecification& specification)
 {
-    EmberAfEndpointType* endpointType = &coverPositionAwareLiftEndpoint;
-
-    if (specification.featureFlags().has(CoverFeature::EdgePositionAwareLift)) {
-        endpointType = &coverEdgePositionAwareLiftEndpoint;
-    }
-
-    addDeviceEndpoint(endpointId, endpointType, Span<const EmberAfDeviceType>(coverDeviceTypes), mAggregatorEndpointId);
+    if (specification.featureFlags().has(CoverFeature::Lift) && specification.featureFlags().has(CoverFeature::Tilt)) {
+        addDeviceEndpoint(endpointId, &liftAndTiltCoverEndpoint, Span(coverDeviceTypes), mAggregatorEndpointId);
+    } else if (specification.featureFlags().has(CoverFeature::EdgePositionAwareLift)) {
+        addDeviceEndpoint(endpointId, &liftCoverEdgeEndpoint, Span(coverDeviceTypes), mAggregatorEndpointId);
+    } else if (specification.featureFlags().has(CoverFeature::Lift)) {
+        addDeviceEndpoint(endpointId, &liftCoverEndpoint, Span(coverDeviceTypes), mAggregatorEndpointId);
+    } // else: invalid mapping
 }
 
 void ZclCoverEndpointService::removeEndpoint(EndpointId endpointId)
