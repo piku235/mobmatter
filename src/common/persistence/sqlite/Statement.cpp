@@ -10,7 +10,7 @@ Statement::Statement(sqlite3_stmt* stmt)
 {
 }
 
-Statement::Statement(Statement&& other)
+Statement::Statement(Statement&& other) noexcept
     : mStmt(std::exchange(other.mStmt, nullptr))
 {
 }
@@ -19,6 +19,7 @@ Statement::~Statement()
 {
     if (mStmt) {
         sqlite3_finalize(mStmt);
+        mStmt = nullptr;
     }
 }
 
@@ -39,7 +40,7 @@ void Statement::bind(const int param, const void* buf, int size)
 
 void Statement::bind(const int param, bool value)
 {
-    sqlite3_bind_int(mStmt, param, static_cast<int>(value));
+    sqlite3_bind_int(mStmt, param, value);
 }
 
 void Statement::bind(const int param, const int32_t value)
@@ -128,7 +129,7 @@ Result<> Statement::exec()
         return tl::unexpected(r.error());
     }
 
-    return {};
+    return { };
 }
 
 Result<bool> Statement::fetch()

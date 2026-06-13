@@ -14,7 +14,7 @@ public:
     static Result<Connection> open(const std::string& filename, int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE);
     static Result<Connection> inMemory();
 
-    Connection(Connection&& other);
+    Connection(Connection&& other) noexcept;
     Connection& operator=(Connection&& other) = delete;
 
     Connection(const Connection& other) = delete;

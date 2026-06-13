@@ -26,7 +26,7 @@ Connection::Connection(sqlite3* db)
 {
 }
 
-Connection::Connection(Connection&& other)
+Connection::Connection(Connection&& other) noexcept
     : mDb(std::exchange(other.mDb, nullptr))
 {
 }
@@ -60,6 +60,7 @@ void Connection::close()
 {
     if (mDb) {
         sqlite3_close(mDb);
+        mDb = nullptr;
     }
 }
 

@@ -13,7 +13,7 @@ class Connection;
 
 class Statement final {
 public:
-    Statement(Statement&& other);
+    Statement(Statement&& other) noexcept;
     Statement& operator=(Statement&& other) = delete;
 
     Statement(const Statement& other) = delete;
@@ -21,13 +21,13 @@ public:
 
     ~Statement();
 
-    void bind(const int param, const std::string& value);
-    void bind(const int param, const char* value);
-    void bind(const int param, const void* buf, int size);
-    void bind(const int param, const bool value);
-    void bind(const int param, const int32_t value);
-    void bind(const int param, const uint32_t value);
-    void bind(const int param, const int64_t value);
+    void bind(int param, const std::string& value);
+    void bind(int param, const char* value);
+    void bind(int param, const void* buf, int size);
+    void bind(int param, bool value);
+    void bind(int param, int32_t value);
+    void bind(int param, uint32_t value);
+    void bind(int param, int64_t value);
 
     template <typename T>
     void bind(const int param, const std::optional<T>& op)
@@ -40,18 +40,18 @@ public:
         bind(param, *op);
     }
 
-    std::string columnAsString(const int index) const;
-    const void* columnAsBlob(const int index) const;
-    bool columnAsBool(const int index) const;
-    int8_t columnAsInt8(const int index) const;
-    int16_t columnAsInt16(const int index) const;
-    int32_t columnAsInt32(const int index) const;
-    int64_t columnAsInt64(const int index) const;
-    uint8_t columnAsUint8(const int index) const;
-    uint16_t columnAsUint16(const int index) const;
-    uint32_t columnAsUint32(const int index) const;
-    bool isColumnNull(const int index) const;
-    int columnSize(const int index) const;
+    std::string columnAsString(int index) const;
+    const void* columnAsBlob(int index) const;
+    bool columnAsBool(int index) const;
+    int8_t columnAsInt8(int index) const;
+    int16_t columnAsInt16(int index) const;
+    int32_t columnAsInt32(int index) const;
+    int64_t columnAsInt64(int index) const;
+    uint8_t columnAsUint8(int index) const;
+    uint16_t columnAsUint16(int index) const;
+    uint32_t columnAsUint32(int index) const;
+    bool isColumnNull(int index) const;
+    int columnSize(int index) const;
     int changes() const;
     Result<bool> fetch();
     Result<> exec();

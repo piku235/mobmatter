@@ -1,7 +1,6 @@
 #pragma once
 
 #include <sqlite3.h>
-
 #include <string>
 
 namespace mobmatter::common::persistence::sqlite {
@@ -15,7 +14,7 @@ public:
 
     SqliteError(int code, std::string message)
         : mCode(code)
-        , mMessage(message)
+        , mMessage(std::move(message))
     {
     }
 
