@@ -10,9 +10,24 @@ CoverControlSubscriber::CoverControlSubscriber(CoverControlService& coverControl
 {
 }
 
+void CoverControlSubscriber::handle(const CoverOpenRequested& event)
+{
+    mCoverControlService.openCover(event.mobilusDeviceId);
+}
+
+void CoverControlSubscriber::handle(const CoverCloseRequested& event)
+{
+    mCoverControlService.closeCover(event.mobilusDeviceId);
+}
+
 void CoverControlSubscriber::handle(const CoverLiftRequested& event)
 {
     mCoverControlService.liftCover(event.mobilusDeviceId, event.position);
+}
+
+void CoverControlSubscriber::handle(const CoverTiltRequested& event)
+{
+    mCoverControlService.tiltCover(event.mobilusDeviceId, event.position);
 }
 
 void CoverControlSubscriber::handle(const CoverStopMotionRequested& event)

@@ -23,15 +23,19 @@ class MqttMobilusCoverControlService : public mobmatter::application::driven_por
 public:
     MqttMobilusCoverControlService(jungi::mobgtw::MqttMobilusGtwClient& client, logging::Logger& logger);
 
+    void openCover(model::MobilusDeviceId deviceId) override;
+    void closeCover(model::MobilusDeviceId deviceId) override;
     void liftCover(model::MobilusDeviceId deviceId, model::window_covering::Position position) override;
+    void tiltCover(model::MobilusDeviceId deviceId, model::window_covering::Position position) override;
     void stopCoverMotion(model::MobilusDeviceId deviceId) override;
 
 private:
     jungi::mobgtw::MqttMobilusGtwClient& mClient;
     logging::Logger& mLogger;
 
-    proto::CallEvents callEventsFor(model::MobilusDeviceId deviceId, const std::string& eventValue) const;
-    std::string convertLiftPosition(model::window_covering::Position position) const;
+    static std::string convertLiftPosition(model::window_covering::Position position);
+    static std::string convertTiltPosition(model::window_covering::Position position);
+    static proto::CallEvents callEventsFor(model::MobilusDeviceId deviceId, const std::string& eventValue);
 };
 
 }
