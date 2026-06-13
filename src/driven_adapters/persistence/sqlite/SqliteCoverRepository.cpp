@@ -7,7 +7,7 @@
 #include "application/model/window_covering/PositionState.h"
 #include "application/model/window_covering/PositionStatus.h"
 
-#define COLUMNS "endpoint_id, mobilus_device_id, unique_id, reachable, name, lift_status, lift_motion, lift_target_position, lift_current_position, spec_mobilus_device_type"
+#define COLUMNS "endpoint_id, mobilus_device_id, unique_id, spec_mobilus_device_type, reachable, name, lift_status, lift_motion, lift_target_position, lift_current_position, tilt_status, tilt_motion, tilt_target_position, tilt_current_position"
 
 using namespace mobmatter::application::model;
 using namespace mobmatter::application::model::window_covering;
@@ -23,18 +23,22 @@ SqliteCoverRepository::SqliteCoverRepository(sqlite::Connection& conn, logging::
 
 void SqliteCoverRepository::save(const Cover& cover)
 {
-    auto stmt = mConn.prepare("INSERT OR REPLACE INTO cover (" COLUMNS ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    auto stmt = mConn.prepare("INSERT OR REPLACE INTO cover (" COLUMNS ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     stmt->bind(1, cover.endpointId());
     stmt->bind(2, cover.mobilusDeviceId());
     stmt->bind(3, cover.uniqueId().value());
-    stmt->bind(4, cover.isReachable());
-    stmt->bind(5, cover.name());
-    stmt->bind(6, static_cast<uint8_t>(cover.liftState().status()));
-    stmt->bind(7, static_cast<uint8_t>(cover.liftState().motion()));
-    stmt->bind(8, cover.liftState().targetPosition() ? std::optional(cover.liftState().targetPosition()->closedPercent().value()) : std::nullopt);
-    stmt->bind(9, cover.liftState().currentPosition() ? std::optional(cover.liftState().currentPosition()->closedPercent().value()) : std::nullopt);
-    stmt->bind(10, static_cast<uint8_t>(cover.specification().mobilusDeviceType()));
+    stmt->bind(4, static_cast<uint8_t>(cover.specification().mobilusDeviceType()));
+    stmt->bind(5, cover.isReachable());
+    stmt->bind(6, cover.name());
+    stmt->bind(7, static_cast<uint8_t>(cover.liftState().status()));
+    stmt->bind(8, static_cast<uint8_t>(cover.liftState().motion()));
+    stmt->bind(9, cover.liftState().targetPosition() ? std::optional(cover.liftState().targetPosition()->closedPercent().value()) : std::nullopt);
+    stmt->bind(10, cover.liftState().currentPosition() ? std::optional(cover.liftState().currentPosition()->closedPercent().value()) : std::nullopt);
+    stmt->bind(11, static_cast<uint8_t>(cover.tiltState().status()));
+    stmt->bind(12, static_cast<uint8_t>(cover.tiltState().motion()));
+    stmt->bind(13, cover.tiltState().targetPosition() ? std::optional(cover.tiltState().targetPosition()->closedPercent().value()) : std::nullopt);
+    stmt->bind(14, cover.tiltState().currentPosition() ? std::optional(cover.tiltState().currentPosition()->closedPercent().value()) : std::nullopt);
 
     if (auto r = stmt->exec(); !r) {
         mLogger.error("Could not save cover: %s", r.error().message().c_str());
@@ -96,7 +100,7 @@ std::vector<Cover> SqliteCoverRepository::all() const
 
     if (!r) {
         mLogger.error("Couldnt fetch all covers: %s", r.error().message().c_str());
-        return {};
+        return { };
     }
 
     std::vector<Cover> covers;
@@ -109,22 +113,28 @@ std::vector<Cover> SqliteCoverRepository::all() const
     return covers;
 }
 
-Cover SqliteCoverRepository::mapRowTo(sqlite::Statement& stmt) const
+Cover SqliteCoverRepository::mapRowTo(sqlite::Statement& stmt)
 {
     // clang-format off
     return Cover::restoreFrom(
         stmt.columnAsUint16(0),
         stmt.columnAsInt64(1),
         UniqueId::of(stmt.columnAsString(2)),
-        stmt.columnAsBool(3),
-        stmt.columnAsString(4),
+        CoverSpecification::findFor(static_cast<MobilusDeviceType>(stmt.columnAsUint8(3))).value(),
+        stmt.columnAsBool(4),
+        stmt.columnAsString(5),
         PositionState::restore(
-            static_cast<PositionStatus>(stmt.columnAsUint8(5)),
-            static_cast<CoverMotion>(stmt.columnAsUint8(6)),
-            stmt.isColumnNull(7) ? std::nullopt : std::optional(Position::closed(Percent::from(stmt.columnAsUint8(7)).value())),
-            stmt.isColumnNull(8) ? std::nullopt : std::optional(Position::closed(Percent::from(stmt.columnAsUint8(8)).value()))
+            static_cast<PositionStatus>(stmt.columnAsUint8(6)),
+            static_cast<CoverMotion>(stmt.columnAsUint8(7)),
+            stmt.isColumnNull(8) ? std::nullopt : std::optional(Position::closed(Percent::from(stmt.columnAsUint8(8)).value())),
+            stmt.isColumnNull(9) ? std::nullopt : std::optional(Position::closed(Percent::from(stmt.columnAsUint8(9)).value()))
         ),
-        CoverSpecification::findFor(static_cast<MobilusDeviceType>(stmt.columnAsUint8(9))).value()
+        PositionState::restore(
+            static_cast<PositionStatus>(stmt.columnAsUint8(10)),
+            static_cast<CoverMotion>(stmt.columnAsUint8(11)),
+            stmt.isColumnNull(12) ? std::nullopt : std::optional(Position::closed(Percent::from(stmt.columnAsUint8(12)).value())),
+            stmt.isColumnNull(13) ? std::nullopt : std::optional(Position::closed(Percent::from(stmt.columnAsUint8(13)).value()))
+        )
     );
     // clang-format on
 }

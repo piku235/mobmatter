@@ -11,18 +11,17 @@ using namespace mobmatter::application::model;
 using namespace mobmatter::application::model::window_covering;
 using namespace mobmatter::driven_adapters::persistence::sqlite;
 using namespace mobmatter::common::logging;
-using testing::Contains;
 
 namespace {
 
-auto sensoStub()
+auto liftAndTiltCover()
 {
-    return Cover::add(1, 2, "senso", PositionState::at(Position::fullyOpen()), CoverSpecification::Senso());
+    return Cover::add(1, 11, CoverSpecification::SensoZ(), "SensoZ", PositionState::at(Position::fullyOpen()), PositionState::at(Position::fullyClosed()));
 }
 
-auto cmrStub()
+auto liftCover()
 {
-    return Cover::add(11, 12, "cmr", PositionState::at(Position::fullyClosed()), CoverSpecification::Cmr());
+    return Cover::add(2, 12, CoverSpecification::Senso(), "Senso", PositionState::at(Position::fullyOpen()), PositionState::unavailable());
 }
 
 }
@@ -42,26 +41,30 @@ protected:
 
 TEST_F(SqliteCoverRepositoryTest, Saves)
 {
-    auto cover = sensoStub();
+    for (auto& cover : { liftAndTiltCover(), liftCover() }) {
+        coverRepository.save(cover);
+        auto savedCover = coverRepository.find(cover.endpointId());
 
-    coverRepository.save(cover);
-    auto savedCover = coverRepository.find(cover.endpointId());
-
-    ASSERT_TRUE(savedCover.has_value());
-    ASSERT_EQ(cover.endpointId(), savedCover->endpointId());
-    ASSERT_EQ(cover.mobilusDeviceId(), savedCover->mobilusDeviceId());
-    ASSERT_EQ(cover.isReachable(), savedCover->isReachable());
-    ASSERT_EQ(cover.name(), savedCover->name());
-    ASSERT_EQ(cover.liftState().status(), savedCover->liftState().status());
-    ASSERT_EQ(cover.liftState().motion(), savedCover->liftState().motion());
-    ASSERT_EQ(cover.liftState().targetPosition(), savedCover->liftState().targetPosition());
-    ASSERT_EQ(cover.liftState().currentPosition(), savedCover->liftState().currentPosition());
-    ASSERT_EQ(cover.specification(), savedCover->specification());
+        ASSERT_TRUE(savedCover.has_value());
+        ASSERT_EQ(cover.endpointId(), savedCover->endpointId());
+        ASSERT_EQ(cover.mobilusDeviceId(), savedCover->mobilusDeviceId());
+        ASSERT_EQ(cover.specification(), savedCover->specification());
+        ASSERT_EQ(cover.isReachable(), savedCover->isReachable());
+        ASSERT_EQ(cover.name(), savedCover->name());
+        ASSERT_EQ(cover.liftState().status(), savedCover->liftState().status());
+        ASSERT_EQ(cover.liftState().motion(), savedCover->liftState().motion());
+        ASSERT_EQ(cover.liftState().targetPosition(), savedCover->liftState().targetPosition());
+        ASSERT_EQ(cover.liftState().currentPosition(), savedCover->liftState().currentPosition());
+        ASSERT_EQ(cover.tiltState().status(), savedCover->tiltState().status());
+        ASSERT_EQ(cover.tiltState().motion(), savedCover->tiltState().motion());
+        ASSERT_EQ(cover.tiltState().targetPosition(), savedCover->tiltState().targetPosition());
+        ASSERT_EQ(cover.tiltState().currentPosition(), savedCover->tiltState().currentPosition());
+    }
 }
 
 TEST_F(SqliteCoverRepositoryTest, Removes)
 {
-    auto cover = sensoStub();
+    auto cover = liftCover();
 
     coverRepository.save(cover);
     ASSERT_TRUE(coverRepository.find(cover.endpointId()));
@@ -72,7 +75,7 @@ TEST_F(SqliteCoverRepositoryTest, Removes)
 
 TEST_F(SqliteCoverRepositoryTest, FindsAndDoesNotFindOfMobilusDeviceId)
 {
-    auto cover = sensoStub();
+    auto cover = liftCover();
     coverRepository.save(cover);
 
     auto foundCover = coverRepository.findOfMobilusDeviceId(cover.mobilusDeviceId());
@@ -80,21 +83,21 @@ TEST_F(SqliteCoverRepositoryTest, FindsAndDoesNotFindOfMobilusDeviceId)
     ASSERT_TRUE(foundCover.has_value());
     ASSERT_EQ(cover, foundCover);
 
-    ASSERT_FALSE(coverRepository.findOfMobilusDeviceId(12));
+    ASSERT_FALSE(coverRepository.findOfMobilusDeviceId(123));
 }
 
 TEST_F(SqliteCoverRepositoryTest, FindsAll)
 {
-    std::vector<EndpointId> expectedCovers = { 1, 11 };
+    std::vector<EndpointId> expectedCovers = { 1, 2 };
 
-    coverRepository.save(sensoStub());
-    coverRepository.save(cmrStub());
+    coverRepository.save(liftAndTiltCover());
+    coverRepository.save(liftCover());
 
     auto covers = coverRepository.all();
 
     ASSERT_EQ(2u, covers.size());
 
     for (auto cover : covers) {
-        ASSERT_THAT(expectedCovers, Contains(cover.endpointId()));
+        ASSERT_THAT(expectedCovers, ::testing::Contains(cover.endpointId()));
     }
 }

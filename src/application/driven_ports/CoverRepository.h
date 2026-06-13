@@ -9,8 +9,6 @@
 
 namespace mobmatter::application::driven_ports {
 
-namespace model = mobmatter::application::model;
-
 class CoverRepository {
 public:
     virtual ~CoverRepository() = default;

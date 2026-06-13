@@ -2,7 +2,6 @@
 
 static constexpr char kSequenceName[] = "endpoint_id";
 
-namespace sqlite = mobmatter::common::persistence::sqlite;
 using mobmatter::application::model::EndpointId;
 
 namespace mobmatter::driven_adapters::persistence::sqlite {
@@ -14,7 +13,7 @@ SqliteEndpointIdGenerator::SqliteEndpointIdGenerator(EndpointId initialEndpointI
 {
 }
 
-std::optional<model::EndpointId> SqliteEndpointIdGenerator::next()
+std::optional<EndpointId> SqliteEndpointIdGenerator::next()
 {
     auto updateStmt = mConn.prepare("UPDATE sequence SET value = value + 1 WHERE name = ? RETURNING value");
     updateStmt->bind(1, kSequenceName);
