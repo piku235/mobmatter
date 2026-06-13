@@ -4,7 +4,6 @@
 #include "application/model/Flags.h"
 #include "application/model/window_covering/CoverMotion.h"
 
-#include <app-common/zap-generated/cluster-enums.h>
 #include <app/AttributeAccessInterface.h>
 #include <app/clusters/window-covering-server/window-covering-server.h>
 
@@ -24,12 +23,12 @@ public:
 private:
     driven_ports::CoverRepository& mCoverRepository;
 
-    chip::app::Clusters::WindowCovering::Type ConvertToType(const model::window_covering::CoverEndProductType coverEndProductType);
-    chip::app::Clusters::WindowCovering::EndProductType ConvertToEndProductType(const model::window_covering::CoverEndProductType coverEndProductType);
-    chip::BitMask<chip::app::Clusters::WindowCovering::ConfigStatus> ConvertToConfigStatus(const model::Flags<model::window_covering::CoverFeature>& featureFlags);
-    chip::app::Clusters::WindowCovering::OperationalState ConvertToOperationalState(model::window_covering::CoverMotion motion);
-    chip::BitMask<chip::app::Clusters::WindowCovering::OperationalStatus> ConvertToOperationalStatus(model::window_covering::CoverMotion liftMotion);
-    chip::BitMask<chip::app::Clusters::WindowCovering::Feature> ConvertToFeatureMap(const model::Flags<model::window_covering::CoverFeature>& featureFlags);
+    static chip::app::Clusters::WindowCovering::Type ConvertToType(model::window_covering::CoverEndProductType coverEndProductType);
+    static chip::app::Clusters::WindowCovering::EndProductType ConvertToEndProductType(model::window_covering::CoverEndProductType coverEndProductType);
+    static chip::BitMask<chip::app::Clusters::WindowCovering::ConfigStatus> ConvertToConfigStatus(const model::Flags<model::window_covering::CoverFeature>& featureFlags);
+    static chip::app::Clusters::WindowCovering::OperationalState ConvertToOperationalState(model::window_covering::CoverMotion motion);
+    static chip::BitMask<chip::app::Clusters::WindowCovering::OperationalStatus> ConvertToOperationalStatus(model::window_covering::CoverMotion liftMotion, model::window_covering::CoverMotion tiltMotion);
+    static chip::BitMask<chip::app::Clusters::WindowCovering::Feature> ConvertToFeatureMap(const model::Flags<model::window_covering::CoverFeature>& featureFlags);
 };
 
 }

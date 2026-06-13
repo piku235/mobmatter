@@ -44,7 +44,7 @@ CHIP_ERROR CoverAttributeAccess::Read(const ConcreteReadAttributePath& path, Att
     case ConfigStatus::Id:
         return encoder.Encode(ConvertToConfigStatus(cover->specification().featureFlags()));
     case OperationalStatus::Id:
-        return encoder.Encode(ConvertToOperationalStatus(cover->liftState().motion()));
+        return encoder.Encode(ConvertToOperationalStatus(cover->liftState().motion(), cover->tiltState().motion()));
     case Mode::Id:
         return encoder.Encode(kWindowCoveringMode);
     case TargetPositionLiftPercent100ths::Id: {
@@ -65,6 +65,24 @@ CHIP_ERROR CoverAttributeAccess::Read(const ConcreteReadAttributePath& path, Att
 
         return encoder.Encode(currentPosition->closedPercent().value100ths());
     }
+    case TargetPositionTiltPercent100ths::Id: {
+        auto targetPosition = cover->tiltState().targetPosition();
+
+        if (!targetPosition) {
+            return CHIP_ERROR_UNINITIALIZED;
+        }
+
+        return encoder.Encode(targetPosition->closedPercent().value100ths());
+    }
+    case CurrentPositionTiltPercent100ths::Id: {
+        auto currentPosition = cover->tiltState().currentPosition();
+
+        if (!currentPosition) {
+            return CHIP_ERROR_UNINITIALIZED;
+        }
+
+        return encoder.Encode(currentPosition->closedPercent().value100ths());
+    }
     case FeatureMap::Id:
         return encoder.Encode(ConvertToFeatureMap(cover->specification().featureFlags()));
     case ClusterRevision::Id:
@@ -74,22 +92,26 @@ CHIP_ERROR CoverAttributeAccess::Read(const ConcreteReadAttributePath& path, Att
     }
 }
 
-WindowCovering::Type CoverAttributeAccess::ConvertToType(const model::window_covering::CoverEndProductType coverEndProductType)
+WindowCovering::Type CoverAttributeAccess::ConvertToType(CoverEndProductType coverEndProductType)
 {
     switch (coverEndProductType) {
     case CoverEndProductType::RollerShutter:
         return WindowCovering::Type::kRollerShadeExterior;
+    case CoverEndProductType::VenetianBlind:
+        return WindowCovering::Type::kTiltBlindLiftAndTilt;
     case CoverEndProductType::Unknown:
     default:
         return WindowCovering::Type::kUnknown;
     }
 }
 
-WindowCovering::EndProductType CoverAttributeAccess::ConvertToEndProductType(const model::window_covering::CoverEndProductType coverEndProductType)
+WindowCovering::EndProductType CoverAttributeAccess::ConvertToEndProductType(CoverEndProductType coverEndProductType)
 {
     switch (coverEndProductType) {
     case CoverEndProductType::RollerShutter:
         return WindowCovering::EndProductType::kRollerShutter;
+    case CoverEndProductType::VenetianBlind:
+        return WindowCovering::EndProductType::kExteriorVenetianBlind;
     case CoverEndProductType::Unknown:
     default:
         return WindowCovering::EndProductType::kUnknown;
@@ -100,8 +122,9 @@ BitMask<WindowCovering::ConfigStatus> CoverAttributeAccess::ConvertToConfigStatu
 {
     BitMask<WindowCovering::ConfigStatus> bitMask;
 
-    bitMask.Set(WindowCovering::ConfigStatus::kOperational, 1u);
+    bitMask.Set(WindowCovering::ConfigStatus::kOperational, true);
     bitMask.Set(WindowCovering::ConfigStatus::kLiftPositionAware, featureFlags.has(CoverFeature::PositionAwareLift));
+    bitMask.Set(WindowCovering::ConfigStatus::kTiltPositionAware, featureFlags.has(CoverFeature::PositionAwareTilt));
 
     return bitMask;
 }
@@ -119,12 +142,13 @@ WindowCovering::OperationalState CoverAttributeAccess::ConvertToOperationalState
     }
 }
 
-BitMask<WindowCovering::OperationalStatus> CoverAttributeAccess::ConvertToOperationalStatus(CoverMotion liftMotion)
+BitMask<WindowCovering::OperationalStatus> CoverAttributeAccess::ConvertToOperationalStatus(CoverMotion liftMotion, CoverMotion tiltMotion)
 {
     BitMask<WindowCovering::OperationalStatus> bitMask;
 
     bitMask.SetField(WindowCovering::OperationalStatus::kLift, static_cast<uint8_t>(ConvertToOperationalState(liftMotion)));
-    bitMask.SetField(WindowCovering::OperationalStatus::kGlobal, bitMask.GetField(WindowCovering::OperationalStatus::kLift));
+    bitMask.SetField(WindowCovering::OperationalStatus::kTilt, static_cast<uint8_t>(ConvertToOperationalState(tiltMotion)));
+    bitMask.SetField(WindowCovering::OperationalStatus::kGlobal, bitMask.GetField(bitMask.HasAny(WindowCovering::OperationalStatus::kLift) ? WindowCovering::OperationalStatus::kLift : WindowCovering::OperationalStatus::kTilt));
 
     return bitMask;
 }
@@ -134,7 +158,9 @@ BitMask<WindowCovering::Feature> CoverAttributeAccess::ConvertToFeatureMap(const
     BitMask<WindowCovering::Feature> bitMask;
 
     bitMask.Set(WindowCovering::Feature::kLift, featureFlags.has(CoverFeature::Lift));
+    bitMask.Set(WindowCovering::Feature::kTilt, featureFlags.has(CoverFeature::Tilt));
     bitMask.Set(WindowCovering::Feature::kPositionAwareLift, featureFlags.has(CoverFeature::PositionAwareLift));
+    bitMask.Set(WindowCovering::Feature::kPositionAwareTilt, featureFlags.has(CoverFeature::PositionAwareTilt));
 
     return bitMask;
 }

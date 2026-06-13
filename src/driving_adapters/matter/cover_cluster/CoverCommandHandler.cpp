@@ -46,7 +46,6 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
         }
 
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
-
         break;
     case DownOrClose::Id:
         mLogger.notice("DownOrClose command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
@@ -56,7 +55,6 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
         }
 
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
-
         break;
     case StopMotion::Id:
         mLogger.notice("StopMotion command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
@@ -66,7 +64,6 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
         }
 
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
-
         break;
     case GoToLiftPercentage::Id: {
         GoToLiftPercentage::DecodableType data;
@@ -87,8 +84,8 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
 
         auto r = cover->requestLiftTo(Position::closed(*percent));
 
-        if (Cover::Result::Ok != r && Cover::Result::NoChange != r) {
-            mLogger.error("GoToLiftPercentage command for endpoint: %u failed: %u", handlerContext.mRequestPath.mEndpointId, r);
+        if (Cover::Result::NotSupported == r) {
+            mLogger.error("GoToLiftPercentage command not supported for endpoint: %u", handlerContext.mRequestPath.mEndpointId);
             handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Failure);
             break;
         }
@@ -96,9 +93,40 @@ void CoverCommandHandler::InvokeCommand(HandlerContext& handlerContext)
         if (Cover::Result::Ok == r) {
             mCoverRepository.save(*cover);
         }
-            
-        handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
 
+        handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
+        break;
+    }
+    case GoToTiltPercentage::Id: {
+        GoToTiltPercentage::DecodableType data;
+
+        mLogger.notice("GoToTiltPercentage command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
+
+        if (DataModel::Decode(handlerContext.mPayload, data) != CHIP_NO_ERROR) {
+            handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::InvalidCommand);
+            break;
+        }
+
+        auto percent = AppPercent::from100ths(data.tiltPercent100thsValue);
+
+        if (!percent) {
+            handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::ConstraintError);
+            break;
+        }
+
+        auto r = cover->requestTiltTo(Position::closed(*percent));
+
+        if (Cover::Result::NotSupported == r) {
+            mLogger.error("GoToTiltPercentage command not supported for endpoint: %u", handlerContext.mRequestPath.mEndpointId);
+            handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Failure);
+            break;
+        }
+
+        if (Cover::Result::Ok == r) {
+            mCoverRepository.save(*cover);
+        }
+
+        handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
         break;
     }
     default:
