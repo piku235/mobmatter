@@ -144,7 +144,7 @@ Cover::Result Cover::reportLiftTo(Position position)
     if (PositionStatus::Unavailable == mLiftState.status()) {
         return Result::NotSupported;
     }
-    if (position == mLiftState.targetPosition() && PositionStatus::Moving == mLiftState.status()) {
+    if (position == mLiftState.targetPosition() && PositionStatus::Requested != mLiftState.status()) {
         return Result::NoChange;
     }
 
@@ -172,7 +172,7 @@ Cover::Result Cover::reportTiltTo(Position position)
     if (PositionStatus::Unavailable == mTiltState.status()) {
         return Result::NotSupported;
     }
-    if (position == mTiltState.targetPosition() && PositionStatus::Moving == mTiltState.status()) {
+    if (position == mTiltState.targetPosition() && PositionStatus::Requested != mTiltState.status()) {
         return Result::NoChange;
     }
 
