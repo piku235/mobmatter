@@ -6,71 +6,72 @@ import("${chip_root}/src/lib/core/core.gni")
 import("${chip_root}/src/lib/lib.gni")
 
 chip_data_model("mobgtw-zap") {
-  zap_file = "//mobgtw.zap"
-  is_server = true
+    zap_file = "//mobgtw.zap"
+    is_server = true
 
-  cflags = [ "-DDYNAMIC_ENDPOINT_COUNT=100" ]
+    cflags = [ "-DDYNAMIC_ENDPOINT_COUNT=100" ]
 }
 
 config("app_includes") {
-  include_dirs = [ "//src" ]
+    include_dirs = [ "//src" ]
 }
 
 config("app_config") {
-  defines = [
-    "DATABASE_FILE=\"${database_file}\"",
-    "DATABASE_PRAGMA_SQL=\"${database_pragma_sql}\"",
-    "MOBILUS_DSN=\"${mobilus_dsn}\"",
-  ]
+    defines = [
+        "DATABASE_FILE=\"${database_file}\"",
+        "DATABASE_PRAGMA_SQL=\"${database_pragma_sql}\"",
+        "MOBILUS_DSN=\"${mobilus_dsn}\"",
+    ]
 }
 
 executable("mobmatter") {
-  sources = [
-    "include/AppConfig.h",
-    "include/CHIPProjectAppConfig.h",
-    "include/SqliteDatabaseSchema.h",
-    "src/main.cpp",
-  ]
+    sources = [
+        "include/AppConfig.h",
+        "include/CHIPProjectAppConfig.h",
+        "include/SqliteDatabaseSchema.h",
+        "src/main.cpp",
+    ]
 
-  deps = [
-    "//src/application",
-    "//src/common/logging:stdio",
-    "//src/common/logging:syslog",
-    "//src/driven_adapters/matter/reporting:cover",
-    "//src/driven_adapters/matter/zcl:cover_endpoint",
-    "//src/driven_adapters/mobilus:cover_control",
-    "//src/driven_adapters/mobilus:device_management",
-    "//src/driven_adapters/persistence/sqlite",
-    "//src/driving_adapters/matter/cluster_stubs",
-    "//src/driving_adapters/matter/cover_cluster",
-    "//src/driving_adapters/mobilus:device_event_subscriber",
-    "//src/driving_adapters/mobilus:device_syncer",
-    "//src/driving_adapters/mobilus/device_handlers:cover",
-    "//src/driving_adapters/mobilus/device_handlers:device_syncer",
-    "//src/matter",
-    "//src/matter/event_loop",
-    "//src/matter/logging",
-    "//src/matter/persistence:sqlite",
-    "//third_party/mobgtw",
-  ]
+    deps = [
+        "//src/application",
+        "//src/common/logging:stdio",
+        "//src/common/logging:syslog",
+        "//src/common/persistence/sqlite:migrator",
+        "//src/driven_adapters/matter/reporting:cover",
+        "//src/driven_adapters/matter/zcl:cover_endpoint",
+        "//src/driven_adapters/mobilus:cover_control",
+        "//src/driven_adapters/mobilus:device_management",
+        "//src/driven_adapters/persistence/sqlite",
+        "//src/driving_adapters/matter/cluster_stubs",
+        "//src/driving_adapters/matter/cover_cluster",
+        "//src/driving_adapters/mobilus:device_event_subscriber",
+        "//src/driving_adapters/mobilus:device_syncer",
+        "//src/driving_adapters/mobilus/device_handlers:cover",
+        "//src/driving_adapters/mobilus/device_handlers:device_syncer",
+        "//src/matter",
+        "//src/matter/event_loop",
+        "//src/matter/logging",
+        "//src/matter/persistence:sqlite",
+        "//third_party/mobgtw",
+    ]
 
-  include_dirs = [
-    "include",
-    "src",
-  ]
+    include_dirs = [
+        "include",
+        "src",
+    ]
 
-  configs += [ ":app_config" ]
+    configs += [ ":app_config" ]
 
-  cflags = [ "-Wconversion" ]
+    cflags = [ "-Wconversion" ]
 
-  output_dir = root_out_dir
+    output_dir = root_out_dir
 }
 
 group("default") {
-  deps = [ ":mobmatter" ]
+    deps = [ ":mobmatter" ]
 }
 
 group("tests") {
-  testonly = true
-  deps = [ "//tests" ]
+    testonly = true
+    deps = [ "//tests" ]
 }

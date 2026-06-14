@@ -10,6 +10,7 @@
 #include "common/logging/handlers/StdioLogHandler.h"
 #include "common/logging/handlers/SyslogHandler.h"
 #include "common/persistence/sqlite/Connection.h"
+#include "common/persistence/sqlite/Migrator.h"
 #include "driven_adapters/matter/reporting/CoverReportingAdapter.h"
 #include "driven_adapters/matter/zcl/ZclCoverEndpointService.h"
 #include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
@@ -40,6 +41,7 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <memory>
 #include <optional>
 #include <string>
@@ -164,6 +166,14 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    {
+        sqlite::Migrator migrator(*db, logger);
+        if (!migrator.migrate(kMigrations, std::size(kMigrations))) {
+            logger.critical("Migrations failed");
+            return 1;
+        }
+    }
+
     auto& chipSystemLayer = static_cast<chip::System::LayerSocketsLoop&>(chip::DeviceLayer::SystemLayer());
     MobilusGtwEventLoopAdapter mobilusGtwEventLoopAdapter(chipSystemLayer);
     MqttMobilusGtwClientLoggerAdapter mobilusLoggerAdapter(logger);
@@ -220,7 +230,7 @@ int main(int argc, char* argv[])
         return rc;
     }
 
-    struct sigaction sa = {};
+    struct sigaction sa = { };
     sa.sa_handler = handleShutdownSignal;
     sa.sa_flags = SA_RESETHAND;
     sigaction(SIGINT, &sa, nullptr);
