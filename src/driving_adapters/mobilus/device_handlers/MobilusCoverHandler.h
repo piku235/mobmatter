@@ -8,6 +8,8 @@
 #include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
 #include "driving_adapters/mobilus/MobilusDeviceSyncHandler.h"
 
+#include <optional>
+
 namespace mobmatter::driving_adapters::mobilus::device_handlers {
 
 namespace model = mobmatter::application::model;
@@ -26,6 +28,8 @@ private:
     driven_ports::CoverRepository& mCoverRepository;
     driven_ports::EndpointIdGenerator& mEndpointIdGenerator;
     logging::Logger& mLogger;
+
+    static std::optional<model::window_covering::Cover::Error> parseError(const std::string& error);
 
     void init(model::window_covering::CoverSpecification coverSpec, const proto::Device& device, const proto::Event& lastEvent);
     bool apply(model::window_covering::Cover& cover, const proto::Device& deviceInfo);

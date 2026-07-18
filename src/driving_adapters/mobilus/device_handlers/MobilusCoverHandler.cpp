@@ -211,24 +211,36 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
         return result;
     }
     case EventNumber::Error: {
-        bool result = false;
+        auto error = parseError(event.value());
 
-        if ("NO_CONNECTION" == event.value() && Cover::Result::Ok == cover.reportUnreachable()) {
-            mLogger.notice(LOG_TAG "Cover marked as unreachable" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
-            result = true;
+        if (!error) {
+            mLogger.error(LOG_TAG "Unrecognized cover error: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+            return false;
         }
 
-        if (Cover::Result::Ok == cover.reportMotionFailure()) {
-            mLogger.notice(LOG_TAG "Cover motion failed: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
-            result = true;
+        if (Cover::Result::Ok == cover.reportError(*error)) {
+            mLogger.notice(LOG_TAG "Cover reported error: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+            return true;
         }
 
-        return result;
+        return false;
     }
     default:
         mLogger.notice(LOG_TAG "Unknown event number");
         return false;
     }
+}
+
+std::optional<Cover::Error> MobilusCoverHandler::parseError(const std::string& error)
+{
+    if ("UNKNOWN" == error) {
+        return Cover::Error::Unknown;
+    }
+    if ("NO_CONNECTION" == error) {
+        return Cover::Error::Unreachable;
+    }
+
+    return std::nullopt;
 }
 
 }

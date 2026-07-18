@@ -17,6 +17,10 @@ public:
         NoChange,
         NotSupported,
     };
+    enum class Error {
+        Unknown,
+        Unreachable,
+    };
 
     static Cover add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, std::string name, PositionState liftState, PositionState tiltState);
     static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
@@ -37,9 +41,8 @@ public:
     Result reportTiltTo(Position position);
     Result reportTiltPosition(Position position);
     Result reportStopMotion();
-    Result reportMotionFailure();
     Result reportReachable();
-    Result reportUnreachable();
+    Result reportError(Error error);
     Result reportRenamedTo(std::string name);
     void reportRemoved();
 
