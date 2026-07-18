@@ -351,11 +351,11 @@ TEST(MobilusCoverHandlerTest, HandlesStopMotionEvent)
 
     ASSERT_TRUE(cover.has_value());
     ASSERT_EQ(PositionStatus::Stopping, cover->liftState().status());
-    ASSERT_EQ(CoverMotion::Closing, cover->liftState().motion());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->liftState().motion());
     ASSERT_EQ(Position::fullyClosed(), cover->liftState().targetPosition());
     ASSERT_EQ(Position::fullyOpen(), cover->liftState().currentPosition());
     ASSERT_EQ(PositionStatus::Stopping, cover->tiltState().status());
-    ASSERT_EQ(CoverMotion::Closing, cover->tiltState().motion());
+    ASSERT_EQ(CoverMotion::NotMoving, cover->tiltState().motion());
     ASSERT_EQ(Position::fullyClosed(), cover->tiltState().targetPosition());
     ASSERT_EQ(Position::fullyOpen(), cover->tiltState().currentPosition());
 }

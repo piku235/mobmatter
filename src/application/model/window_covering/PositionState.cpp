@@ -29,7 +29,7 @@ PositionState PositionState::movingTo(Position position) const
 
 PositionState PositionState::stop() const
 {
-    return { PositionStatus::Stopping, mMotion, mTargetPosition, mCurrentPosition };
+    return { PositionStatus::Stopping, CoverMotion::NotMoving, mTargetPosition, mCurrentPosition };
 }
 
 PositionState PositionState::reset() const
