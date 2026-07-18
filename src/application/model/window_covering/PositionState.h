@@ -15,7 +15,6 @@ public:
     static PositionState restore(PositionStatus status, CoverMotion motion, std::optional<Position> targetPosition, std::optional<Position> currentPosition);
 
     PositionState movingTo(Position position) const;
-    PositionState requestMoveTo(Position position) const;
     PositionState stop() const;
     PositionState reset() const;
 

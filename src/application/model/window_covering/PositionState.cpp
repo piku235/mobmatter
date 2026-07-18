@@ -27,11 +27,6 @@ PositionState PositionState::movingTo(Position position) const
     };
 }
 
-PositionState PositionState::requestMoveTo(Position position) const
-{
-    return { PositionStatus::Requested, CoverMotion::NotMoving, position, mCurrentPosition };
-}
-
 PositionState PositionState::stop() const
 {
     return { PositionStatus::Stopping, mMotion, mTargetPosition, mCurrentPosition };
