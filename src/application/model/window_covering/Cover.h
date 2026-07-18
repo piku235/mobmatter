@@ -30,6 +30,8 @@ public:
     Result requestRename(std::string name);
 
     /* mobilus specific */
+    Result reportOpen();
+    Result reportClose();
     Result reportLiftTo(Position position);
     Result reportLiftPosition(Position position);
     Result reportTiltTo(Position position);
@@ -63,6 +65,7 @@ private:
 
     Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
     Result rename(std::string name);
+    Result changeLiftAndTiltTargetPosition(Position position);
     Result changeLiftTargetPosition(Position position);
     Result changeTiltTargetPosition(Position position);
     Result stopMotion();

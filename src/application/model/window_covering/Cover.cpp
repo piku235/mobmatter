@@ -66,28 +66,24 @@ Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId un
 
 Cover::Result Cover::requestOpen()
 {
-    auto liftResult = changeLiftTargetPosition(Position::fullyOpen());
-    auto tiltResult = changeTiltTargetPosition(Position::fullyOpen());
+    auto result = changeLiftAndTiltTargetPosition(Position::fullyOpen());
 
-    if (Result::Ok == liftResult || Result::Ok == tiltResult) {
+    if (Result::Ok == result) {
         raise(std::make_unique<CoverOpenRequested>(mEndpointId, mMobilusDeviceId));
-        return Result::Ok;
     }
 
-    return Result::NoChange;
+    return result;
 }
 
 Cover::Result Cover::requestClose()
 {
-    auto liftResult = changeLiftTargetPosition(Position::fullyClosed());
-    auto tiltResult = changeTiltTargetPosition(Position::fullyClosed());
+    auto result = changeLiftAndTiltTargetPosition(Position::fullyClosed());
 
-    if (Result::Ok == liftResult || Result::Ok == tiltResult) {
+    if (Result::Ok == result) {
         raise(std::make_unique<CoverCloseRequested>(mEndpointId, mMobilusDeviceId));
-        return Result::Ok;
     }
 
-    return Result::NoChange;
+    return result;
 }
 
 Cover::Result Cover::requestLiftTo(Position position)
@@ -132,6 +128,16 @@ Cover::Result Cover::requestRename(std::string name)
     }
 
     return result;
+}
+
+Cover::Result Cover::reportOpen()
+{
+    return changeLiftAndTiltTargetPosition(Position::fullyOpen());
+}
+
+Cover::Result Cover::reportClose()
+{
+    return changeLiftAndTiltTargetPosition(Position::fullyClosed());
 }
 
 Cover::Result Cover::reportLiftTo(Position position)
@@ -319,6 +325,14 @@ Cover::Result Cover::rename(std::string name)
     raise(std::make_unique<CoverNameChanged>(mEndpointId, mMobilusDeviceId, mName));
 
     return Result::Ok;
+}
+
+Cover::Result Cover::changeLiftAndTiltTargetPosition(Position position)
+{
+    auto liftResult = changeLiftTargetPosition(position);
+    auto tiltResult = changeTiltTargetPosition(position);
+
+    return Result::Ok == liftResult || Result::Ok == tiltResult ? Result::Ok : Result::NoChange;
 }
 
 Cover::Result Cover::changeLiftTargetPosition(Position position)

@@ -22,14 +22,6 @@ std::optional<Position> parseLiftPosition(std::string_view value)
         return std::nullopt;
     }
 
-    if ("UP" == value) {
-        return Position::fullyOpen();
-    }
-
-    if ("DOWN" == value) {
-        return Position::fullyClosed();
-    }
-
     return std::nullopt;
 }
 
@@ -58,7 +50,9 @@ MobilusCoverPositionState MobilusCoverPositionState::parse(const std::string& va
     std::string_view sv(value);
 
     if (auto pos = sv.find(':'); pos != std::string::npos) {
-        auto liftPosition = parseLiftPosition(sv.substr(0, pos));
+        auto liftPosition = 0 == value.find("DOWN")
+            ? Position::fullyClosed()
+            : parseLiftPosition(sv.substr(0, pos));
         auto tiltPosition = parseTiltPosition(sv.substr(pos + 1));
 
         if (liftPosition && tiltPosition) {

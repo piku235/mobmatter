@@ -76,14 +76,11 @@ INSTANTIATE_TEST_SUITE_P(Positions, MobilusCoverLiftAndTiltPositionStateTest, Va
     std::make_tuple("100%:0$", Position::fullyOpen(), Position::fullyClosed()),
     std::make_tuple("0%:100$", Position::fullyClosed(), Position::fullyOpen()),
     std::make_tuple("12%:23$", Position::open(*Percent::from(12)), Position::open(*Percent::from(23))),
-    std::make_tuple("UP:23$", Position::fullyOpen(), Position::open(*Percent::from(23))),
     std::make_tuple("DOWN:23$", Position::fullyClosed(), Position::open(*Percent::from(23)))
 ));
 INSTANTIATE_TEST_SUITE_P(Positions, MobilusCoverLiftPositionStateTest, Values(
     std::make_tuple("100%", Position::fullyOpen()),
     std::make_tuple("0%", Position::fullyClosed()),
-    std::make_tuple("UP", Position::fullyOpen()),
-    std::make_tuple("DOWN", Position::fullyClosed()),
     std::make_tuple("12%", Position::open(*Percent::from(12)))
 ));
 INSTANTIATE_TEST_SUITE_P(Positions, MobilusCoverTiltPositionStateTest, Values(
@@ -94,12 +91,15 @@ INSTANTIATE_TEST_SUITE_P(Positions, MobilusCoverTiltPositionStateTest, Values(
 INSTANTIATE_TEST_SUITE_P(InvalidPositions, MobilusCoverPositionStateTest, Values(
     "",
     "0",
+    "UP",
+    "DOWN",
     "%100%",
     "100%%",
     "101%",
     "$100$",
     "100$$",
     "23$:12%",
+    "UP:100$",
     "100%:UP",
     "0%:101$"
 ));

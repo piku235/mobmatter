@@ -135,14 +135,36 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
 {
     switch (event.event_number()) {
     case EventNumber::Sent: {
-        auto positionState = MobilusCoverPositionState::parse(event.value());
-
-        if (!positionState.isValid()) {
-            if ("STOP" == event.value()) {
-                cover.reportStopMotion();
+        if ("UP" == event.value()) {
+            if (Cover::Result::Ok == cover.reportOpen()) {
+                mLogger.notice(LOG_TAG "Started opening cover" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
                 return true;
             }
 
+            return false;
+        }
+
+        if ("DOWN" == event.value()) {
+            if (Cover::Result::Ok == cover.reportClose()) {
+                mLogger.notice(LOG_TAG "Started closing cover" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
+                return true;
+            }
+
+            return false;
+        }
+
+        if ("STOP" == event.value()) {
+            if (Cover::Result::Ok == cover.reportStopMotion()) {
+                mLogger.notice(LOG_TAG "Stopping cover motion" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
+                return true;
+            }
+
+            return false;
+        }
+
+        auto positionState = MobilusCoverPositionState::parse(event.value());
+
+        if (!positionState.isValid()) {
             mLogger.error(LOG_TAG "Invalid cover position: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
             return false;
         }
