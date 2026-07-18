@@ -62,11 +62,10 @@ private:
     PositionState mTiltState;
 
     Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
-    void replaceLiftState(PositionState&& liftState);
-    void replaceTiltState(PositionState&& tiltState);
-
-    template <typename Event>
-    Result requestLiftAndTiltTo(Position position);
+    Result rename(std::string name);
+    Result changeLiftTargetPosition(Position position);
+    Result changeTiltTargetPosition(Position position);
+    Result stopMotion();
 };
 
 }
