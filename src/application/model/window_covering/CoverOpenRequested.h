@@ -6,7 +6,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverOpenRequested : public mobmatter::common::domain::DomainEvent {
+struct CoverOpenRequested : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_open_requested";
 
     const EndpointId endpointId;

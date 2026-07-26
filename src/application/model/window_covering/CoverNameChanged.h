@@ -8,7 +8,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverNameChanged : public mobmatter::common::domain::DomainEvent {
+struct CoverNameChanged : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_name_changed";
 
     const EndpointId endpointId;

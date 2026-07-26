@@ -5,7 +5,7 @@
 namespace mobmatter::matter::logging {
 
 namespace LoggerAdapter {
-    using mobmatter::common::logging::Logger;
+    using common::logging::Logger;
 
     void setLogger(Logger* logger);
     Logger* getLogger();

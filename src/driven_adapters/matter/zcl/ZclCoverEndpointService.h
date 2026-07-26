@@ -4,10 +4,10 @@
 
 namespace mobmatter::driven_adapters::matter::zcl {
 
-namespace model = mobmatter::application::model;
-namespace wc = mobmatter::application::model::window_covering;
+namespace model = application::model;
+namespace wc = application::model::window_covering;
 
-class ZclCoverEndpointService final : public mobmatter::application::driven_ports::CoverEndpointService {
+class ZclCoverEndpointService final : public application::driven_ports::CoverEndpointService {
 public:
     ZclCoverEndpointService(model::EndpointId aggregatorEndpointId);
 

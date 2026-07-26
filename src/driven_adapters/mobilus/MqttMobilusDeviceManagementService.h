@@ -13,11 +13,11 @@ class Device;
 
 namespace mobmatter::driven_adapters::mobilus {
 
-namespace model = mobmatter::application::model;
-namespace logging = mobmatter::common::logging;
+namespace model = application::model;
+namespace logging = common::logging;
 namespace proto = jungi::mobgtw::proto;
 
-class MqttMobilusDeviceManagementService final : public mobmatter::application::driven_ports::DeviceManagementService {
+class MqttMobilusDeviceManagementService final : public application::driven_ports::DeviceManagementService {
 public:
     MqttMobilusDeviceManagementService(jungi::mobgtw::MqttMobilusGtwClient& client, logging::Logger& logger);
 

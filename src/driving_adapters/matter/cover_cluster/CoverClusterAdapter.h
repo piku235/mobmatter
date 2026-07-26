@@ -9,8 +9,8 @@
 
 namespace mobmatter::driving_adapters::matter::cover_cluster {
 
-namespace driven_ports = mobmatter::application::driven_ports;
-namespace logging = mobmatter::common::logging;
+namespace driven_ports = application::driven_ports;
+namespace logging = common::logging;
 
 class CoverClusterAdapter final : public mobmatter::matter::AppComponent {
 public:

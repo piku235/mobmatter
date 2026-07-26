@@ -16,7 +16,7 @@ namespace mobio = jungi::mobgtw::io;
 
 class MobilusGtwEventLoopAdapter final : public mobio::EventLoop,
                                          public chip::System::EventLoopHandler,
-                                         public mobmatter::matter::AppComponent {
+                                         public matter::AppComponent {
 public:
     MobilusGtwEventLoopAdapter(chip::System::LayerSocketsLoop& systemLayer);
 

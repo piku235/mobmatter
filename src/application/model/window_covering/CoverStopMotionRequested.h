@@ -6,7 +6,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverStopMotionRequested : public mobmatter::common::domain::DomainEvent {
+struct CoverStopMotionRequested : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_stop_motion_requested";
 
     const EndpointId endpointId;

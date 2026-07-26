@@ -5,7 +5,7 @@
 
 namespace mobmatter::matter::event_loop {
 
-class DomainEventPublisherAdapter final : public mobmatter::matter::AppComponent,
+class DomainEventPublisherAdapter final : public matter::AppComponent,
                                           public chip::System::EventLoopHandler {
 public:
     DomainEventPublisherAdapter(chip::System::LayerSocketsLoop& systemLayer);

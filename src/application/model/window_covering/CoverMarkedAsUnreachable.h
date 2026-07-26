@@ -6,7 +6,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverMarkedAsUnreachable : public mobmatter::common::domain::DomainEvent {
+struct CoverMarkedAsUnreachable : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_marked_as_unreachable";
 
     const EndpointId endpointId;

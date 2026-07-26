@@ -7,7 +7,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverLiftMotionChanged : public mobmatter::common::domain::DomainEvent {
+struct CoverLiftMotionChanged : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_lift_motion_changed";
 
     const EndpointId endpointId;

@@ -1,14 +1,13 @@
 #pragma once
 
 #include "Position.h"
-#include "PositionStatus.h"
 #include "application/model/EndpointId.h"
 #include "application/model/MobilusDeviceId.h"
 #include "common/domain/DomainEvent.h"
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverLiftTargetPositionChanged : public mobmatter::common::domain::DomainEvent {
+struct CoverLiftTargetPositionChanged : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_lift_target_position_changed";
 
     const EndpointId endpointId;

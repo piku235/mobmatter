@@ -6,7 +6,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverRemoved : public mobmatter::common::domain::DomainEvent {
+struct CoverRemoved : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_removed";
 
     const EndpointId endpointId;

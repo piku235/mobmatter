@@ -5,8 +5,6 @@
 
 namespace mobmatter::application::driven_ports {
 
-namespace model = mobmatter::application::model;
-
 class CoverEndpointService {
 public:
     virtual ~CoverEndpointService() = default;

@@ -6,8 +6,6 @@
 
 namespace mobmatter::application::driven_ports {
 
-namespace model = mobmatter::application::model;
-
 class DeviceManagementService {
 public:
     virtual ~DeviceManagementService() = default;

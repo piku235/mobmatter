@@ -6,11 +6,11 @@
 
 namespace mobmatter::driven_adapters::persistence::sqlite {
 
-namespace model = mobmatter::application::model;
-namespace sqlite = mobmatter::common::persistence::sqlite;
-namespace logging = mobmatter::common::logging;
+namespace model = application::model;
+namespace sqlite = common::persistence::sqlite;
+namespace logging = common::logging;
 
-class SqliteCoverRepository final : public mobmatter::application::driven_ports::CoverRepository {
+class SqliteCoverRepository final : public application::driven_ports::CoverRepository {
 public:
     SqliteCoverRepository(sqlite::Connection& conn, logging::Logger& logger);
     void save(const model::window_covering::Cover& cover) override;

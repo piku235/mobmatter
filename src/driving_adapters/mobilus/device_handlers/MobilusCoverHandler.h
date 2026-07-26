@@ -12,9 +12,9 @@
 
 namespace mobmatter::driving_adapters::mobilus::device_handlers {
 
-namespace model = mobmatter::application::model;
-namespace driven_ports = mobmatter::application::driven_ports;
-namespace logging = mobmatter::common::logging;
+namespace model = application::model;
+namespace driven_ports = application::driven_ports;
+namespace logging = common::logging;
 
 class MobilusCoverHandler final : public MobilusDeviceSyncHandler,
                                   public MobilusDeviceEventHandler {

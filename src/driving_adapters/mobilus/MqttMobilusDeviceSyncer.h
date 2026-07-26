@@ -11,7 +11,7 @@
 
 namespace mobmatter::driving_adapters::mobilus {
 
-namespace logging = mobmatter::common::logging;
+namespace logging = common::logging;
 
 class MqttMobilusDeviceSyncer final : public mobmatter::matter::AppComponent {
 public:

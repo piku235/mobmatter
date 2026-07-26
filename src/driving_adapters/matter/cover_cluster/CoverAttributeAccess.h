@@ -9,8 +9,8 @@
 
 namespace mobmatter::driving_adapters::matter::cover_cluster {
 
-namespace model = mobmatter::application::model;
-namespace driven_ports = mobmatter::application::driven_ports;
+namespace model = application::model;
+namespace driven_ports = application::driven_ports;
 
 class CoverAttributeAccess final : public chip::app::AttributeAccessInterface {
 public:

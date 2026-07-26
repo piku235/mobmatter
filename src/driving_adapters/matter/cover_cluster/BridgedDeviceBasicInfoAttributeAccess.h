@@ -6,7 +6,7 @@
 
 namespace mobmatter::driving_adapters::matter::cover_cluster {
 
-namespace driven_ports = mobmatter::application::driven_ports;
+namespace driven_ports = application::driven_ports;
 
 /**
  * it would break if new devices were also handled

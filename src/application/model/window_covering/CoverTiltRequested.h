@@ -7,7 +7,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverTiltRequested : public mobmatter::common::domain::DomainEvent {
+struct CoverTiltRequested : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_tilt_requested";
 
     const EndpointId endpointId;

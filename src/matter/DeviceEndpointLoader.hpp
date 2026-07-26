@@ -7,8 +7,8 @@
 
 namespace mobmatter::matter {
 
-namespace driven_ports = mobmatter::application::driven_ports;
-namespace logging = mobmatter::common::logging;
+namespace driven_ports = application::driven_ports;
+namespace logging = common::logging;
 
 class DeviceEndpointLoader final : public AppComponent {
 public:

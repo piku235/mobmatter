@@ -7,7 +7,7 @@
 
 namespace mobmatter::driving_adapters::mobilus::device_handlers {
 
-namespace model = mobmatter::application::model;
+namespace model = application::model;
 
 struct MobilusCoverPositionState final {
     std::optional<model::window_covering::Position> liftPosition;

@@ -16,10 +16,10 @@ class CallEvents;
 namespace mobmatter::driven_adapters::mobilus {
 
 namespace proto = jungi::mobgtw::proto;
-namespace model = mobmatter::application::model;
-namespace logging = mobmatter::common::logging;
+namespace model = application::model;
+namespace logging = common::logging;
 
-class MqttMobilusCoverControlService : public mobmatter::application::driven_ports::CoverControlService {
+class MqttMobilusCoverControlService : public application::driven_ports::CoverControlService {
 public:
     MqttMobilusCoverControlService(jungi::mobgtw::MqttMobilusGtwClient& client, logging::Logger& logger);
 

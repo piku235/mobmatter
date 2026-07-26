@@ -7,8 +7,8 @@
 
 namespace mobmatter::matter::persistence {
 
-namespace sqlite = mobmatter::common::persistence::sqlite;
-namespace logging = mobmatter::common::logging;
+namespace sqlite = common::persistence::sqlite;
+namespace logging = common::logging;
 
 class SqlitePersistentStorageDelegate final : public chip::PersistentStorageDelegate {
 public:

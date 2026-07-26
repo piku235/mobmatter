@@ -13,9 +13,9 @@
 
 namespace mobmatter::driven_adapters::matter::reporting {
 
-namespace wc = mobmatter::application::model::window_covering;
+namespace wc = application::model::window_covering;
 
-class CoverReportingAdapter final : public mobmatter::common::domain::MultiDomainEventSubscriber<wc::CoverLiftCurrentPositionChanged, wc::CoverLiftTargetPositionChanged, wc::CoverLiftMotionChanged, wc::CoverTiltCurrentPositionChanged, wc::CoverTiltTargetPositionChanged, wc::CoverTiltMotionChanged, wc::CoverMarkedAsReachable, wc::CoverMarkedAsUnreachable, wc::CoverNameChanged> {
+class CoverReportingAdapter final : public common::domain::MultiDomainEventSubscriber<wc::CoverLiftCurrentPositionChanged, wc::CoverLiftTargetPositionChanged, wc::CoverLiftMotionChanged, wc::CoverTiltCurrentPositionChanged, wc::CoverTiltTargetPositionChanged, wc::CoverTiltMotionChanged, wc::CoverMarkedAsReachable, wc::CoverMarkedAsUnreachable, wc::CoverNameChanged> {
 public:
     void handle(const wc::CoverLiftCurrentPositionChanged& event) override;
     void handle(const wc::CoverLiftTargetPositionChanged& event) override;

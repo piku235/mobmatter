@@ -15,7 +15,7 @@ namespace mobmatter::matter {
 class ChipAppMain final {
 public:
     void registerComponent(AppComponent& component) { mComponents.push_back(&component); }
-    int boot(mobmatter::common::logging::Logger& logger, jungi::mobgtw::MqttMobilusGtwClient& mobilusGtwClient, chip::PersistentStorageDelegate& persistentStorageDelegate);
+    int boot(common::logging::Logger& logger, jungi::mobgtw::MqttMobilusGtwClient& mobilusGtwClient, chip::PersistentStorageDelegate& persistentStorageDelegate);
     void run();
     void shutdown();
 

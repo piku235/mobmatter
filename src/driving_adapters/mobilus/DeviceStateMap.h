@@ -7,7 +7,7 @@
 
 namespace mobmatter::driving_adapters::mobilus {
 
-namespace model = mobmatter::application::model;
+namespace model = application::model;
 
 using DeviceStateMap = std::unordered_map<model::MobilusDeviceId, DeviceState>;
 

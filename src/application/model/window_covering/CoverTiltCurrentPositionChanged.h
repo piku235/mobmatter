@@ -7,7 +7,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-struct CoverTiltCurrentPositionChanged : public mobmatter::common::domain::DomainEvent {
+struct CoverTiltCurrentPositionChanged : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_tilt_current_position_changed";
 
     const EndpointId endpointId;

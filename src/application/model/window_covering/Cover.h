@@ -10,7 +10,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-class Cover final : public mobmatter::common::domain::Entity {
+class Cover final : public common::domain::Entity {
 public:
     enum class Result {
         Ok,
