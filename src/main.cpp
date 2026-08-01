@@ -29,6 +29,7 @@
 #include "matter/event_loop/MobilusGtwEventLoopAdapter.h"
 #include "matter/persistence/SqlitePersistentStorageDelegate.h"
 
+#include <jungi/mobgtw/Action.h>
 #include <jungi/mobgtw/MqttDsn.h>
 #include <jungi/mobgtw/MqttMobilusGtwClient.h>
 #include <jungi/mobgtw/proto/DeviceSettingsRequest.pb.h>
@@ -97,10 +98,13 @@ const char* getEnvOr(const char* name, const char* defaultValue)
 
 std::unique_ptr<MqttMobilusGtwClient> createMobilusGtwClient(jungi::mobgtw::io::EventLoop* loop, jungi::mobgtw::logging::Logger* logger)
 {
+    auto keepAliveMessage = std::make_unique<proto::DeviceSettingsRequest>();
+    keepAliveMessage->set_action(Action::Query);
+
     return MqttMobilusGtwClient::builder()
         .dsn(MqttDsn::from(MOBILUS_DSN).value())
         .login({ getEnvOr("MOBILUS_USERNAME", "admin"), getEnvOr("MOBILUS_PASSWORD", "admin") })
-        .useKeepAliveMessage(std::make_unique<proto::DeviceSettingsRequest>())
+        .useKeepAliveMessage(std::move(keepAliveMessage))
         .useLogger(logger)
         .attachTo(loop)
         .build();
