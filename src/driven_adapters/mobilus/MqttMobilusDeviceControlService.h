@@ -1,6 +1,7 @@
 #pragma once
 
 #include "application/driven_ports/CoverControlService.h"
+#include "application/driven_ports/SwitchControlService.h"
 #include "common/logging/Logger.h"
 
 #include <jungi/mobgtw/MqttMobilusGtwClient.h>
@@ -19,15 +20,17 @@ namespace proto = jungi::mobgtw::proto;
 namespace model = application::model;
 namespace logging = common::logging;
 
-class MqttMobilusCoverControlService : public application::driven_ports::CoverControlService {
+class MqttMobilusDeviceControlService : public application::driven_ports::CoverControlService, public application::driven_ports::SwitchControlService {
 public:
-    MqttMobilusCoverControlService(jungi::mobgtw::MqttMobilusGtwClient& client, logging::Logger& logger);
+    MqttMobilusDeviceControlService(jungi::mobgtw::MqttMobilusGtwClient& client, logging::Logger& logger);
 
     void openCover(model::MobilusDeviceId deviceId) override;
     void closeCover(model::MobilusDeviceId deviceId) override;
     void liftCover(model::MobilusDeviceId deviceId, model::window_covering::Position position) override;
     void tiltCover(model::MobilusDeviceId deviceId, model::window_covering::Position position) override;
     void stopCoverMotion(model::MobilusDeviceId deviceId) override;
+    void turnSwitchOn(model::MobilusDeviceId deviceId) override;
+    void turnSwitchOff(model::MobilusDeviceId deviceId) override;
 
 private:
     jungi::mobgtw::MqttMobilusGtwClient& mClient;

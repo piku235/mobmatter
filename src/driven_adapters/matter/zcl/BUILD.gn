@@ -1,20 +1,32 @@
 source_set("base") {
-  sources = [
-    "ZclDeviceEndpoint.cpp",
-    "ZclDeviceEndpoint.h",
-  ]
+    sources = [
+        "ZclDeviceEndpoint.cpp",
+        "ZclDeviceEndpoint.h",
+    ]
 
-  public_deps = [ "//:mobgtw-zap" ]
+    public_deps = [ "//:mobgtw-zap" ]
 }
 
 source_set("cover_endpoint") {
-  sources = [ "ZclCoverEndpointService.cpp" ]
-  public = [ "ZclCoverEndpointService.h" ]
+    sources = [ "ZclCoverEndpointService.cpp" ]
+    public = [ "ZclCoverEndpointService.h" ]
 
-  configs += [ "//:app_includes" ]
+    configs += [ "//:app_includes" ]
 
-  deps = [
-    ":base",
-    "//src/application",
-  ]
+    deps = [
+        ":base",
+        "//src/application",
+    ]
+}
+
+source_set("switch_endpoint") {
+    sources = [ "ZclSwitchEndpointService.cpp" ]
+    public = [ "ZclSwitchEndpointService.h" ]
+
+    configs += [ "//:app_includes" ]
+
+    deps = [
+        ":base",
+        "//src/application",
+    ]
 }

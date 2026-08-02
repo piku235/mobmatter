@@ -1,6 +1,6 @@
-#include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
 #include "application/model/window_covering/Position.h"
 #include "common/logging/Logger.h"
+#include "driven_adapters/mobilus/MqttMobilusDeviceControlService.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
@@ -15,7 +15,7 @@ using mobmatter::application::model::MobilusDeviceId;
 using mobmatter::application::model::Percent;
 using mobmatter::application::model::window_covering::Position;
 using mobmatter::common::logging::Logger;
-using mobmatter::driven_adapters::mobilus::MqttMobilusCoverControlService;
+using mobmatter::driven_adapters::mobilus::MqttMobilusDeviceControlService;
 using mobmatter::tests::mobilus::MockMqttMobilusGtwClient;
 
 static constexpr MobilusDeviceId kDeviceId = 12;
@@ -44,7 +44,7 @@ void assertSentCallEvent(const MockMqttMobilusGtwClient& client, const std::stri
 TEST(MqttMobilusCoverControlServiceTest, OpensCover)
 {
     MockMqttMobilusGtwClient client;
-    MqttMobilusCoverControlService coverControlService(client, Logger::noop());
+    MqttMobilusDeviceControlService coverControlService(client, Logger::noop());
 
     coverControlService.openCover(kDeviceId);
 
@@ -54,7 +54,7 @@ TEST(MqttMobilusCoverControlServiceTest, OpensCover)
 TEST(MqttMobilusCoverControlServiceTest, ClosesCover)
 {
     MockMqttMobilusGtwClient client;
-    MqttMobilusCoverControlService coverControlService(client, Logger::noop());
+    MqttMobilusDeviceControlService coverControlService(client, Logger::noop());
 
     coverControlService.closeCover(kDeviceId);
 
@@ -64,7 +64,7 @@ TEST(MqttMobilusCoverControlServiceTest, ClosesCover)
 TEST(MqttMobilusCoverControlServiceTest, LiftsCover)
 {
     MockMqttMobilusGtwClient client;
-    MqttMobilusCoverControlService coverControlService(client, Logger::noop());
+    MqttMobilusDeviceControlService coverControlService(client, Logger::noop());
 
     coverControlService.liftCover(kDeviceId, Position::fullyOpen());
 
@@ -74,7 +74,7 @@ TEST(MqttMobilusCoverControlServiceTest, LiftsCover)
 TEST(MqttMobilusCoverControlServiceTest, TiltsCover)
 {
     MockMqttMobilusGtwClient client;
-    MqttMobilusCoverControlService coverControlService(client, Logger::noop());
+    MqttMobilusDeviceControlService coverControlService(client, Logger::noop());
 
     coverControlService.tiltCover(kDeviceId, Position::fullyOpen());
 
@@ -84,7 +84,7 @@ TEST(MqttMobilusCoverControlServiceTest, TiltsCover)
 TEST(MqttMobilusCoverControlServiceTest, StopsCoverMotion)
 {
     MockMqttMobilusGtwClient client;
-    MqttMobilusCoverControlService coverControlService(client, Logger::noop());
+    MqttMobilusDeviceControlService coverControlService(client, Logger::noop());
 
     coverControlService.stopCoverMotion(kDeviceId);
 

@@ -4,6 +4,8 @@
 #include "application/subscribers/CoverControlSubscriber.h"
 #include "application/subscribers/CoverEndpointSubscriber.h"
 #include "application/subscribers/DeviceManagementSubscriber.h"
+#include "application/subscribers/SwitchControlSubscriber.h"
+#include "application/subscribers/SwitchEndpointSubscriber.h"
 #include "common/domain/DomainEventPublisher.h"
 #include "common/logging/LogHandler.h"
 #include "common/logging/Logger.h"
@@ -12,17 +14,22 @@
 #include "common/persistence/sqlite/Connection.h"
 #include "common/persistence/sqlite/Migrator.h"
 #include "driven_adapters/matter/reporting/CoverReportingAdapter.h"
+#include "driven_adapters/matter/reporting/SwitchReportingAdapter.h"
 #include "driven_adapters/matter/zcl/ZclCoverEndpointService.h"
-#include "driven_adapters/mobilus/MqttMobilusCoverControlService.h"
+#include "driven_adapters/matter/zcl/ZclSwitchEndpointService.h"
+#include "driven_adapters/mobilus/MqttMobilusDeviceControlService.h"
 #include "driven_adapters/mobilus/MqttMobilusDeviceManagementService.h"
 #include "driven_adapters/persistence/sqlite/SqliteCoverRepository.h"
 #include "driven_adapters/persistence/sqlite/SqliteEndpointIdGenerator.h"
+#include "driven_adapters/persistence/sqlite/SqliteSwitchRepository.h"
 #include "driving_adapters/matter/cluster_stubs/ClusterStubsAdapter.h"
 #include "driving_adapters/matter/cover_cluster/CoverClusterAdapter.h"
+#include "driving_adapters/matter/switch_cluster/SwitchClusterAdapter.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceEventSubscriber.h"
 #include "driving_adapters/mobilus/MqttMobilusDeviceSyncer.h"
 #include "driving_adapters/mobilus/device_handlers/MobilusCoverHandler.h"
 #include "driving_adapters/mobilus/device_handlers/MobilusDeviceSyncerAdapter.h"
+#include "driving_adapters/mobilus/device_handlers/MobilusSwitchHandler.h"
 #include "matter/ChipAppMain.h"
 #include "matter/DeviceEndpointLoader.hpp"
 #include "matter/event_loop/DomainEventPublisherAdapter.h"
@@ -61,6 +68,7 @@ using namespace mobmatter::driven_adapters::matter::reporting;
 using namespace mobmatter::driving_adapters::mobilus;
 using namespace mobmatter::driving_adapters::mobilus::device_handlers;
 using namespace mobmatter::driving_adapters::matter::cover_cluster;
+using namespace mobmatter::driving_adapters::matter::switch_cluster;
 using namespace mobmatter::driving_adapters::matter::cluster_stubs;
 using namespace mobmatter::matter;
 using namespace mobmatter::matter::event_loop;
@@ -189,41 +197,54 @@ int main(int argc, char* argv[])
 
     // driven
     SqliteCoverRepository coverRepository(*db, logger);
+    SqliteSwitchRepository switchRepository(*db, logger);
     SqliteEndpointIdGenerator endpointIdGenerator(ZCL_INITIAL_DYNAMIC_ENDPOINT_ID, *db, logger);
     ZclCoverEndpointService coverEndpointService(ZCL_AGGREGATOR_ENDPOINT_ID);
-    MqttMobilusCoverControlService coverControlService(*mobilusGtwClient, logger);
+    ZclSwitchEndpointService switchEndpointService(ZCL_AGGREGATOR_ENDPOINT_ID);
+    MqttMobilusDeviceControlService deviceControlService(*mobilusGtwClient, logger);
     MqttMobilusDeviceManagementService deviceManagementService(*mobilusGtwClient, logger);
 
     // app subscribers
     auto& domainEventPublisher = DomainEventPublisher::instance();
     DomainEventPublisherAdapter domainEventPublisherAdapter(chipSystemLayer);
-    CoverControlSubscriber mobilusCoverControlSubscriber(coverControlService);
-    CoverEndpointSubscriber chipCoverEndpointSubscriber(coverEndpointService);
-    DeviceManagementSubscriber deviceManagemenetSubscriber(deviceManagementService);
+    CoverControlSubscriber coverControlSubscriber(deviceControlService);
+    CoverEndpointSubscriber coverEndpointSubscriber(coverEndpointService);
+    SwitchControlSubscriber switchControlSubscriber(deviceControlService);
+    DeviceManagementSubscriber deviceManagementSubscriber(deviceManagementService);
     CoverReportingAdapter coverReportingAdapter;
+    SwitchReportingAdapter switchReportingAdapter;
+    SwitchEndpointSubscriber switchEndpointSubscriber(switchEndpointService);
 
     // driving
     CoverClusterAdapter coverClusterAdapter(coverRepository, logger);
+    SwitchClusterAdapter switchClusterAdapter(switchRepository, logger);
     ClusterStubsAdapter clusterStubsAdapter;
-    DeviceEndpointLoader deviceEndpointLoader(coverRepository, coverEndpointService, logger);
+    DeviceEndpointLoader deviceEndpointLoader(coverRepository, switchRepository, coverEndpointService, switchEndpointService, logger);
 
     MqttMobilusDeviceSyncer mobilusDeviceSyncer(*mobilusGtwClient, logger);
     MqttMobilusDeviceEventSubscriber mobilusDeviceEventSubscriber(*mobilusGtwClient);
     MobilusDeviceSyncerAdapter mobilusDeviceSyncerAdapter(mobilusDeviceSyncer);
     MobilusCoverHandler mobilusCoverHandler(coverRepository, endpointIdGenerator, logger);
+    MobilusSwitchHandler mobilusSwitchHandler(switchRepository, endpointIdGenerator, logger);
 
     mobilusDeviceEventSubscriber.registerHandler(mobilusCoverHandler);
+    mobilusDeviceEventSubscriber.registerHandler(mobilusSwitchHandler);
     mobilusDeviceEventSubscriber.registerHandler(mobilusDeviceSyncerAdapter);
     mobilusDeviceSyncer.registerHandler(mobilusCoverHandler);
+    mobilusDeviceSyncer.registerHandler(mobilusSwitchHandler);
 
-    domainEventPublisher.subscribe(mobilusCoverControlSubscriber);
-    domainEventPublisher.subscribe(chipCoverEndpointSubscriber);
-    domainEventPublisher.subscribe(deviceManagemenetSubscriber);
+    domainEventPublisher.subscribe(coverControlSubscriber);
+    domainEventPublisher.subscribe(coverEndpointSubscriber);
+    domainEventPublisher.subscribe(deviceManagementSubscriber);
     domainEventPublisher.subscribe(coverReportingAdapter);
+    domainEventPublisher.subscribe(switchControlSubscriber);
+    domainEventPublisher.subscribe(switchEndpointSubscriber);
+    domainEventPublisher.subscribe(switchReportingAdapter);
 
     sChipApp.registerComponent(mobilusGtwEventLoopAdapter);
     sChipApp.registerComponent(domainEventPublisherAdapter);
     sChipApp.registerComponent(coverClusterAdapter);
+    sChipApp.registerComponent(switchClusterAdapter);
     sChipApp.registerComponent(clusterStubsAdapter);
     sChipApp.registerComponent(deviceEndpointLoader); // must be before mobilusDeviceSyncer
     sChipApp.registerComponent(mobilusDeviceSyncer);

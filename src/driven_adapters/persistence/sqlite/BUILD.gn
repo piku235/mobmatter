@@ -1,17 +1,19 @@
 source_set("sqlite") {
-  sources = [
-    "SqliteCoverRepository.cpp",
-    "SqliteEndpointIdGenerator.cpp",
-  ]
+    sources = [
+        "SqliteCoverRepository.cpp",
+        "SqliteSwitchRepository.cpp",
+        "SqliteEndpointIdGenerator.cpp",
+    ]
 
-  public = [
-    "SqliteCoverRepository.h",
-    "SqliteEndpointIdGenerator.h",
-  ]
+    public = [
+        "SqliteCoverRepository.h",
+        "SqliteSwitchRepository.h",
+        "SqliteEndpointIdGenerator.h",
+    ]
 
-  deps = [ "//src/application" ]
+    deps = [ "//src/application" ]
 
-  public_deps = [ "//src/common/persistence/sqlite" ]
+    public_deps = [ "//src/common/persistence/sqlite" ]
 
-  configs += [ "//:app_includes" ]
+    configs += [ "//:app_includes" ]
 }

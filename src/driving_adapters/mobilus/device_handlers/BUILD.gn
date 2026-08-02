@@ -1,27 +1,41 @@
 source_set("device_syncer") {
-  sources = [ "MobilusDeviceSyncerAdapter.cpp" ]
+    sources = [ "MobilusDeviceSyncerAdapter.cpp" ]
 
-  public = [ "MobilusDeviceSyncerAdapter.h" ]
+    public = [ "MobilusDeviceSyncerAdapter.h" ]
 
-  deps = [ "//src/driving_adapters/mobilus:device_syncer" ]
+    deps = [ "//src/driving_adapters/mobilus:device_syncer" ]
 
-  public_deps = [ "//third_party/mobgtw" ]
+    public_deps = [ "//third_party/mobgtw" ]
 
-  configs += [ "//:app_includes" ]
+    configs += [ "//:app_includes" ]
 }
 
 source_set("cover") {
-  sources = [
-    "MobilusCoverPositionState.cpp",
-    "MobilusCoverPositionState.hpp",
-    "MobilusCoverHandler.cpp"
-  ]
+    sources = [
+        "MobilusCoverPositionState.cpp",
+        "MobilusCoverPositionState.hpp",
+        "MobilusCoverHandler.cpp"
+    ]
 
-  public = [ "MobilusCoverHandler.h" ]
+    public = [ "MobilusCoverHandler.h" ]
 
-  deps = [ "//src/application" ]
+    deps = [ "//src/application" ]
 
-  public_deps = [ "//third_party/mobgtw" ]
+    public_deps = [ "//third_party/mobgtw" ]
 
-  configs += [ "//:app_includes" ]
+    configs += [ "//:app_includes" ]
+}
+
+source_set("switch") {
+    sources = [
+        "MobilusSwitchHandler.cpp"
+    ]
+
+    public = [ "MobilusSwitchHandler.h" ]
+
+    deps = [ "//src/application" ]
+
+    public_deps = [ "//third_party/mobgtw" ]
+
+    configs += [ "//:app_includes" ]
 }

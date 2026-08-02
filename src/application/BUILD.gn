@@ -10,12 +10,15 @@ static_library("application") {
 
     sources = [
         "model/UniqueId.cpp",
+        "model/Switch.cpp",
         "model/window_covering/Cover.cpp",
         "model/window_covering/CoverSpecification.cpp",
         "model/window_covering/PositionState.cpp",
         "subscribers/CoverControlSubscriber.cpp",
         "subscribers/CoverEndpointSubscriber.cpp",
         "subscribers/DeviceManagementSubscriber.cpp",
+        "subscribers/SwitchControlSubscriber.cpp",
+        "subscribers/SwitchEndpointSubscriber.cpp",
     ]
 
     public = [
@@ -24,12 +27,17 @@ static_library("application") {
         "driven_ports/CoverRepository.h",
         "driven_ports/DeviceManagementService.h",
         "driven_ports/EndpointIdGenerator.h",
+        "driven_ports/SwitchControlService.h",
+        "driven_ports/SwitchRepository.h",
+        "driven_ports/SwitchEndpointService.h",
         "model/EndpointId.h",
         "model/Flags.h",
         "model/MobilusDeviceId.h",
         "model/MobilusDeviceType.h",
         "model/Percent.h",
         "model/UniqueId.h",
+        "model/Switch.h",
+        "model/SwitchEvents.h",
         "model/window_covering/Cover.h",
         "model/window_covering/CoverEvents.h",
         "model/window_covering/CoverEndProductType.h",
@@ -42,6 +50,8 @@ static_library("application") {
         "subscribers/CoverControlSubscriber.h",
         "subscribers/CoverEndpointSubscriber.h",
         "subscribers/DeviceManagementSubscriber.h",
+        "subscribers/SwitchControlSubscriber.h",
+        "subscribers/SwitchEndpointSubscriber.h",
     ]
 
     public_deps = [ "//src/common/domain" ]

@@ -39,7 +39,7 @@ void addDeviceEndpoint(EndpointId id, const EmberAfEndpointType* ep, Span<const 
 
     if (CHIP_NO_ERROR != err) {
         delete[] dataVersion;
-        ChipLogError(Zcl, "Failed adding device at endpoint %u", id);
+        ChipLogError(Zcl, "Failed adding device at endpoint %u: %s", id, err.AsString());
 
         return;
     }
