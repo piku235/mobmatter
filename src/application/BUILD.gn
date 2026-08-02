@@ -2,70 +2,54 @@ import("//build_overrides/build.gni")
 import("${build_root}/config/linux/pkg_config.gni")
 
 pkg_config("openssl_config") {
-  packages = [ "openssl" ]
+    packages = [ "openssl" ]
 }
 
 static_library("application") {
-  output_name = "libapp"
+    output_name = "libapp"
 
-  sources = [
-    "model/UniqueId.cpp",
-    "model/window_covering/Cover.cpp",
-    "model/window_covering/CoverSpecification.cpp",
-    "model/window_covering/PositionState.cpp",
-    "subscribers/CoverControlSubscriber.cpp",
-    "subscribers/CoverEndpointSubscriber.cpp",
-    "subscribers/DeviceManagementSubscriber.cpp",
-  ]
+    sources = [
+        "model/UniqueId.cpp",
+        "model/window_covering/Cover.cpp",
+        "model/window_covering/CoverSpecification.cpp",
+        "model/window_covering/PositionState.cpp",
+        "subscribers/CoverControlSubscriber.cpp",
+        "subscribers/CoverEndpointSubscriber.cpp",
+        "subscribers/DeviceManagementSubscriber.cpp",
+    ]
 
-  public = [
-    "driven_ports/CoverControlService.h",
-    "driven_ports/CoverEndpointService.h",
-    "driven_ports/CoverRepository.h",
-    "driven_ports/DeviceManagementService.h",
-    "driven_ports/EndpointIdGenerator.h",
-    "model/EndpointId.h",
-    "model/Flags.h",
-    "model/MobilusDeviceId.h",
-    "model/MobilusDeviceType.h",
-    "model/Percent.h",
-    "model/UniqueId.h",
-    "model/window_covering/Cover.h",
-    "model/window_covering/CoverAdded.h",
-    "model/window_covering/CoverEndProductType.h",
-    "model/window_covering/CoverFeature.h",
-    "model/window_covering/CoverLiftCurrentPositionChanged.h",
-    "model/window_covering/CoverLiftMotionChanged.h",
-    "model/window_covering/CoverLiftRequested.h",
-    "model/window_covering/CoverLiftTargetPositionChanged.h",
-    "model/window_covering/CoverTiltCurrentPositionChanged.h",
-    "model/window_covering/CoverTiltMotionChanged.h",
-    "model/window_covering/CoverTiltRequested.h",
-    "model/window_covering/CoverTiltTargetPositionChanged.h",
-    "model/window_covering/CoverOpenRequested.h",
-    "model/window_covering/CoverCloseRequested.h",
-    "model/window_covering/CoverMarkedAsReachable.h",
-    "model/window_covering/CoverMarkedAsUnreachable.h",
-    "model/window_covering/CoverMotion.h",
-    "model/window_covering/CoverNameChanged.h",
-    "model/window_covering/CoverRemoved.h",
-    "model/window_covering/CoverRenameRequested.h",
-    "model/window_covering/CoverSpecification.h",
-    "model/window_covering/CoverStopMotionRequested.h",
-    "model/window_covering/Position.h",
-    "model/window_covering/PositionState.h",
-    "model/window_covering/PositionStatus.h",
-    "subscribers/CoverControlSubscriber.h",
-    "subscribers/CoverEndpointSubscriber.h",
-    "subscribers/DeviceManagementSubscriber.h",
-  ]
+    public = [
+        "driven_ports/CoverControlService.h",
+        "driven_ports/CoverEndpointService.h",
+        "driven_ports/CoverRepository.h",
+        "driven_ports/DeviceManagementService.h",
+        "driven_ports/EndpointIdGenerator.h",
+        "model/EndpointId.h",
+        "model/Flags.h",
+        "model/MobilusDeviceId.h",
+        "model/MobilusDeviceType.h",
+        "model/Percent.h",
+        "model/UniqueId.h",
+        "model/window_covering/Cover.h",
+        "model/window_covering/CoverEvents.h",
+        "model/window_covering/CoverEndProductType.h",
+        "model/window_covering/CoverFeature.h",
+        "model/window_covering/CoverMotion.h",
+        "model/window_covering/CoverSpecification.h",
+        "model/window_covering/Position.h",
+        "model/window_covering/PositionState.h",
+        "model/window_covering/PositionStatus.h",
+        "subscribers/CoverControlSubscriber.h",
+        "subscribers/CoverEndpointSubscriber.h",
+        "subscribers/DeviceManagementSubscriber.h",
+    ]
 
-  public_deps = [ "//src/common/domain" ]
+    public_deps = [ "//src/common/domain" ]
 
-  configs += [
-    "//:app_includes",
-    ":openssl_config",
-  ]
+    configs += [
+        "//:app_includes",
+        ":openssl_config",
+    ]
 
-  cflags = [ "-Wconversion" ]
+    cflags = [ "-Wconversion" ]
 }

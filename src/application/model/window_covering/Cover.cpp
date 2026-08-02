@@ -1,22 +1,5 @@
 #include "Cover.h"
-#include "CoverAdded.h"
-#include "CoverCloseRequested.h"
-#include "CoverLiftCurrentPositionChanged.h"
-#include "CoverLiftMotionChanged.h"
-#include "CoverLiftRequested.h"
-#include "CoverLiftTargetPositionChanged.h"
-#include "CoverMarkedAsReachable.h"
-#include "CoverMarkedAsUnreachable.h"
-#include "CoverMotion.h"
-#include "CoverNameChanged.h"
-#include "CoverOpenRequested.h"
-#include "CoverRemoved.h"
-#include "CoverRenameRequested.h"
-#include "CoverStopMotionRequested.h"
-#include "CoverTiltCurrentPositionChanged.h"
-#include "CoverTiltMotionChanged.h"
-#include "CoverTiltRequested.h"
-#include "CoverTiltTargetPositionChanged.h"
+#include "CoverEvents.h"
 
 using namespace mobmatter::common::domain;
 

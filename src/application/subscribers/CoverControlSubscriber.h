@@ -1,11 +1,7 @@
 #pragma once
 
 #include "application/driven_ports/CoverControlService.h"
-#include "application/model/window_covering/CoverCloseRequested.h"
-#include "application/model/window_covering/CoverLiftRequested.h"
-#include "application/model/window_covering/CoverOpenRequested.h"
-#include "application/model/window_covering/CoverStopMotionRequested.h"
-#include "application/model/window_covering/CoverTiltRequested.h"
+#include "application/model/window_covering/CoverEvents.h"
 #include "common/domain/MultiDomainEventSubscriber.h"
 
 namespace mobmatter::application::subscribers {

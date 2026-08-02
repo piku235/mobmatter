@@ -1,14 +1,6 @@
 #pragma once
 
-#include "application/model/window_covering/CoverLiftCurrentPositionChanged.h"
-#include "application/model/window_covering/CoverLiftMotionChanged.h"
-#include "application/model/window_covering/CoverLiftTargetPositionChanged.h"
-#include "application/model/window_covering/CoverMarkedAsReachable.h"
-#include "application/model/window_covering/CoverMarkedAsUnreachable.h"
-#include "application/model/window_covering/CoverNameChanged.h"
-#include "application/model/window_covering/CoverTiltCurrentPositionChanged.h"
-#include "application/model/window_covering/CoverTiltMotionChanged.h"
-#include "application/model/window_covering/CoverTiltTargetPositionChanged.h"
+#include "application/model/window_covering/CoverEvents.h"
 #include "common/domain/MultiDomainEventSubscriber.h"
 
 namespace mobmatter::driven_adapters::matter::reporting {

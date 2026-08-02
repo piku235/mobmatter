@@ -1,7 +1,7 @@
 #pragma once
 
 #include "application/driven_ports/DeviceManagementService.h"
-#include "application/model/window_covering/CoverRenameRequested.h"
+#include "application/model/window_covering/CoverEvents.h"
 #include "common/domain/DomainEventSubscriber.h"
 
 namespace mobmatter::application::subscribers {
