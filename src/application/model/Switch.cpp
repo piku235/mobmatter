@@ -8,21 +8,20 @@ namespace mobmatter::application::model {
 
 Switch Switch::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state)
 {
-    Switch newSwitch(endpointId, mobilusDeviceId, UniqueId::random(), std::move(name), state);
+    Switch newSwitch(endpointId, mobilusDeviceId, std::move(name), state);
     newSwitch.raise(std::make_unique<SwitchAdded>(endpointId, mobilusDeviceId));
 
     return newSwitch;
 }
 
-Switch Switch::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, std::string name, State state)
+Switch Switch::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state)
 {
-    return { endpointId, mobilusDeviceId, uniqueId, std::move(name), state };
+    return { endpointId, mobilusDeviceId, std::move(name), state };
 }
 
-Switch::Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, std::string name, State state)
+Switch::Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state)
     : mEndpointId(endpointId)
     , mMobilusDeviceId(mobilusDeviceId)
-    , mUniqueId(uniqueId)
     , mName(std::move(name))
     , mState(state)
 {
@@ -125,11 +124,6 @@ EndpointId Switch::endpointId() const
 MobilusDeviceId Switch::mobilusDeviceId() const
 {
     return mMobilusDeviceId;
-}
-
-const UniqueId& Switch::uniqueId() const
-{
-    return mUniqueId;
 }
 
 const std::string& Switch::name() const

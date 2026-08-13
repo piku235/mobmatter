@@ -12,7 +12,6 @@ Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSp
     return {
         endpointId,
         mobilusDeviceId,
-        UniqueId::random(),
         std::move(specification),
         true,
         std::move(name),
@@ -21,12 +20,11 @@ Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSp
     };
 }
 
-Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
+Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
 {
     return {
         endpointId,
         mobilusDeviceId,
-        std::move(uniqueId),
         std::move(specification),
         reachable,
         std::move(name),
@@ -35,10 +33,9 @@ Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId,
     };
 }
 
-Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
+Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
     : mEndpointId(endpointId)
     , mMobilusDeviceId(mobilusDeviceId)
-    , mUniqueId(std::move(uniqueId))
     , mSpecification(std::move(specification))
     , mReachable(reachable)
     , mName(std::move(name))
@@ -264,11 +261,6 @@ EndpointId Cover::endpointId() const
 MobilusDeviceId Cover::mobilusDeviceId() const
 {
     return mMobilusDeviceId;
-}
-
-const UniqueId& Cover::uniqueId() const
-{
-    return mUniqueId;
 }
 
 const CoverSpecification& Cover::specification() const

@@ -5,8 +5,9 @@
 #include "PositionState.h"
 #include "application/model/EndpointId.h"
 #include "application/model/MobilusDeviceId.h"
-#include "application/model/UniqueId.h"
 #include "common/domain/Entity.h"
+
+#include <string>
 
 namespace mobmatter::application::model::window_covering {
 
@@ -23,7 +24,7 @@ public:
     };
 
     static Cover add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, std::string name, PositionState liftState, PositionState tiltState);
-    static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
+    static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
 
     /* chip specific */
     Result requestOpen();
@@ -50,7 +51,6 @@ public:
     bool isReachable() const;
     EndpointId endpointId() const;
     MobilusDeviceId mobilusDeviceId() const;
-    const UniqueId& uniqueId() const;
     const CoverSpecification& specification() const;
     const std::string& name() const;
     const PositionState& liftState() const;
@@ -59,14 +59,13 @@ public:
 private:
     /* const */ EndpointId mEndpointId;
     /* const */ MobilusDeviceId mMobilusDeviceId;
-    /* const */ UniqueId mUniqueId;
     /* const */ CoverSpecification mSpecification;
     bool mReachable;
     std::string mName;
     PositionState mLiftState;
     PositionState mTiltState;
 
-    Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
+    Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
     Result rename(std::string name);
     Result changeLiftAndTiltTargetPosition(Position position);
     Result changeLiftTargetPosition(Position position);

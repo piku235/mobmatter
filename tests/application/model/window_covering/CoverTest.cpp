@@ -60,12 +60,11 @@ TEST(CoverTest, AddsNew)
 
 TEST(CoverTest, Restores)
 {
-    auto cover = Cover::restoreFrom(1, 11, UniqueId::of("7bc1ac82347f4f64970db8228ed24290"), CoverSpecification::SensoZ(), false, "foo", PositionState::at(Position::fullyClosed()), PositionState::at(Position::fullyOpen()));
+    auto cover = Cover::restoreFrom(1, 11, CoverSpecification::SensoZ(), false, "foo", PositionState::at(Position::fullyClosed()), PositionState::at(Position::fullyOpen()));
     auto& events = DomainEventQueue::instance();
 
     ASSERT_EQ(1, cover.endpointId());
     ASSERT_EQ(11, cover.mobilusDeviceId());
-    ASSERT_EQ("7bc1ac82347f4f64970db8228ed24290", cover.uniqueId().value());
     ASSERT_EQ(CoverSpecification::SensoZ(), cover.specification());
     ASSERT_FALSE(cover.isReachable());
     ASSERT_EQ("foo", cover.name());

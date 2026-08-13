@@ -8,6 +8,7 @@
 #include <lib/support/Span.h>
 
 #include <cstdint>
+#include <string>
 
 using namespace chip;
 using namespace chip::app;
@@ -51,7 +52,7 @@ CHIP_ERROR BridgedDeviceBasicInfoAttributeAccess::Read(const ConcreteReadAttribu
     case NodeLabel::Id:
         return encoder.Encode(CharSpan::fromCharString(cover->name().c_str()));
     case UniqueID::Id:
-        return encoder.Encode(CharSpan::fromCharString(cover->uniqueId().value().c_str()));
+        return encoder.Encode(CharSpan::fromCharString(std::to_string(cover->mobilusDeviceId()).c_str()));
     case FeatureMap::Id:
         return encoder.Encode(kBridgedDeviceBasicInfoFeatureMap);
     case ClusterRevision::Id:

@@ -2,7 +2,6 @@
 
 #include "EndpointId.h"
 #include "MobilusDeviceId.h"
-#include "UniqueId.h"
 #include "common/domain/Entity.h"
 
 #include <string>
@@ -26,7 +25,7 @@ public:
     };
 
     static Switch add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state);
-    static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, std::string name, State state);
+    static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state);
 
     /* chip oriented */
     Result requestOn();
@@ -44,18 +43,16 @@ public:
     bool operator==(const Switch& other) const;
     EndpointId endpointId() const;
     MobilusDeviceId mobilusDeviceId() const;
-    const UniqueId& uniqueId() const;
     const std::string& name() const;
     State state() const;
 
 private:
     /* const */ EndpointId mEndpointId;
     /* const */ MobilusDeviceId mMobilusDeviceId;
-    /* const */ UniqueId mUniqueId;
     std::string mName;
     State mState;
 
-    Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, UniqueId uniqueId, std::string name, State state);
+    Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state);
     Result rename(std::string name);
     Result turnOn();
     Result turnOff();
