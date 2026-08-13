@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
             is_clang: true
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y git gcc g++ pkg-config cmake libmosquitto-dev libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev ninja-build python3-venv python3-dev python3-pip unzip libgirepository1.0-dev libcairo2-dev libreadline-dev default-jre
@@ -41,14 +41,14 @@ jobs:
         run: scripts/checkout_submodules.py --shallow --platform linux
 
       - name: Cache protoc
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           key: ${{ runner.os }}-build-protoc
           path: third_party/protobuf/bin/protoc
 
       - name: Cache CHIP pigweed
         id: pigweed-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/scripts/setup/requirements*.txt', 'third_party/connectedhomeip/third_party/pigweed/repo/package-lock.json') }}
           path: third_party/connectedhomeip/.environment
