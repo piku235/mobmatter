@@ -171,14 +171,14 @@ struct CoverMarkedAsUnreachable : common::domain::DomainEvent {
     const char* eventName() const override { return kEventName; }
 };
 
-struct CoverNameChanged : common::domain::DomainEvent {
-    static constexpr char kEventName[] = "cover_name_changed";
+struct CoverRenamed : common::domain::DomainEvent {
+    static constexpr char kEventName[] = "cover_ren";
 
     const EndpointId endpointId;
     const MobilusDeviceId mobilusDeviceId;
     const std::string name;
 
-    CoverNameChanged(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId, std::string aName)
+    CoverRenamed(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId, std::string aName)
         : endpointId(aEndpointId)
         , mobilusDeviceId(aMobilusDeviceId)
         , name(std::move(aName))

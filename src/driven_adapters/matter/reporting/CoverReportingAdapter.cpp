@@ -49,7 +49,7 @@ void CoverReportingAdapter::handle(const CoverMarkedAsUnreachable& event)
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::Reachable::Id);
 }
 
-void CoverReportingAdapter::handle(const CoverNameChanged& event)
+void CoverReportingAdapter::handle(const CoverRenamed& event)
 {
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::NodeLabel::Id);
 }

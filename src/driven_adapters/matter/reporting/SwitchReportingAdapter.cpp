@@ -29,7 +29,7 @@ void SwitchReportingAdapter::handle(const SwitchMarkedAsUnreachable& event)
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::Reachable::Id);
 }
 
-void SwitchReportingAdapter::handle(const SwitchNameChanged& event)
+void SwitchReportingAdapter::handle(const SwitchRenamed& event)
 {
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::NodeLabel::Id);
 }

@@ -1,19 +1,11 @@
 #pragma once
 
-#include "EndpointId.h"
-#include "MobilusDeviceId.h"
-#include "common/domain/Entity.h"
-
-#include <string>
+#include "application/model/Device.h"
 
 namespace mobmatter::application::model {
 
-class Switch final : public common::domain::Entity {
+class Switch final : public Device {
 public:
-    enum class Result {
-        Ok,
-        NoChange,
-    };
     enum class Error {
         Unknown,
         Unreachable,
@@ -31,31 +23,24 @@ public:
     Result requestOn();
     Result requestOff();
     Result requestToggle();
-    Result requestRename(std::string name);
 
     /* mobilus oriented */
     Result reportOn();
     Result reportOff();
     Result reportError(Error error);
-    Result reportRenamedTo(std::string name);
-    void reportRemoved();
 
-    bool operator==(const Switch& other) const;
-    EndpointId endpointId() const;
-    MobilusDeviceId mobilusDeviceId() const;
-    const std::string& name() const;
-    State state() const;
+    State state() const { return mState; }
 
 private:
-    /* const */ EndpointId mEndpointId;
-    /* const */ MobilusDeviceId mMobilusDeviceId;
-    std::string mName;
     State mState;
 
     Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state);
-    Result rename(std::string name);
     Result turnOn();
     Result turnOff();
+
+    std::unique_ptr<common::domain::DomainEvent> deviceRemoved() override;
+    std::unique_ptr<common::domain::DomainEvent> deviceRenamed() override;
+    std::unique_ptr<common::domain::DomainEvent> deviceRenameRequested() override;
 };
 
 }

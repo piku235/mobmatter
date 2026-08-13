@@ -7,13 +7,13 @@ namespace mobmatter::driven_adapters::matter::reporting {
 
 namespace model = application::model;
 
-class SwitchReportingAdapter final : public common::domain::MultiDomainEventSubscriber<model::SwitchTurnedOn, model::SwitchTurnedOff, model::SwitchMarkedAsReachable, model::SwitchMarkedAsUnreachable, model::SwitchNameChanged> {
+class SwitchReportingAdapter final : public common::domain::MultiDomainEventSubscriber<model::SwitchTurnedOn, model::SwitchTurnedOff, model::SwitchMarkedAsReachable, model::SwitchMarkedAsUnreachable, model::SwitchRenamed> {
 public:
     void handle(const model::SwitchTurnedOn& event) override;
     void handle(const model::SwitchTurnedOff& event) override;
     void handle(const model::SwitchMarkedAsReachable& event) override;
     void handle(const model::SwitchMarkedAsUnreachable& event) override;
-    void handle(const model::SwitchNameChanged& event) override;
+    void handle(const model::SwitchRenamed& event) override;
 };
 
 }

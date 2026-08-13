@@ -9,6 +9,7 @@ static_library("application") {
     output_name = "libapp"
 
     sources = [
+        "model/Device.cpp",
         "model/Switch.cpp",
         "model/window_covering/Cover.cpp",
         "model/window_covering/CoverSpecification.cpp",
@@ -30,6 +31,7 @@ static_library("application") {
         "driven_ports/SwitchRepository.h",
         "driven_ports/SwitchEndpointService.h",
         "model/EndpointId.h",
+        "model/Device.h",
         "model/Flags.h",
         "model/MobilusDeviceId.h",
         "model/MobilusDeviceType.h",

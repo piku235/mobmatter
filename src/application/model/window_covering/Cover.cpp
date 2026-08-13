@@ -34,11 +34,9 @@ Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId,
 }
 
 Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
-    : mEndpointId(endpointId)
-    , mMobilusDeviceId(mobilusDeviceId)
+    : Device(endpointId, mobilusDeviceId, std::move(name))
     , mSpecification(std::move(specification))
     , mReachable(reachable)
-    , mName(std::move(name))
     , mLiftState(std::move(liftState))
     , mTiltState(std::move(tiltState))
 {
@@ -94,17 +92,6 @@ Cover::Result Cover::requestStopMotion()
 
     if (Result::Ok == result) {
         raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
-    }
-
-    return result;
-}
-
-Cover::Result Cover::requestRename(std::string name)
-{
-    auto result = rename(std::move(name));
-
-    if (Result::Ok == result) {
-        raise(std::make_unique<CoverRenameRequested>(mEndpointId, mMobilusDeviceId, mName));
     }
 
     return result;
@@ -233,68 +220,6 @@ Cover::Result Cover::reportError(Error error)
     return result;
 }
 
-Cover::Result Cover::reportRenamedTo(std::string name)
-{
-    return rename(std::move(name));
-}
-
-void Cover::reportRemoved()
-{
-    raise(std::make_unique<CoverRemoved>(mEndpointId, mMobilusDeviceId));
-}
-
-bool Cover::operator==(const Cover& other) const
-{
-    return mEndpointId == other.mEndpointId;
-}
-
-bool Cover::isReachable() const
-{
-    return mReachable;
-}
-
-EndpointId Cover::endpointId() const
-{
-    return mEndpointId;
-}
-
-MobilusDeviceId Cover::mobilusDeviceId() const
-{
-    return mMobilusDeviceId;
-}
-
-const CoverSpecification& Cover::specification() const
-{
-    return mSpecification;
-}
-
-const std::string& Cover::name() const
-{
-    return mName;
-}
-
-const PositionState& Cover::liftState() const
-{
-    return mLiftState;
-}
-
-const PositionState& Cover::tiltState() const
-{
-    return mTiltState;
-}
-
-Cover::Result Cover::rename(std::string name)
-{
-    if (mName == name) {
-        return Result::NoChange;
-    }
-
-    mName = std::move(name);
-    raise(std::make_unique<CoverNameChanged>(mEndpointId, mMobilusDeviceId, mName));
-
-    return Result::Ok;
-}
-
 Cover::Result Cover::changeLiftAndTiltTargetPosition(Position position)
 {
     auto liftResult = changeLiftTargetPosition(position);
@@ -356,6 +281,21 @@ Cover::Result Cover::stopMotion()
     }
 
     return Result::Ok;
+}
+
+std::unique_ptr<DomainEvent> Cover::deviceRemoved()
+{
+    return std::make_unique<CoverRemoved>(mEndpointId, mMobilusDeviceId);
+}
+
+std::unique_ptr<DomainEvent> Cover::deviceRenamed()
+{
+    return std::make_unique<CoverRenamed>(mEndpointId, mMobilusDeviceId, mName);
+}
+
+std::unique_ptr<DomainEvent> Cover::deviceRenameRequested()
+{
+    return std::make_unique<CoverRenameRequested>(mEndpointId, mMobilusDeviceId, mName);
 }
 
 }

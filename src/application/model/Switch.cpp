@@ -4,6 +4,8 @@
 #include <csignal>
 #include <memory>
 
+using namespace mobmatter::common::domain;
+
 namespace mobmatter::application::model {
 
 Switch Switch::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state)
@@ -20,9 +22,7 @@ Switch Switch::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceI
 }
 
 Switch::Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state)
-    : mEndpointId(endpointId)
-    , mMobilusDeviceId(mobilusDeviceId)
-    , mName(std::move(name))
+    : Device(endpointId, mobilusDeviceId, std::move(name))
     , mState(state)
 {
 }
@@ -62,17 +62,6 @@ Switch::Result Switch::requestToggle()
     }
 }
 
-Switch::Result Switch::requestRename(std::string name)
-{
-    auto result = rename(std::move(name));
-
-    if (Result::Ok == result) {
-        raise(std::make_unique<SwitchRenameRequested>(mEndpointId, mMobilusDeviceId, mName));
-    }
-
-    return result;
-}
-
 Switch::Result Switch::reportOn()
 {
     return turnOn();
@@ -81,11 +70,6 @@ Switch::Result Switch::reportOn()
 Switch::Result Switch::reportOff()
 {
     return turnOff();
-}
-
-Switch::Result Switch::reportRenamedTo(std::string name)
-{
-    return rename(std::move(name));
 }
 
 Switch::Result Switch::reportError(Error error)
@@ -104,46 +88,6 @@ Switch::Result Switch::reportError(Error error)
     default:
         return Result::NoChange;
     }
-}
-
-void Switch::reportRemoved()
-{
-    raise(std::make_unique<SwitchRemoved>(mMobilusDeviceId, mEndpointId));
-}
-
-bool Switch::operator==(const Switch& other) const
-{
-    return mEndpointId == other.mEndpointId;
-}
-
-EndpointId Switch::endpointId() const
-{
-    return mEndpointId;
-}
-
-MobilusDeviceId Switch::mobilusDeviceId() const
-{
-    return mMobilusDeviceId;
-}
-
-const std::string& Switch::name() const
-{
-    return mName;
-}
-
-Switch::State Switch::state() const
-{
-    return mState;
-}
-
-Switch::Result Switch::rename(std::string name)
-{
-    if (mName == name) {
-        return Result::NoChange;
-    }
-
-    mName = std::move(name);
-    return Result::Ok;
 }
 
 Switch::Result Switch::turnOn()
@@ -168,6 +112,21 @@ Switch::Result Switch::turnOff()
     raise(std::make_unique<SwitchTurnedOff>(mEndpointId, mMobilusDeviceId));
 
     return Result::Ok;
+}
+
+std::unique_ptr<DomainEvent> Switch::deviceRemoved()
+{
+    return std::make_unique<SwitchRemoved>(mEndpointId, mMobilusDeviceId);
+}
+
+std::unique_ptr<DomainEvent> Switch::deviceRenamed()
+{
+    return std::make_unique<SwitchRenamed>(mEndpointId, mMobilusDeviceId, mName);
+}
+
+std::unique_ptr<DomainEvent> Switch::deviceRenameRequested()
+{
+    return std::make_unique<SwitchRenameRequested>(mEndpointId, mMobilusDeviceId, mName);
 }
 
 }

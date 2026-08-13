@@ -129,14 +129,14 @@ struct SwitchMarkedAsUnreachable : common::domain::DomainEvent {
     const char* eventName() const override { return kEventName; }
 };
 
-struct SwitchNameChanged : common::domain::DomainEvent {
-    static constexpr char kEventName[] = "switch_name_changed";
+struct SwitchRenamed : common::domain::DomainEvent {
+    static constexpr char kEventName[] = "switch_rename";
 
     const EndpointId endpointId;
     const MobilusDeviceId mobilusDeviceId;
     const std::string name;
 
-    SwitchNameChanged(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId, std::string aName)
+    SwitchRenamed(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId, std::string aName)
         : endpointId(aEndpointId)
         , mobilusDeviceId(aMobilusDeviceId)
         , name(std::move(aName))
