@@ -1,0 +1,76 @@
+config("mosquitto_config") {
+  include_dirs = [
+    "repo",
+    "repo/include",
+    "repo/lib",
+    "repo/deps",
+  ]
+
+  defines = [
+    "LIBMOSQUITTO_STATIC",
+    "WITH_TLS",
+    "OPENSSL_API_COMPAT=0x10100000L",
+    "WITH_EC",
+    "WITH_UNIX_SOCKETS",
+    "WITH_THREADING",
+  ]
+}
+
+static_library("mosquitto") {
+  sources = [
+    "repo/lib/actions.c",
+    "repo/lib/callbacks.c",
+    "repo/lib/connect.c",
+    "repo/lib/handle_auth.c",
+    "repo/lib/handle_connack.c",
+    "repo/lib/handle_disconnect.c",
+    "repo/lib/handle_ping.c",
+    "repo/lib/handle_pubackcomp.c",
+    "repo/lib/handle_publish.c",
+    "repo/lib/handle_pubrec.c",
+    "repo/lib/handle_pubrel.c",
+    "repo/lib/handle_suback.c",
+    "repo/lib/handle_unsuback.c",
+    "repo/lib/helpers.c",
+    "repo/lib/logging_mosq.c",
+    "repo/lib/loop.c",
+    "repo/lib/memory_mosq.c",
+    "repo/lib/messages_mosq.c",
+    "repo/lib/misc_mosq.c",
+    "repo/lib/mosquitto.c",
+    "repo/lib/net_mosq_ocsp.c",
+    "repo/lib/net_mosq.c",
+    "repo/lib/options.c",
+    "repo/lib/packet_datatypes.c",
+    "repo/lib/packet_mosq.c",
+    "repo/lib/property_mosq.c",
+    "repo/lib/read_handle.c",
+    "repo/lib/send_connect.c",
+    "repo/lib/send_disconnect.c",
+    "repo/lib/send_mosq.c",
+    "repo/lib/send_publish.c",
+    "repo/lib/send_subscribe.c",
+    "repo/lib/send_unsubscribe.c",
+    "repo/lib/socks_mosq.c",
+    "repo/lib/srv_mosq.c",
+    "repo/lib/strings_mosq.c",
+    "repo/lib/thread_mosq.c",
+    "repo/lib/time_mosq.c",
+    "repo/lib/tls_mosq.c",
+    "repo/lib/utf8_mosq.c",
+    "repo/lib/util_mosq.c",
+    "repo/lib/util_topic.c",
+    "repo/lib/will_mosq.c",
+  ]
+
+  public_configs = [
+    ":mosquitto_config",
+  ]
+
+  libs = [
+    "ssl",
+    "crypto",
+    "pthread",
+    "rt",
+  ]
+}

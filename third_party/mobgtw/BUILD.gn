@@ -16,10 +16,6 @@ config("protobuf_config") {
   cflags = [ "-w" ]  # suppress warnings
 }
 
-pkg_config("mosquitto_config") {
-  packages = [ "libmosquitto" ]
-}
-
 pkg_config("openssl_config") {
   packages = [ "openssl" ]
 }
@@ -79,11 +75,11 @@ action("gen_mobilus_proto") {
   ]
 
   args = [
-           "-I",
-           rebase_path("${mobilus_proto_dir}", root_build_dir),
-           "--cpp_out",
-           rebase_path(mobilus_proto_outdir, root_build_dir),
-         ] + rebase_path(sources, root_build_dir)
+    "-I",
+    rebase_path("${mobilus_proto_dir}", root_build_dir),
+    "--cpp_out",
+    rebase_path(mobilus_proto_outdir, root_build_dir),
+  ] + rebase_path(sources, root_build_dir)
 }
 
 source_set("proto") {
@@ -162,12 +158,12 @@ static_library("mobgtw") {
 
   public_deps = [
     ":proto",
+    "//third_party/mosquitto",
     "//third_party/tl_expected",
   ]
 
   configs += [
     ":openssl_config",
-    ":mosquitto_config",
   ]
 
   public_configs = [ ":mobgtw_includes" ]
