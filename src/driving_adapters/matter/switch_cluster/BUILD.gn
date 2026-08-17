@@ -2,12 +2,14 @@ import("//build_overrides/chip.gni")
 
 source_set("switch_cluster") {
     sources = [
+        "BridgedDeviceBasicInfoAttributeAccess.cpp",
         "SwitchAttributeAccess.cpp",
         "SwitchClusterAdapter.cpp",
         "SwitchCommandHandler.cpp",
     ]
 
     public = [
+        "BridgedDeviceBasicInfoAttributeAccess.h",
         "SwitchAttributeAccess.h",
         "SwitchClusterAdapter.h",
         "SwitchCommandHandler.h",

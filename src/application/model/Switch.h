@@ -29,6 +29,7 @@ public:
     Result reportOff();
     Result reportError(Error error);
 
+    bool isReachable() const { return mState != State::Unreachable; }
     State state() const { return mState; }
 
 private:
