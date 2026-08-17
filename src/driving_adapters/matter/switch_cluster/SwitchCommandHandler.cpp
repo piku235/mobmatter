@@ -37,7 +37,7 @@ void SwitchCommandHandler::InvokeCommand(HandlerContext& handlerContext)
 
     switch (handlerContext.mRequestPath.mCommandId) {
     case On::Id:
-        mLogger.notice("On command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
+        mLogger.notice("Switch on command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
 
         if (Switch::Result::Ok == switch_->requestOn()) {
             mSwitchRepository.save(*switch_);
@@ -46,7 +46,7 @@ void SwitchCommandHandler::InvokeCommand(HandlerContext& handlerContext)
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
         break;
     case Off::Id:
-        mLogger.notice("Off command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
+        mLogger.notice("Switch off command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
 
         if (Switch::Result::Ok == switch_->requestOff()) {
             mSwitchRepository.save(*switch_);
@@ -55,7 +55,7 @@ void SwitchCommandHandler::InvokeCommand(HandlerContext& handlerContext)
         handlerContext.mCommandHandler.AddStatus(handlerContext.mRequestPath, Status::Success);
         break;
     case Toggle::Id:
-        mLogger.notice("Toggle command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
+        mLogger.notice("Switch toggle command received on endpoint: %u", handlerContext.mRequestPath.mEndpointId);
 
         if (Switch::Result::Ok == switch_->requestToggle()) {
             mSwitchRepository.save(*switch_);

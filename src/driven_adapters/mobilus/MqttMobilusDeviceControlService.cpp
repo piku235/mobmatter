@@ -74,21 +74,21 @@ void MqttMobilusDeviceControlService::stopCoverMotion(MobilusDeviceId deviceId)
 void MqttMobilusDeviceControlService::turnSwitchOn(MobilusDeviceId deviceId)
 {
     if (mClient.send(callEventsFor(deviceId, "ON"))) {
-        mLogger.info(LOG_TAG "Turn switch on command sent" LOG_SUFFIX, deviceId);
+        mLogger.info(LOG_TAG "Switch on command sent" LOG_SUFFIX, deviceId);
         return;
     }
 
-    mLogger.error(LOG_TAG "Turn switch on command failed" LOG_SUFFIX, deviceId);
+    mLogger.error(LOG_TAG "Switch on command failed" LOG_SUFFIX, deviceId);
 }
 
 void MqttMobilusDeviceControlService::turnSwitchOff(MobilusDeviceId deviceId)
 {
     if (mClient.send(callEventsFor(deviceId, "OFF"))) {
-        mLogger.info(LOG_TAG "Turn switch off command sent" LOG_SUFFIX, deviceId);
+        mLogger.info(LOG_TAG "Switch off command sent" LOG_SUFFIX, deviceId);
         return;
     }
 
-    mLogger.error(LOG_TAG "Turn switch off command failed" LOG_SUFFIX, deviceId);
+    mLogger.error(LOG_TAG "Switch off command failed" LOG_SUFFIX, deviceId);
 }
 
 proto::CallEvents MqttMobilusDeviceControlService::callEventsFor(MobilusDeviceId deviceId, const std::string& eventValue)
