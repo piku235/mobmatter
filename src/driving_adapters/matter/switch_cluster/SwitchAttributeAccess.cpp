@@ -11,6 +11,8 @@ using namespace chip::app;
 using mobmatter::application::driven_ports::SwitchRepository;
 using mobmatter::application::model::Switch;
 
+constexpr uint16_t kClusterRevision = 6u;
+
 namespace mobmatter::driving_adapters::matter::switch_cluster {
 
 SwitchAttributeAccess::SwitchAttributeAccess(SwitchRepository& switchRepository)
@@ -22,6 +24,7 @@ SwitchAttributeAccess::SwitchAttributeAccess(SwitchRepository& switchRepository)
 CHIP_ERROR SwitchAttributeAccess::Read(const ConcreteReadAttributePath& path, AttributeValueEncoder& encoder)
 {
     using namespace Clusters::OnOff::Attributes;
+    using Clusters::OnOff::Feature;
 
     auto switch_ = mSwitchRepository.find(path.mEndpointId);
 
@@ -32,6 +35,12 @@ CHIP_ERROR SwitchAttributeAccess::Read(const ConcreteReadAttributePath& path, At
     switch (path.mAttributeId) {
     case OnOff::Id:
         return encoder.Encode(Switch::State::On == switch_->state());
+    case FeatureMap::Id: {
+        BitMask bitMask(Feature::kLighting);
+        return encoder.Encode(bitMask);
+    }
+    case ClusterRevision::Id:
+        return encoder.Encode(kClusterRevision);
     default:
         return CHIP_ERROR_INVALID_ARGUMENT;
     }

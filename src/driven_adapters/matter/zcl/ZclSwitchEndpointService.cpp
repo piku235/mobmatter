@@ -48,6 +48,7 @@ DECLARE_DYNAMIC_ATTRIBUTE(BridgedDeviceBasicInformation::Attributes::VendorID::I
 
 DECLARE_DYNAMIC_ATTRIBUTE_LIST_BEGIN(onOffAttributes)
 DECLARE_DYNAMIC_ATTRIBUTE(OnOff::Attributes::OnOff::Id, BOOLEAN, 1, 0),
+    DECLARE_DYNAMIC_ATTRIBUTE(OnOff::Attributes::FeatureMap::Id, BITMAP32, 4, 0),
     DECLARE_DYNAMIC_ATTRIBUTE_LIST_END(); /* ClusterRevision */
 
 constexpr CommandId identifyCommands[] = {
