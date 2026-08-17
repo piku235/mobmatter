@@ -12,7 +12,6 @@
 
 using namespace chip;
 using namespace chip::app;
-using namespace chip::app::Clusters;
 using namespace chip::app::Clusters::BridgedDeviceBasicInformation::Attributes;
 using mobmatter::application::driven_ports::CoverRepository;
 using mobmatter::application::model::window_covering::Cover;
@@ -26,8 +25,8 @@ constexpr uint16_t kBridgedDeviceBasicInfoClusterRevision = 4u;
 
 namespace mobmatter::driving_adapters::matter::cover_cluster {
 
-BridgedDeviceBasicInfoAttributeAccess::BridgedDeviceBasicInfoAttributeAccess(CoverRepository& coverRepository)
-    : AttributeAccessInterface(Optional<EndpointId>::Missing(), BridgedDeviceBasicInformation::Id)
+BridgedDeviceBasicInfoAttributeAccess::BridgedDeviceBasicInfoAttributeAccess(EndpointId endpointId, CoverRepository& coverRepository)
+    : AttributeAccessInterface(Optional(endpointId), Clusters::BridgedDeviceBasicInformation::Id)
     , mCoverRepository(coverRepository)
 {
 }

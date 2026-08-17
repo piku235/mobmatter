@@ -236,6 +236,7 @@ int main(int argc, char* argv[])
     domainEventPublisher.subscribe(coverControlSubscriber);
     domainEventPublisher.subscribe(coverEndpointSubscriber);
     domainEventPublisher.subscribe(deviceManagementSubscriber);
+    domainEventPublisher.subscribe(coverClusterAdapter);
     domainEventPublisher.subscribe(coverReportingAdapter);
     domainEventPublisher.subscribe(switchControlSubscriber);
     domainEventPublisher.subscribe(switchEndpointSubscriber);

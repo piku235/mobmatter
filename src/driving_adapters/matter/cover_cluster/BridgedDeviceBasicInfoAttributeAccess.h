@@ -8,13 +8,9 @@ namespace mobmatter::driving_adapters::matter::cover_cluster {
 
 namespace driven_ports = application::driven_ports;
 
-/**
- * it would break if new devices were also handled
- * for now it is ok since window covering devices are only supported
- */
 class BridgedDeviceBasicInfoAttributeAccess final : public chip::app::AttributeAccessInterface {
 public:
-    explicit BridgedDeviceBasicInfoAttributeAccess(driven_ports::CoverRepository& coverRepository);
+    explicit BridgedDeviceBasicInfoAttributeAccess(chip::EndpointId endpointId, driven_ports::CoverRepository& coverRepository);
 
     CHIP_ERROR Read(const chip::app::ConcreteReadAttributePath& path, chip::app::AttributeValueEncoder& encoder) override;
     CHIP_ERROR Write(const chip::app::ConcreteDataAttributePath& path, chip::app::AttributeValueDecoder& decoder) override;
