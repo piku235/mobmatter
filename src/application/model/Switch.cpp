@@ -8,20 +8,20 @@ using namespace mobmatter::common::domain;
 
 namespace mobmatter::application::model {
 
-Switch Switch::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state)
+Switch Switch::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name)
 {
-    Switch newSwitch(endpointId, mobilusDeviceId, std::move(name), state);
+    Switch newSwitch(endpointId, mobilusDeviceId, state, std::move(name));
     newSwitch.raise(std::make_unique<SwitchAdded>(endpointId, mobilusDeviceId));
 
     return newSwitch;
 }
 
-Switch Switch::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state)
+Switch Switch::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name)
 {
-    return { endpointId, mobilusDeviceId, std::move(name), state };
+    return { endpointId, mobilusDeviceId, state, std::move(name) };
 }
 
-Switch::Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state)
+Switch::Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name)
     : Device(endpointId, mobilusDeviceId, std::move(name))
     , mState(state)
 {

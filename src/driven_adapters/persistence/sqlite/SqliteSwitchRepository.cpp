@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#define COLUMNS "endpoint_id, mobilus_device_id, name, state"
+#define COLUMNS "endpoint_id, mobilus_device_id, state, name"
 
 using namespace mobmatter::application::model;
 namespace sqlite = mobmatter::common::persistence::sqlite;
@@ -21,8 +21,8 @@ void SqliteSwitchRepository::save(const Switch& switch_)
 
     stmt->bind(1, switch_.endpointId());
     stmt->bind(2, switch_.mobilusDeviceId());
-    stmt->bind(3, switch_.name());
-    stmt->bind(4, static_cast<uint8_t>(switch_.state()));
+    stmt->bind(3, static_cast<uint8_t>(switch_.state()));
+    stmt->bind(4, switch_.name());
 
     if (auto r = stmt->exec(); !r) {
         mLogger.error("Could not save switch: %s", r.error().message().c_str());
@@ -60,7 +60,7 @@ std::optional<Switch> SqliteSwitchRepository::findOfMobilusDeviceId(MobilusDevic
 
 std::optional<Switch> SqliteSwitchRepository::find(EndpointId endpointId) const
 {
-    auto stmt = mConn.prepare("SELECT " COLUMNS " FROM switch_ WHERE endpoint_id = ?");
+    auto stmt = mConn.prepare("SELECT " COLUMNS " FROM switch WHERE endpoint_id = ?");
     stmt->bind(1, endpointId);
 
     auto r = stmt->fetch();
@@ -83,7 +83,7 @@ std::vector<Switch> SqliteSwitchRepository::all() const
     auto r = stmt->fetch();
 
     if (!r) {
-        mLogger.error("Couldnt fetch all covers: %s", r.error().message().c_str());
+        mLogger.error("Couldnt fetch all switches: %s", r.error().message().c_str());
         return { };
     }
 
@@ -103,8 +103,8 @@ Switch SqliteSwitchRepository::mapRowTo(sqlite::Statement& stmt)
     return Switch::restoreFrom(
         stmt.columnAsUint16(0),
         stmt.columnAsInt64(1),
-        stmt.columnAsString(2),
-        static_cast<Switch::State>(stmt.columnAsUint8(3))
+        static_cast<Switch::State>(stmt.columnAsUint8(2)),
+        stmt.columnAsString(3)
     );
     // clang-format on
 }

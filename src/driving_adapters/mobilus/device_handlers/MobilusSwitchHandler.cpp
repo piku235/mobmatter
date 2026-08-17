@@ -107,7 +107,7 @@ void MobilusSwitchHandler::init(const proto::Device& device, const proto::Event&
         return;
     }
 
-    auto newSwitch = Switch::add(*endpointId, device.id(), device.name(), state);
+    auto newSwitch = Switch::add(*endpointId, device.id(), state, device.name());
     mSwitchRepository.save(newSwitch);
 
     mLogger.notice(LOG_TAG "Added switch" LOG_SUFFIX_EP, newSwitch.endpointId(), device.id());

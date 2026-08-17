@@ -16,8 +16,8 @@ public:
         Unreachable,
     };
 
-    static Switch add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state);
-    static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state);
+    static Switch add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name);
+    static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name);
 
     /* chip oriented */
     Result requestOn();
@@ -35,7 +35,7 @@ public:
 private:
     State mState;
 
-    Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name, State state);
+    Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name);
     Result turnOn();
     Result turnOff();
 
