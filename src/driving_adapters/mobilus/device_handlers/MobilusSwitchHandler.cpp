@@ -76,30 +76,7 @@ MobilusDeviceEventHandler::Result MobilusSwitchHandler::handle(const proto::Even
 
 void MobilusSwitchHandler::init(const proto::Device& device, const proto::Event& lastEvent)
 {
-    Switch::State state = Switch::State::Unreachable;
-
-    switch (lastEvent.event_number()) {
-    case EventNumber::Sent:
-    case EventNumber::Reached:
-        if ("ON" == lastEvent.value()) {
-            state = Switch::State::On;
-            break;
-        }
-        if ("OFF" == lastEvent.value()) {
-            state = Switch::State::Off;
-            break;
-        }
-
-        break;
-    case EventNumber::Error:
-        if ("NO_CONNECTION" == lastEvent.value()) {
-            state = Switch::State::Unreachable;
-            break;
-        }
-
-        break;
-    }
-
+    bool onOff = "ON" == lastEvent.value() && (lastEvent.event_number() == EventNumber::Sent || lastEvent.event_number() == EventNumber::Reached);
     auto endpointId = mEndpointIdGenerator.next();
 
     if (!endpointId) {
@@ -107,7 +84,7 @@ void MobilusSwitchHandler::init(const proto::Device& device, const proto::Event&
         return;
     }
 
-    auto newSwitch = Switch::add(*endpointId, device.id(), state, device.name());
+    auto newSwitch = Switch::add(*endpointId, device.id(), onOff, device.name());
     mSwitchRepository.save(newSwitch);
 
     mLogger.notice(LOG_TAG "Added switch" LOG_SUFFIX_EP, newSwitch.endpointId(), device.id());
@@ -128,16 +105,22 @@ bool MobilusSwitchHandler::apply(Switch& switch_, const proto::Event& event)
     switch (event.event_number()) {
     case EventNumber::Sent:
     case EventNumber::Reached: {
+        bool result = false;
+
+        if (EventNumber::Reached == event.event_number() && Switch::Result::Ok == switch_.reportReachable()) {
+            mLogger.notice(LOG_TAG "Switch marked as reachable" LOG_SUFFIX_EP, switch_.endpointId(), switch_.mobilusDeviceId());
+            result = true;
+        }
         if ("ON" == event.value() && Switch::Result::Ok == switch_.reportOn()) {
             mLogger.notice(LOG_TAG "Turned switch on" LOG_SUFFIX_EP, switch_.endpointId(), switch_.mobilusDeviceId());
-            return true;
+            result = true;
         }
         if ("OFF" == event.value() && Switch::Result::Ok == switch_.reportOff()) {
             mLogger.notice(LOG_TAG "Turned switch off" LOG_SUFFIX_EP, switch_.endpointId(), switch_.mobilusDeviceId());
-            return true;
+            result = true;
         }
 
-        return false;
+        return result;
     }
     case EventNumber::Error: {
         auto error = parseError(event.value());

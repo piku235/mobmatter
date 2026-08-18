@@ -1,8 +1,6 @@
 #include "SqliteSwitchRepository.h"
 
-#include <cstdint>
-
-#define COLUMNS "endpoint_id, mobilus_device_id, state, name"
+#define COLUMNS "endpoint_id, mobilus_device_id, reachable, on_off, name"
 
 using namespace mobmatter::application::model;
 namespace sqlite = mobmatter::common::persistence::sqlite;
@@ -17,12 +15,13 @@ SqliteSwitchRepository::SqliteSwitchRepository(sqlite::Connection& conn, logging
 
 void SqliteSwitchRepository::save(const Switch& switch_)
 {
-    auto stmt = mConn.prepare("INSERT OR REPLACE INTO switch (" COLUMNS ") VALUES (?, ?, ?, ?)");
+    auto stmt = mConn.prepare("INSERT OR REPLACE INTO switch (" COLUMNS ") VALUES (?, ?, ?, ?, ?)");
 
     stmt->bind(1, switch_.endpointId());
     stmt->bind(2, switch_.mobilusDeviceId());
-    stmt->bind(3, static_cast<uint8_t>(switch_.state()));
-    stmt->bind(4, switch_.name());
+    stmt->bind(3, switch_.isReachable());
+    stmt->bind(4, switch_.isOn());
+    stmt->bind(5, switch_.name());
 
     if (auto r = stmt->exec(); !r) {
         mLogger.error("Could not save switch: %s", r.error().message().c_str());
@@ -103,8 +102,9 @@ Switch SqliteSwitchRepository::mapRowTo(sqlite::Statement& stmt)
     return Switch::restoreFrom(
         stmt.columnAsUint16(0),
         stmt.columnAsInt64(1),
-        static_cast<Switch::State>(stmt.columnAsUint8(2)),
-        stmt.columnAsString(3)
+        stmt.columnAsBool(2),
+        stmt.columnAsBool(3),
+        stmt.columnAsString(4)
     );
     // clang-format on
 }

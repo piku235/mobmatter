@@ -8,22 +8,23 @@ using namespace mobmatter::common::domain;
 
 namespace mobmatter::application::model {
 
-Switch Switch::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name)
+Switch Switch::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool onOff, std::string name)
 {
-    Switch newSwitch(endpointId, mobilusDeviceId, state, std::move(name));
+    Switch newSwitch(endpointId, mobilusDeviceId, true, onOff, std::move(name));
     newSwitch.raise(std::make_unique<SwitchAdded>(endpointId, mobilusDeviceId));
 
     return newSwitch;
 }
 
-Switch Switch::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name)
+Switch Switch::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool reachable, bool onOff, std::string name)
 {
-    return { endpointId, mobilusDeviceId, state, std::move(name) };
+    return { endpointId, mobilusDeviceId, reachable, onOff, std::move(name) };
 }
 
-Switch::Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name)
+Switch::Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool reachable, bool onOff, std::string name)
     : Device(endpointId, mobilusDeviceId, std::move(name))
-    , mState(state)
+    , mReachable(reachable)
+    , mOnOff(onOff)
 {
 }
 
@@ -51,15 +52,11 @@ Switch::Result Switch::requestOff()
 
 Switch::Result Switch::requestToggle()
 {
-    switch (mState) {
-    case State::On:
+    if (mOnOff) {
         return requestOff();
-    case State::Off:
-        return requestOn();
-    case State::Unreachable:
-    default:
-        return Result::NoChange;
     }
+
+    return requestOn();
 }
 
 Switch::Result Switch::reportOn()
@@ -72,15 +69,27 @@ Switch::Result Switch::reportOff()
     return turnOff();
 }
 
+Switch::Result Switch::reportReachable()
+{
+    if (mReachable) {
+        return Result::NoChange;
+    }
+
+    mReachable = true;
+    raise(std::make_unique<SwitchMarkedAsReachable>(mEndpointId, mMobilusDeviceId));
+
+    return Result::Ok;
+}
+
 Switch::Result Switch::reportError(Error error)
 {
     switch (error) {
     case Error::Unreachable:
-        if (mState == State::Unreachable) {
+        if (!mReachable) {
             return Result::NoChange;
         }
 
-        mState = State::Unreachable;
+        mReachable = false;
         raise(std::make_unique<SwitchMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
 
         return Result::Ok;
@@ -92,11 +101,11 @@ Switch::Result Switch::reportError(Error error)
 
 Switch::Result Switch::turnOn()
 {
-    if (mState == State::On) {
+    if (mOnOff) {
         return Result::NoChange;
     }
 
-    mState = State::On;
+    mOnOff = true;
     raise(std::make_unique<SwitchTurnedOn>(mEndpointId, mMobilusDeviceId));
 
     return Result::Ok;
@@ -104,11 +113,11 @@ Switch::Result Switch::turnOn()
 
 Switch::Result Switch::turnOff()
 {
-    if (mState == State::Off) {
+    if (!mOnOff) {
         return Result::NoChange;
     }
 
-    mState = State::Off;
+    mOnOff = false;
     raise(std::make_unique<SwitchTurnedOff>(mEndpointId, mMobilusDeviceId));
 
     return Result::Ok;

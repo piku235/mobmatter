@@ -10,14 +10,9 @@ public:
         Unknown,
         Unreachable,
     };
-    enum class State {
-        On,
-        Off,
-        Unreachable,
-    };
 
-    static Switch add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name);
-    static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name);
+    static Switch add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool onOff, std::string name);
+    static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool reachable, bool onOff, std::string name);
 
     /* chip oriented */
     Result requestOn();
@@ -27,15 +22,17 @@ public:
     /* mobilus oriented */
     Result reportOn();
     Result reportOff();
+    Result reportReachable();
     Result reportError(Error error);
 
-    bool isReachable() const { return mState != State::Unreachable; }
-    State state() const { return mState; }
+    bool isReachable() const { return mReachable; }
+    bool isOn() const { return mOnOff; }
 
 private:
-    State mState;
+    bool mReachable;
+    bool mOnOff;
 
-    Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, State state, std::string name);
+    Switch(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool reachable, bool onOff, std::string name);
     Result turnOn();
     Result turnOff();
 

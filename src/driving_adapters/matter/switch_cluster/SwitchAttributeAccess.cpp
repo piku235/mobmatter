@@ -34,7 +34,7 @@ CHIP_ERROR SwitchAttributeAccess::Read(const ConcreteReadAttributePath& path, At
 
     switch (path.mAttributeId) {
     case OnOff::Id:
-        return encoder.Encode(Switch::State::On == switch_->state());
+        return encoder.Encode(switch_->isOn());
     case FeatureMap::Id: {
         BitMask bitMask(Feature::kLighting);
         return encoder.Encode(bitMask);
