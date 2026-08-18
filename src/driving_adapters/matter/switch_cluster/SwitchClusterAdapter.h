@@ -1,15 +1,14 @@
 #pragma once
 
-#include "BridgedDeviceBasicInfoAttributeAccess.h"
 #include "SwitchAttributeAccess.h"
+#include "SwitchBasicInfoLoader.h"
 #include "SwitchCommandHandler.h"
 #include "application/driven_ports/SwitchRepository.h"
 #include "application/model/SwitchEvents.h"
 #include "common/domain/MultiDomainEventSubscriber.h"
 #include "common/logging/Logger.h"
+#include "driving_adapters/matter/bridged_device_cluster/BridgedDeviceBasicInfoAttributeAccessRegistry.h"
 #include "matter/AppComponent.h"
-
-#include <optional>
 
 namespace mobmatter::driving_adapters::matter::switch_cluster {
 
@@ -19,7 +18,7 @@ namespace logging = common::logging;
 class SwitchClusterAdapter final : public mobmatter::matter::AppComponent,
                                    public common::domain::MultiDomainEventSubscriber<model::SwitchAdded, model::SwitchRemoved> {
 public:
-    SwitchClusterAdapter(driven_ports::SwitchRepository& switchRepository, logging::Logger& logger);
+    SwitchClusterAdapter(driven_ports::SwitchRepository& switchRepository, bridged_device_cluster::BridgedDeviceBasicInfoAttributeAccessRegistry& basicInfoAttributeAccessRegistry, logging::Logger& logger);
 
     void boot() override;
     void shutdown() override;
@@ -29,12 +28,10 @@ public:
 
 private:
     driven_ports::SwitchRepository& mSwitchRepository;
+    SwitchBasicInfoLoader mBasicInfoLoader;
+    bridged_device_cluster::BridgedDeviceBasicInfoAttributeAccessRegistry& mBasicInfoAttributeAccessRegistry;
     SwitchAttributeAccess mSwitchAttributeAccess;
     SwitchCommandHandler mSwitchCommandHandler;
-    std::optional<BridgedDeviceBasicInfoAttributeAccess> mBridgeDeviceBasicInfoAttributeAccessList[CHIP_DEVICE_CONFIG_DYNAMIC_ENDPOINT_COUNT];
-
-    void registerBridgedDeviceBasicInfoAttributeAccessFor(chip::EndpointId endpointId);
-    void unregisterBridgedDeviceBasicInfoAttributeAccessFor(chip::EndpointId endpointId);
 };
 
 }

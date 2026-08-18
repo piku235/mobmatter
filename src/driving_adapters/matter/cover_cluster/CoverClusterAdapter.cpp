@@ -1,16 +1,21 @@
 #include "CoverClusterAdapter.h"
 
+#include "CoverBasicInfoLoader.h"
+
 #include <app/AttributeAccessInterfaceRegistry.h>
 #include <app/CommandHandlerInterfaceRegistry.h>
 
 using namespace chip::app;
 using namespace mobmatter::application::model::window_covering;
 using mobmatter::application::driven_ports::CoverRepository;
+using mobmatter::driving_adapters::matter::bridged_device_cluster::BridgedDeviceBasicInfoAttributeAccessRegistry;
 
 namespace mobmatter::driving_adapters::matter::cover_cluster {
 
-CoverClusterAdapter::CoverClusterAdapter(CoverRepository& coverRepository, logging::Logger& logger)
+CoverClusterAdapter::CoverClusterAdapter(CoverRepository& coverRepository, BridgedDeviceBasicInfoAttributeAccessRegistry& basicInfoAttributeAccessRegistry, logging::Logger& logger)
     : mCoverRepository(coverRepository)
+    , mBasicInfoLoader(coverRepository)
+    , mBasicInfoAttributeAccessRegistry(basicInfoAttributeAccessRegistry)
     , mCoverAttributeAccess(coverRepository)
     , mCoverCommandHandler(coverRepository, logger)
 {
@@ -25,7 +30,7 @@ void CoverClusterAdapter::boot()
     commandHandlerRegistry.RegisterCommandHandler(&mCoverCommandHandler);
 
     for (auto& cover : mCoverRepository.all()) {
-        registerBridgedDeviceBasicInfoAttributeAccessFor(cover.endpointId());
+        mBasicInfoAttributeAccessRegistry.registerAttributeAccess(cover.endpointId(), mBasicInfoLoader);
     }
 }
 
@@ -38,43 +43,18 @@ void CoverClusterAdapter::shutdown()
     commandHandlerRegistry.UnregisterCommandHandler(&mCoverCommandHandler);
 
     for (auto& cover : mCoverRepository.all()) {
-        unregisterBridgedDeviceBasicInfoAttributeAccessFor(cover.endpointId());
+        mBasicInfoAttributeAccessRegistry.unregisterAttributeAccess(cover.endpointId());
     }
 }
 
 void CoverClusterAdapter::handle(const CoverAdded& event)
 {
-    registerBridgedDeviceBasicInfoAttributeAccessFor(event.endpointId);
+    mBasicInfoAttributeAccessRegistry.registerAttributeAccess(event.endpointId, mBasicInfoLoader);
 }
 
 void CoverClusterAdapter::handle(const CoverRemoved& event)
 {
-    unregisterBridgedDeviceBasicInfoAttributeAccessFor(event.endpointId);
-}
-
-void CoverClusterAdapter::registerBridgedDeviceBasicInfoAttributeAccessFor(chip::EndpointId endpointId)
-{
-    auto& registry = AttributeAccessInterfaceRegistry::Instance();
-
-    for (auto& attributeAccess : mBridgeDeviceBasicInfoAttributeAccessList) {
-        if (!attributeAccess) {
-            registry.Register(&attributeAccess.emplace(endpointId, mCoverRepository));
-            break;
-        }
-    }
-}
-
-void CoverClusterAdapter::unregisterBridgedDeviceBasicInfoAttributeAccessFor(chip::EndpointId endpointId)
-{
-    auto& registry = AttributeAccessInterfaceRegistry::Instance();
-
-    for (auto& attributeAccess : mBridgeDeviceBasicInfoAttributeAccessList) {
-        if (attributeAccess && attributeAccess->MatchesEndpoint(endpointId)) {
-            registry.Unregister(&*attributeAccess);
-            attributeAccess.reset();
-            break;
-        }
-    }
+    mBasicInfoAttributeAccessRegistry.unregisterAttributeAccess(event.endpointId);
 }
 
 }

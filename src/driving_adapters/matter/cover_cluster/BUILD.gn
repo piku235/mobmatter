@@ -2,22 +2,23 @@ import("//build_overrides/chip.gni")
 
 source_set("cover_cluster") {
   sources = [
-    "BridgedDeviceBasicInfoAttributeAccess.cpp",
     "CoverAttributeAccess.cpp",
     "CoverClusterAdapter.cpp",
     "CoverCommandHandler.cpp",
+    "CoverBasicInfoLoader.cpp",
   ]
 
   public = [
-    "BridgedDeviceBasicInfoAttributeAccess.h",
     "CoverAttributeAccess.h",
     "CoverClusterAdapter.h",
     "CoverCommandHandler.h",
+    "CoverBasicInfoLoader.h",
   ]
 
   deps = [
     "${chip_root}/src/app",
     "//src/application",
+    "//src/driving_adapters/matter/bridged_device_cluster",
   ]
 
   configs += [ "//:app_includes" ]

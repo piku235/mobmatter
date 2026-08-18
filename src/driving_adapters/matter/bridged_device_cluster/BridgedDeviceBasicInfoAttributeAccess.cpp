@@ -1,6 +1,5 @@
 #include "BridgedDeviceBasicInfoAttributeAccess.h"
 #include "CHIPProjectAppConfig.h"
-#include "application/model/window_covering/Cover.h"
 
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
@@ -12,8 +11,6 @@
 using namespace chip;
 using namespace chip::app;
 using namespace chip::app::Clusters::BridgedDeviceBasicInformation::Attributes;
-using mobmatter::application::driven_ports::CoverRepository;
-using mobmatter::application::model::window_covering::Cover;
 
 namespace {
 
@@ -22,19 +19,19 @@ constexpr uint16_t kBridgedDeviceBasicInfoClusterRevision = 4u;
 
 }
 
-namespace mobmatter::driving_adapters::matter::cover_cluster {
+namespace mobmatter::driving_adapters::matter::bridged_device_cluster {
 
-BridgedDeviceBasicInfoAttributeAccess::BridgedDeviceBasicInfoAttributeAccess(EndpointId endpointId, CoverRepository& coverRepository)
+BridgedDeviceBasicInfoAttributeAccess::BridgedDeviceBasicInfoAttributeAccess(EndpointId endpointId, BridgedDeviceBasicInfoLoader& loader)
     : AttributeAccessInterface(Optional(endpointId), Clusters::BridgedDeviceBasicInformation::Id)
-    , mCoverRepository(coverRepository)
+    , mLoader(loader)
 {
 }
 
 CHIP_ERROR BridgedDeviceBasicInfoAttributeAccess::Read(const ConcreteReadAttributePath& path, AttributeValueEncoder& encoder)
 {
-    auto cover = mCoverRepository.find(path.mEndpointId);
+    auto data = mLoader.load(path.mEndpointId);
 
-    if (!cover) {
+    if (!data) {
         return CHIP_ERROR_NOT_FOUND;
     }
 
@@ -44,13 +41,13 @@ CHIP_ERROR BridgedDeviceBasicInfoAttributeAccess::Read(const ConcreteReadAttribu
     case VendorName::Id:
         return encoder.Encode(CharSpan::fromCharString(CHIP_DEVICE_CONFIG_DEVICE_VENDOR_NAME));
     case ProductName::Id:
-        return encoder.Encode(CharSpan::fromCharString(cover->specification().model().c_str()));
+        return encoder.Encode(CharSpan::fromCharString(data->productName.c_str()));
     case Reachable::Id:
-        return encoder.Encode(cover->isReachable());
+        return encoder.Encode(data->reachable);
     case NodeLabel::Id:
-        return encoder.Encode(CharSpan::fromCharString(cover->name().c_str()));
+        return encoder.Encode(CharSpan::fromCharString(data->nodeLabel.c_str()));
     case UniqueID::Id:
-        return encoder.Encode(CharSpan::fromCharString(std::to_string(cover->mobilusDeviceId()).c_str()));
+        return encoder.Encode(CharSpan::fromCharString(data->uniqueId.c_str()));
     case FeatureMap::Id:
         return encoder.Encode(kBridgedDeviceBasicInfoFeatureMap);
     case ClusterRevision::Id:

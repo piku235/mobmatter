@@ -20,6 +20,7 @@
 #include "driven_adapters/persistence/sqlite/SqliteCoverRepository.h"
 #include "driven_adapters/persistence/sqlite/SqliteEndpointIdGenerator.h"
 #include "driven_adapters/persistence/sqlite/SqliteSwitchRepository.h"
+#include "driving_adapters/matter/bridged_device_cluster/BridgedDeviceBasicInfoAttributeAccessRegistry.h"
 #include "driving_adapters/matter/cluster_stubs/ClusterStubsAdapter.h"
 #include "driving_adapters/matter/cover_cluster/CoverClusterAdapter.h"
 #include "driving_adapters/matter/switch_cluster/SwitchClusterAdapter.h"
@@ -65,6 +66,7 @@ using namespace mobmatter::driven_adapters::matter::zcl;
 using namespace mobmatter::driven_adapters::matter::reporting;
 using namespace mobmatter::driving_adapters::mobilus;
 using namespace mobmatter::driving_adapters::mobilus::device_handlers;
+using namespace mobmatter::driving_adapters::matter::bridged_device_cluster;
 using namespace mobmatter::driving_adapters::matter::cover_cluster;
 using namespace mobmatter::driving_adapters::matter::switch_cluster;
 using namespace mobmatter::driving_adapters::matter::cluster_stubs;
@@ -212,8 +214,9 @@ int main(int argc, char* argv[])
     SwitchEndpointSubscriber switchEndpointSubscriber(switchEndpointService);
 
     // driving
-    CoverClusterAdapter coverClusterAdapter(coverRepository, logger);
-    SwitchClusterAdapter switchClusterAdapter(switchRepository, logger);
+    BridgedDeviceBasicInfoAttributeAccessRegistry bridgedDeviceBasicInfoAttributeAccessRegistry;
+    CoverClusterAdapter coverClusterAdapter(coverRepository, bridgedDeviceBasicInfoAttributeAccessRegistry, logger);
+    SwitchClusterAdapter switchClusterAdapter(switchRepository, bridgedDeviceBasicInfoAttributeAccessRegistry, logger);
     ClusterStubsAdapter clusterStubsAdapter;
     DeviceEndpointLoader deviceEndpointLoader(coverRepository, switchRepository, coverEndpointService, switchEndpointService, logger);
 

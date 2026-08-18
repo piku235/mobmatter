@@ -6,11 +6,14 @@
 using namespace chip::app;
 using namespace mobmatter::application::model;
 using mobmatter::application::driven_ports::SwitchRepository;
+using mobmatter::driving_adapters::matter::bridged_device_cluster::BridgedDeviceBasicInfoAttributeAccessRegistry;
 
 namespace mobmatter::driving_adapters::matter::switch_cluster {
 
-SwitchClusterAdapter::SwitchClusterAdapter(SwitchRepository& switchRepository, logging::Logger& logger)
+SwitchClusterAdapter::SwitchClusterAdapter(SwitchRepository& switchRepository, BridgedDeviceBasicInfoAttributeAccessRegistry& basicInfoAttributeAccessRegistry, logging::Logger& logger)
     : mSwitchRepository(switchRepository)
+    , mBasicInfoLoader(switchRepository)
+    , mBasicInfoAttributeAccessRegistry(basicInfoAttributeAccessRegistry)
     , mSwitchAttributeAccess(switchRepository)
     , mSwitchCommandHandler(switchRepository, logger)
 {
@@ -25,7 +28,7 @@ void SwitchClusterAdapter::boot()
     commandHandlerRegistry.RegisterCommandHandler(&mSwitchCommandHandler);
 
     for (auto& switch_ : mSwitchRepository.all()) {
-        registerBridgedDeviceBasicInfoAttributeAccessFor(switch_.endpointId());
+        mBasicInfoAttributeAccessRegistry.registerAttributeAccess(switch_.endpointId(), mBasicInfoLoader);
     }
 }
 
@@ -38,43 +41,18 @@ void SwitchClusterAdapter::shutdown()
     commandHandlerRegistry.UnregisterCommandHandler(&mSwitchCommandHandler);
 
     for (auto& switch_ : mSwitchRepository.all()) {
-        unregisterBridgedDeviceBasicInfoAttributeAccessFor(switch_.endpointId());
+        mBasicInfoAttributeAccessRegistry.unregisterAttributeAccess(switch_.endpointId());
     }
 }
 
 void SwitchClusterAdapter::handle(const SwitchAdded& event)
 {
-    registerBridgedDeviceBasicInfoAttributeAccessFor(event.endpointId);
+    mBasicInfoAttributeAccessRegistry.registerAttributeAccess(event.endpointId, mBasicInfoLoader);
 }
 
 void SwitchClusterAdapter::handle(const SwitchRemoved& event)
 {
-    unregisterBridgedDeviceBasicInfoAttributeAccessFor(event.endpointId);
-}
-
-void SwitchClusterAdapter::registerBridgedDeviceBasicInfoAttributeAccessFor(chip::EndpointId endpointId)
-{
-    auto& registry = AttributeAccessInterfaceRegistry::Instance();
-
-    for (auto& attributeAccess : mBridgeDeviceBasicInfoAttributeAccessList) {
-        if (!attributeAccess) {
-            registry.Register(&attributeAccess.emplace(endpointId, mSwitchRepository));
-            break;
-        }
-    }
-}
-
-void SwitchClusterAdapter::unregisterBridgedDeviceBasicInfoAttributeAccessFor(chip::EndpointId endpointId)
-{
-    auto& registry = AttributeAccessInterfaceRegistry::Instance();
-
-    for (auto& attributeAccess : mBridgeDeviceBasicInfoAttributeAccessList) {
-        if (attributeAccess && attributeAccess->MatchesEndpoint(endpointId)) {
-            registry.Unregister(&*attributeAccess);
-            attributeAccess.reset();
-            break;
-        }
-    }
+    mBasicInfoAttributeAccessRegistry.unregisterAttributeAccess(event.endpointId);
 }
 
 }

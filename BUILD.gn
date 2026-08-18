@@ -43,6 +43,7 @@ executable("mobmatter") {
     "//src/driven_adapters/matter/zcl:switch_endpoint",
     "//src/driven_adapters/mobilus:device_control",
     "//src/driven_adapters/persistence/sqlite",
+    "//src/driving_adapters/matter/bridged_device_cluster",
     "//src/driving_adapters/matter/cluster_stubs",
     "//src/driving_adapters/matter/cover_cluster",
     "//src/driving_adapters/matter/switch_cluster",
