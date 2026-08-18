@@ -1,25 +1,11 @@
 source_set("device_control") {
-    sources = [ "MqttMobilusDeviceControlService.cpp" ]
+  sources = [ "MqttMobilusDeviceControlService.cpp" ]
+  public = [ "MqttMobilusDeviceControlService.h" ]
 
-    public = [ "MqttMobilusDeviceControlService.h" ]
+  deps = [
+    "//src/application",
+    "//third_party/mobgtw",
+  ]
 
-    deps = [
-        "//src/application",
-        "//third_party/mobgtw",
-    ]
-
-    configs += [ "//:app_includes" ]
-}
-
-source_set("device_management") {
-    sources = [ "MqttMobilusDeviceManagementService.cpp" ]
-
-    public = [ "MqttMobilusDeviceManagementService.h" ]
-
-    deps = [
-        "//src/application",
-        "//third_party/mobgtw",
-    ]
-
-    configs += [ "//:app_includes" ]
+  configs += [ "//:app_includes" ]
 }

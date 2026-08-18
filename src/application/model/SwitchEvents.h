@@ -146,21 +146,4 @@ struct SwitchRenamed : common::domain::DomainEvent {
     const char* eventName() const override { return kEventName; }
 };
 
-struct SwitchRenameRequested : common::domain::DomainEvent {
-    static constexpr char kEventName[] = "switch_rename_requested";
-
-    const EndpointId endpointId;
-    const MobilusDeviceId mobilusDeviceId;
-    const std::string name;
-
-    SwitchRenameRequested(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId, std::string aName)
-        : endpointId(aEndpointId)
-        , mobilusDeviceId(aMobilusDeviceId)
-        , name(std::move(aName))
-    {
-    }
-
-    const char* eventName() const override { return kEventName; }
-};
-
 }

@@ -188,23 +188,6 @@ struct CoverRenamed : common::domain::DomainEvent {
     const char* eventName() const override { return kEventName; }
 };
 
-struct CoverRenameRequested : common::domain::DomainEvent {
-    static constexpr char kEventName[] = "cover_rename_requested";
-
-    const EndpointId endpointId;
-    const MobilusDeviceId mobilusDeviceId;
-    const std::string name;
-
-    CoverRenameRequested(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId, std::string aName)
-        : endpointId(aEndpointId)
-        , mobilusDeviceId(aMobilusDeviceId)
-        , name(std::move(aName))
-    {
-    }
-
-    const char* eventName() const override { return kEventName; }
-};
-
 struct CoverStopMotionRequested : common::domain::DomainEvent {
     static constexpr char kEventName[] = "cover_stop_motion_requested";
 

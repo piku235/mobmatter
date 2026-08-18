@@ -293,9 +293,4 @@ std::unique_ptr<DomainEvent> Cover::deviceRenamed()
     return std::make_unique<CoverRenamed>(mEndpointId, mMobilusDeviceId, mName);
 }
 
-std::unique_ptr<DomainEvent> Cover::deviceRenameRequested()
-{
-    return std::make_unique<CoverRenameRequested>(mEndpointId, mMobilusDeviceId, mName);
-}
-
 }

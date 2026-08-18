@@ -41,7 +41,6 @@ private:
 
     std::unique_ptr<common::domain::DomainEvent> deviceRemoved() override;
     std::unique_ptr<common::domain::DomainEvent> deviceRenamed() override;
-    std::unique_ptr<common::domain::DomainEvent> deviceRenameRequested() override;
 };
 
 }

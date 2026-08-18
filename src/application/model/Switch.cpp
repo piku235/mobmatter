@@ -124,9 +124,4 @@ std::unique_ptr<DomainEvent> Switch::deviceRenamed()
     return std::make_unique<SwitchRenamed>(mEndpointId, mMobilusDeviceId, mName);
 }
 
-std::unique_ptr<DomainEvent> Switch::deviceRenameRequested()
-{
-    return std::make_unique<SwitchRenameRequested>(mEndpointId, mMobilusDeviceId, mName);
-}
-
 }

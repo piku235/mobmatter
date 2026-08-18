@@ -3,7 +3,6 @@
 #include "SqliteDatabaseSchema.h"
 #include "application/subscribers/CoverControlSubscriber.h"
 #include "application/subscribers/CoverEndpointSubscriber.h"
-#include "application/subscribers/DeviceManagementSubscriber.h"
 #include "application/subscribers/SwitchControlSubscriber.h"
 #include "application/subscribers/SwitchEndpointSubscriber.h"
 #include "common/domain/DomainEventPublisher.h"
@@ -18,7 +17,6 @@
 #include "driven_adapters/matter/zcl/ZclCoverEndpointService.h"
 #include "driven_adapters/matter/zcl/ZclSwitchEndpointService.h"
 #include "driven_adapters/mobilus/MqttMobilusDeviceControlService.h"
-#include "driven_adapters/mobilus/MqttMobilusDeviceManagementService.h"
 #include "driven_adapters/persistence/sqlite/SqliteCoverRepository.h"
 #include "driven_adapters/persistence/sqlite/SqliteEndpointIdGenerator.h"
 #include "driven_adapters/persistence/sqlite/SqliteSwitchRepository.h"
@@ -202,7 +200,6 @@ int main(int argc, char* argv[])
     ZclCoverEndpointService coverEndpointService(ZCL_AGGREGATOR_ENDPOINT_ID);
     ZclSwitchEndpointService switchEndpointService(ZCL_AGGREGATOR_ENDPOINT_ID);
     MqttMobilusDeviceControlService deviceControlService(*mobilusGtwClient, logger);
-    MqttMobilusDeviceManagementService deviceManagementService(*mobilusGtwClient, logger);
 
     // app subscribers
     auto& domainEventPublisher = DomainEventPublisher::instance();
@@ -210,7 +207,6 @@ int main(int argc, char* argv[])
     CoverControlSubscriber coverControlSubscriber(deviceControlService);
     CoverEndpointSubscriber coverEndpointSubscriber(coverEndpointService);
     SwitchControlSubscriber switchControlSubscriber(deviceControlService);
-    DeviceManagementSubscriber deviceManagementSubscriber(deviceManagementService);
     CoverReportingAdapter coverReportingAdapter;
     SwitchReportingAdapter switchReportingAdapter;
     SwitchEndpointSubscriber switchEndpointSubscriber(switchEndpointService);
@@ -235,7 +231,6 @@ int main(int argc, char* argv[])
 
     domainEventPublisher.subscribe(coverControlSubscriber);
     domainEventPublisher.subscribe(coverEndpointSubscriber);
-    domainEventPublisher.subscribe(deviceManagementSubscriber);
     domainEventPublisher.subscribe(coverClusterAdapter);
     domainEventPublisher.subscribe(coverReportingAdapter);
     domainEventPublisher.subscribe(switchClusterAdapter);

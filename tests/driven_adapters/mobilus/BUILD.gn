@@ -1,18 +1,14 @@
 source_set("mobilus") {
-    sources = [
-        "MqttMobilusDeviceControlServiceTest.cpp",
-        "MqttMobilusDeviceManagementServiceTest.cpp",
-    ]
+  sources = [ "MqttMobilusDeviceControlServiceTest.cpp" ]
 
-    deps = [
-        "//src/application",
-        "//src/common/logging",
-        "//src/driven_adapters/mobilus:device_control",
-        "//src/driven_adapters/mobilus:device_management",
-        "//tests/mobilus:mock_client",
-        "//third_party/googletest:gmock",
-        "//third_party/googletest:gtest",
-    ]
+  deps = [
+    "//src/application",
+    "//src/common/logging",
+    "//src/driven_adapters/mobilus:device_control",
+    "//tests/mobilus:mock_client",
+    "//third_party/googletest:gmock",
+    "//third_party/googletest:gtest",
+  ]
 
-    configs += [ "//tests:tests_include" ]
+  configs += [ "//tests:tests_include" ]
 }

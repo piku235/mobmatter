@@ -21,7 +21,6 @@ public:
     Device(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, std::string name);
     virtual ~Device() = default;
 
-    Result requestRename(std::string name);
     Result reportRenamedTo(std::string name);
     void reportRemoved();
 
@@ -40,7 +39,6 @@ private:
 
     virtual std::unique_ptr<common::domain::DomainEvent> deviceRemoved() = 0;
     virtual std::unique_ptr<common::domain::DomainEvent> deviceRenamed() = 0;
-    virtual std::unique_ptr<common::domain::DomainEvent> deviceRenameRequested() = 0;
 };
 
 }

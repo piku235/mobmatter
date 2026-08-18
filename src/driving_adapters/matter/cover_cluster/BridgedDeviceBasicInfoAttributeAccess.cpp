@@ -4,7 +4,6 @@
 
 #include <app-common/zap-generated/ids/Attributes.h>
 #include <app-common/zap-generated/ids/Clusters.h>
-#include <lib/support/CodeUtils.h>
 #include <lib/support/Span.h>
 
 #include <cstdint>
@@ -56,30 +55,6 @@ CHIP_ERROR BridgedDeviceBasicInfoAttributeAccess::Read(const ConcreteReadAttribu
         return encoder.Encode(kBridgedDeviceBasicInfoFeatureMap);
     case ClusterRevision::Id:
         return encoder.Encode(kBridgedDeviceBasicInfoClusterRevision);
-    default:
-        return CHIP_ERROR_INVALID_ARGUMENT;
-    }
-}
-
-CHIP_ERROR BridgedDeviceBasicInfoAttributeAccess::Write(const ConcreteDataAttributePath& path, AttributeValueDecoder& decoder)
-{
-    auto cover = mCoverRepository.find(path.mEndpointId);
-
-    if (!cover) {
-        return CHIP_ERROR_NOT_FOUND;
-    }
-
-    switch (path.mAttributeId) {
-    case NodeLabel::Id: {
-        CharSpan nodeLabel;
-        ReturnErrorOnFailure(decoder.Decode(nodeLabel));
-
-        if (Cover::Result::Ok == cover->requestRename(std::string(nodeLabel.data(), nodeLabel.size()))) {
-            mCoverRepository.save(*cover);
-        }
-
-        return CHIP_NO_ERROR;
-    }
     default:
         return CHIP_ERROR_INVALID_ARGUMENT;
     }
