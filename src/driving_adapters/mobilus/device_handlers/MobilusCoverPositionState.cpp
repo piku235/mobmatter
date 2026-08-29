@@ -1,44 +1,43 @@
 #include "MobilusCoverPositionState.h"
 
+#include <charconv>
 #include <cstdint>
-#include <cstdio>
 #include <string_view>
 
 using mobmatter::application::model::Percent;
 using mobmatter::application::model::window_covering::Position;
 
-namespace {
-
-std::optional<Position> parseLiftPosition(std::string_view value)
+static std::optional<Position> parsePosition(std::string_view value, char sign)
 {
-    uint8_t parsedValue;
-    int read = -1;
-
-    if (1 == sscanf(value.data(), "%hhu%%%n", &parsedValue, &read) && read == value.size()) {
-        if (auto percent = Percent::from(parsedValue)) {
-            return Position::open(*percent);
-        }
-
+    if (!value.ends_with(sign)) {
         return std::nullopt;
+    }
+
+    uint8_t percentValue;
+    auto end = value.data() + value.size() - 1;
+    auto [ptr, ec] = std::from_chars(value.data(), end, percentValue);
+
+    if (ec != std::errc { } || ptr != end) {
+        return std::nullopt;
+    }
+
+    if (auto percent = Percent::from(percentValue)) {
+        return Position::open(*percent);
     }
 
     return std::nullopt;
 }
 
+namespace {
+
+std::optional<Position> parseLiftPosition(std::string_view value)
+{
+    return parsePosition(value, '%');
+}
+
 std::optional<Position> parseTiltPosition(std::string_view value)
 {
-    uint8_t parsedValue;
-    int read = -1;
-
-    if (1 == sscanf(value.data(), "%hhu$%n", &parsedValue, &read) && read == value.size()) {
-        if (auto percent = Percent::from(parsedValue)) {
-            return Position::open(*percent);
-        }
-
-        return std::nullopt;
-    }
-
-    return std::nullopt;
+    return parsePosition(value, '$');
 }
 
 }
