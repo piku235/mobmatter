@@ -11,8 +11,8 @@ public:
         Unreachable,
     };
 
-    static Switch add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool onOff, std::string name);
-    static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool reachable, bool onOff, std::string name);
+    [[nodiscard]] static Switch add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool onOff, std::string name);
+    [[nodiscard]] static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool reachable, bool onOff, std::string name);
 
     /* chip oriented */
     Result requestOn();
@@ -25,8 +25,8 @@ public:
     Result reportReachable();
     Result reportError(Error error);
 
-    bool isReachable() const { return mReachable; }
-    bool isOn() const { return mOnOff; }
+    [[nodiscard]] bool isReachable() const { return mReachable; }
+    [[nodiscard]] bool isOn() const { return mOnOff; }
 
 private:
     bool mReachable;

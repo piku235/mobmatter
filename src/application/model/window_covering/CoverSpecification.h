@@ -12,16 +12,16 @@ namespace mobmatter::application::model::window_covering {
 
 class CoverSpecification final {
 public:
-    static std::optional<CoverSpecification> findFor(MobilusDeviceType mobilusDeviceType);
-    static CoverSpecification Senso();
-    static CoverSpecification SensoZ();
-    static CoverSpecification Cosmo();
-    static CoverSpecification Cmr();
+    [[nodiscard]] static std::optional<CoverSpecification> findFor(MobilusDeviceType mobilusDeviceType);
+    [[nodiscard]] static CoverSpecification Senso();
+    [[nodiscard]] static CoverSpecification SensoZ();
+    [[nodiscard]] static CoverSpecification Cosmo();
+    [[nodiscard]] static CoverSpecification Cmr();
 
-    const std::string& model() const { return mModel; }
-    MobilusDeviceType mobilusDeviceType() const { return mMobilusDeviceType; }
-    CoverEndProductType endProductType() const { return mEndProductType; }
-    Flags<CoverFeature> featureFlags() const { return mFeatureFlags; }
+    [[nodiscard]] const std::string& model() const { return mModel; }
+    [[nodiscard]] MobilusDeviceType mobilusDeviceType() const { return mMobilusDeviceType; }
+    [[nodiscard]] CoverEndProductType endProductType() const { return mEndProductType; }
+    [[nodiscard]] Flags<CoverFeature> featureFlags() const { return mFeatureFlags; }
 
     bool operator==(const CoverSpecification& other) const;
 

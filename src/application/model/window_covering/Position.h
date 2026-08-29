@@ -10,7 +10,7 @@ namespace mobmatter::application::model::window_covering {
  *
  * Internally the closed interpretation is used
  */
-class Position final {
+class [[nodiscard]] Position final {
 public:
     static constexpr Position fullyOpen() { return Percent::min(); }
     static constexpr Position fullyClosed() { return Percent::max(); }
@@ -19,18 +19,18 @@ public:
 
     constexpr Percent openPercent() const { return Percent::max() - mClosedPercent; }
     constexpr Percent closedPercent() const { return mClosedPercent; }
-    constexpr bool isFullyOpen() const { return *this == fullyOpen(); }
-    constexpr bool isFullyClosed() const { return *this == fullyClosed(); }
-    constexpr bool isOpen() const { return *this != fullyClosed(); }
+    [[nodiscard]] constexpr bool isFullyOpen() const { return *this == fullyOpen(); }
+    [[nodiscard]] constexpr bool isFullyClosed() const { return *this == fullyClosed(); }
+    [[nodiscard]] constexpr bool isOpen() const { return *this != fullyClosed(); }
 
-    constexpr bool operator==(const Position& other) const { return mClosedPercent == other.mClosedPercent; }
-    constexpr bool operator!=(const Position& other) const { return mClosedPercent != other.mClosedPercent; }
+    constexpr bool operator==(const Position& other) const = default;
+    constexpr bool operator!=(const Position& other) const = default;
 
 private:
     /* const */ Percent mClosedPercent;
 
     constexpr Position(Percent closedPercent)
-        : mClosedPercent(std::move(closedPercent))
+        : mClosedPercent(closedPercent)
     {
     }
 };

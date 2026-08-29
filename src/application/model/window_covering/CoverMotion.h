@@ -2,7 +2,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-enum class CoverMotion {
+enum class [[nodiscard]] CoverMotion {
     NotMoving,
     Opening,
     Closing,

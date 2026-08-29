@@ -5,6 +5,7 @@
 #include "DomainEventSubscriber.h"
 #include "MultiDomainEventSubscriber.h"
 
+#include <concepts>
 #include <functional>
 #include <string>
 #include <type_traits>
@@ -26,7 +27,7 @@ public:
     void publish(const DomainEvent& event);
     void publish(DomainEventQueue& eventQueue);
 
-    template <class TEvent, class = std::enable_if_t<std::is_base_of_v<DomainEvent, TEvent>>>
+    template <std::derived_from<DomainEvent> TEvent>
     void subscribe(DomainEventSubscriber<TEvent>& subscriber)
     {
         auto& eventHandlers = mSubscribers[TEvent::kEventName];

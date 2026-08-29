@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include <initializer_list>
 #include <type_traits>
 
 namespace mobmatter::application::model {
 
-template <typename T, typename = std::enable_if_t<std::is_enum<T>::value>>
+template <typename T>
+    requires std::is_enum_v<T>
 class Flags final {
 public:
     using TUnly = std::underlying_type_t<T>;

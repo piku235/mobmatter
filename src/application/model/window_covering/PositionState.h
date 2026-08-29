@@ -8,7 +8,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-class PositionState final {
+class [[nodiscard]] PositionState final {
 public:
     static PositionState unavailable();
     static PositionState at(Position position);
@@ -20,8 +20,8 @@ public:
 
     PositionStatus status() const { return mStatus; }
     CoverMotion motion() const { return mMotion; }
-    std::optional<Position> targetPosition() const { return mTargetPosition; }
-    std::optional<Position> currentPosition() const { return mCurrentPosition; }
+    [[nodiscard]] std::optional<Position> targetPosition() const { return mTargetPosition; }
+    [[nodiscard]] std::optional<Position> currentPosition() const { return mCurrentPosition; }
 
 private:
     /* const */ PositionStatus mStatus;

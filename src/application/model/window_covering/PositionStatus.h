@@ -2,7 +2,7 @@
 
 namespace mobmatter::application::model::window_covering {
 
-enum class PositionStatus {
+enum class [[nodiscard]] PositionStatus {
     Unavailable,
     Idle,
     Moving,

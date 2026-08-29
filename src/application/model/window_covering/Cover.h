@@ -14,8 +14,8 @@ public:
         Unreachable,
     };
 
-    static Cover add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, std::string name, PositionState liftState, PositionState tiltState);
-    static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
+    [[nodiscard]] static Cover add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, std::string name, PositionState liftState, PositionState tiltState);
+    [[nodiscard]] static Cover restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState);
 
     /* chip oriented */
     Result requestOpen();
@@ -34,11 +34,11 @@ public:
     Result reportStopMotion();
     Result reportReachable();
     Result reportError(Error error);
-
-    bool isReachable() const { return mReachable; }
-    const CoverSpecification& specification() const { return mSpecification; }
-    const PositionState& liftState() const { return mLiftState; }
-    const PositionState& tiltState() const { return mTiltState; }
+    
+    [[nodiscard]] bool isReachable() const { return mReachable; }
+    [[nodiscard]] const CoverSpecification& specification() const { return mSpecification; }
+    [[nodiscard]] const PositionState& liftState() const { return mLiftState; }
+    [[nodiscard]] const PositionState& tiltState() const { return mTiltState; }
 
 private:
     /* const */ CoverSpecification mSpecification;

@@ -193,7 +193,7 @@ int main(int argc, char* argv[])
 
     // chip
     static SqlitePersistentStorageDelegate persistentStorageDelegate;
-    persistentStorageDelegate.Init(&*db, &logger);
+    (void)persistentStorageDelegate.Init(&*db, &logger);
 
     // driven
     SqliteCoverRepository coverRepository(*db, logger);

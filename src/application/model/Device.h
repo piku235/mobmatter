@@ -12,7 +12,7 @@ namespace mobmatter::application::model {
 
 class Device : public common::domain::Entity {
 public:
-    enum class Result {
+    enum class [[nodiscard]] Result {
         Ok,
         NoChange,
         NotSupported,
@@ -25,9 +25,9 @@ public:
     void reportRemoved();
 
     bool operator==(const Device& other) const { return mEndpointId == other.mEndpointId; }
-    EndpointId endpointId() const { return mEndpointId; }
-    MobilusDeviceId mobilusDeviceId() const { return mMobilusDeviceId; }
-    const std::string& name() const { return mName; }
+    [[nodiscard]] EndpointId endpointId() const { return mEndpointId; }
+    [[nodiscard]] MobilusDeviceId mobilusDeviceId() const { return mMobilusDeviceId; }
+    [[nodiscard]] const std::string& name() const { return mName; }
 
 protected:
     /* const */ EndpointId mEndpointId;

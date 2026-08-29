@@ -50,24 +50,24 @@ MobilusCoverPositionState MobilusCoverPositionState::parse(const std::string& va
     std::string_view sv(value);
 
     if (auto pos = sv.find(':'); pos != std::string::npos) {
-        auto liftPosition = 0 == value.find("DOWN")
+        auto liftPosition = value.starts_with("DOWN")
             ? Position::fullyClosed()
             : parseLiftPosition(sv.substr(0, pos));
         auto tiltPosition = parseTiltPosition(sv.substr(pos + 1));
 
         if (liftPosition && tiltPosition) {
-            return { std::move(liftPosition), std::move(tiltPosition) };
+            return { liftPosition, tiltPosition };
         }
 
         return { std::nullopt, std::nullopt };
     }
 
     if (auto liftPosition = parseLiftPosition(sv); liftPosition) {
-        return { std::move(liftPosition), std::nullopt };
+        return { liftPosition, std::nullopt };
     }
 
     if (auto tiltPosition = parseTiltPosition(sv); tiltPosition) {
-        return { std::nullopt, std::move(tiltPosition) };
+        return { std::nullopt, tiltPosition };
     }
 
     return { std::nullopt, std::nullopt };
