@@ -6,19 +6,19 @@ using namespace mobmatter::common::domain;
 
 namespace mobmatter::matter::event_loop {
 
-DomainEventPublisherAdapter::DomainEventPublisherAdapter(chip::System::LayerSocketsLoop& systemLayer)
-    : mSystemLayer(systemLayer)
+DomainEventPublisherAdapter::DomainEventPublisherAdapter(chip::System::LayerSelectLoop& systemLayer)
+    : mSelectLoop(systemLayer)
 {
 }
 
 void DomainEventPublisherAdapter::boot()
 {
-    mSystemLayer.AddLoopHandler(*this);
+    mSelectLoop.AddLoopHandler(*this);
 }
 
 void DomainEventPublisherAdapter::shutdown()
 {
-    mSystemLayer.RemoveLoopHandler(*this);
+    mSelectLoop.RemoveLoopHandler(*this);
 }
 
 void DomainEventPublisherAdapter::HandleEvents()

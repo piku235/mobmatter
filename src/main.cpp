@@ -186,8 +186,8 @@ int main(int argc, char* argv[])
         }
     }
 
-    auto& chipSystemLayer = static_cast<chip::System::LayerSocketsLoop&>(chip::DeviceLayer::SystemLayer());
-    MobilusGtwEventLoopAdapter mobilusGtwEventLoopAdapter(chipSystemLayer);
+    auto& chipSelectLoop = static_cast<chip::System::LayerSelectLoop&>(chip::DeviceLayer::SystemLayer());
+    MobilusGtwEventLoopAdapter mobilusGtwEventLoopAdapter(chipSelectLoop);
     MqttMobilusGtwClientLoggerAdapter mobilusLoggerAdapter(logger);
     auto mobilusGtwClient = createMobilusGtwClient(&mobilusGtwEventLoopAdapter, &mobilusLoggerAdapter);
 
@@ -205,7 +205,7 @@ int main(int argc, char* argv[])
 
     // app subscribers
     auto& domainEventPublisher = DomainEventPublisher::instance();
-    DomainEventPublisherAdapter domainEventPublisherAdapter(chipSystemLayer);
+    DomainEventPublisherAdapter domainEventPublisherAdapter(chipSelectLoop);
     CoverControlSubscriber coverControlSubscriber(deviceControlService);
     CoverEndpointSubscriber coverEndpointSubscriber(coverEndpointService);
     SwitchControlSubscriber switchControlSubscriber(deviceControlService);

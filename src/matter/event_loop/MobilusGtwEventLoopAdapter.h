@@ -16,9 +16,9 @@ namespace mobio = jungi::mobgtw::io;
 
 class MobilusGtwEventLoopAdapter final : public mobio::EventLoop,
                                          public chip::System::EventLoopHandler,
-                                         public matter::AppComponent {
+                                         public AppComponent {
 public:
-    MobilusGtwEventLoopAdapter(chip::System::LayerSocketsLoop& systemLayer);
+    explicit MobilusGtwEventLoopAdapter(chip::System::LayerSelectLoop& selectLoop);
 
     // EventLoop
     TimerId startTimer(std::chrono::milliseconds delay, TimerCallback callback, void* callbackData) override;
@@ -45,9 +45,9 @@ private:
         void* callbackData;
     };
 
-    chip::System::LayerSocketsLoop& mSystemLayer;
+    chip::System::LayerSelectLoop& mSelectLoop;
     std::unordered_map<int, SocketWatch> mSocketWatchList;
-    Timer mTimers[CHIP_SYSTEM_CONFIG_NUM_TIMERS];
+    Timer mTimers[CHIP_SYSTEM_CONFIG_NUM_TIMERS] = { };
 
     static void socketWatchCallback(chip::System::SocketEvents events, intptr_t data);
     static void timerCallback(chip::System::Layer* aLayer, void* appState);

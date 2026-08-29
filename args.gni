@@ -11,7 +11,7 @@ chip_project_config_include_dirs = [
 
 chip_enable_ble = false
 chip_enable_wifi = false
-chip_enable_openthread = false
+chip_enable_thread = false
 chip_config_network_layer_ble = false
 
 matter_enable_recommended = false

@@ -27,7 +27,7 @@ void CoverClusterAdapter::boot()
     auto& attributeAccessRegistry = AttributeAccessInterfaceRegistry::Instance();
 
     attributeAccessRegistry.Register(&mCoverAttributeAccess);
-    commandHandlerRegistry.RegisterCommandHandler(&mCoverCommandHandler);
+    (void)commandHandlerRegistry.RegisterCommandHandler(&mCoverCommandHandler);
 
     for (auto& cover : mCoverRepository.all()) {
         mBasicInfoAttributeAccessRegistry.registerAttributeAccess(cover.endpointId(), mBasicInfoLoader);
@@ -40,7 +40,7 @@ void CoverClusterAdapter::shutdown()
     auto& attributeAccessRegistry = AttributeAccessInterfaceRegistry::Instance();
 
     attributeAccessRegistry.Unregister(&mCoverAttributeAccess);
-    commandHandlerRegistry.UnregisterCommandHandler(&mCoverCommandHandler);
+    (void)commandHandlerRegistry.UnregisterCommandHandler(&mCoverCommandHandler);
 
     for (auto& cover : mCoverRepository.all()) {
         mBasicInfoAttributeAccessRegistry.unregisterAttributeAccess(cover.endpointId());

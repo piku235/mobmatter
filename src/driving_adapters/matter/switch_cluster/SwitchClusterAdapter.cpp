@@ -25,7 +25,7 @@ void SwitchClusterAdapter::boot()
     auto& attributeAccessRegistry = AttributeAccessInterfaceRegistry::Instance();
 
     attributeAccessRegistry.Register(&mSwitchAttributeAccess);
-    commandHandlerRegistry.RegisterCommandHandler(&mSwitchCommandHandler);
+    (void)commandHandlerRegistry.RegisterCommandHandler(&mSwitchCommandHandler);
 
     for (auto& switch_ : mSwitchRepository.all()) {
         mBasicInfoAttributeAccessRegistry.registerAttributeAccess(switch_.endpointId(), mBasicInfoLoader);
@@ -38,7 +38,7 @@ void SwitchClusterAdapter::shutdown()
     auto& attributeAccessRegistry = AttributeAccessInterfaceRegistry::Instance();
 
     attributeAccessRegistry.Unregister(&mSwitchAttributeAccess);
-    commandHandlerRegistry.UnregisterCommandHandler(&mSwitchCommandHandler);
+    (void)commandHandlerRegistry.UnregisterCommandHandler(&mSwitchCommandHandler);
 
     for (auto& switch_ : mSwitchRepository.all()) {
         mBasicInfoAttributeAccessRegistry.unregisterAttributeAccess(switch_.endpointId());

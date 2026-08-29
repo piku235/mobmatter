@@ -13,7 +13,7 @@ void ClusterStubsAdapter::boot()
     auto& attributeAccessRegistry = AttributeAccessInterfaceRegistry::Instance();
 
     attributeAccessRegistry.Register(&mIdentifyAttributeAccess);
-    commandHandlerRegistry.RegisterCommandHandler(&mIdentifyCommandHandler);
+    (void)commandHandlerRegistry.RegisterCommandHandler(&mIdentifyCommandHandler);
 }
 
 void ClusterStubsAdapter::shutdown()
@@ -22,7 +22,7 @@ void ClusterStubsAdapter::shutdown()
     auto& attributeAccessRegistry = AttributeAccessInterfaceRegistry::Instance();
 
     attributeAccessRegistry.Unregister(&mIdentifyAttributeAccess);
-    commandHandlerRegistry.UnregisterCommandHandler(&mIdentifyCommandHandler);
+    (void)commandHandlerRegistry.UnregisterCommandHandler(&mIdentifyCommandHandler);
 }
 
 }

@@ -5,20 +5,20 @@ using chip::System::SocketEventFlags;
 
 namespace mobmatter::matter::event_loop {
 
-MobilusGtwEventLoopAdapter::MobilusGtwEventLoopAdapter(chip::System::LayerSocketsLoop& systemLayer)
-    : mSystemLayer(systemLayer)
+MobilusGtwEventLoopAdapter::MobilusGtwEventLoopAdapter(chip::System::LayerSelectLoop& selectLoop)
+    : mSelectLoop(selectLoop)
 {
 }
 
 void MobilusGtwEventLoopAdapter::boot()
 {
-    mSystemLayer.AddLoopHandler(*this);
+    mSelectLoop.AddLoopHandler(*this);
 }
 
 void MobilusGtwEventLoopAdapter::shutdown()
 {
     for (auto& [_, socketWatch] : mSocketWatchList) {
-        mSystemLayer.StopWatchingSocket(&socketWatch.token);
+        (void)mSelectLoop.StopWatchingSocket(&socketWatch.token);
     }
 
     mSocketWatchList.clear();
@@ -28,11 +28,11 @@ void MobilusGtwEventLoopAdapter::shutdown()
             continue;
         }
 
-        mSystemLayer.CancelTimer(timerCallback, &timer);
-        timer = {};
+        mSelectLoop.CancelTimer(timerCallback, &timer);
+        timer = { };
     }
 
-    mSystemLayer.RemoveLoopHandler(*this);
+    mSelectLoop.RemoveLoopHandler(*this);
 }
 
 mobio::EventLoop::TimerId MobilusGtwEventLoopAdapter::startTimer(std::chrono::milliseconds delay, TimerCallback callback, void* callbackData)
@@ -43,7 +43,7 @@ mobio::EventLoop::TimerId MobilusGtwEventLoopAdapter::startTimer(std::chrono::mi
         }
 
         mTimers[i] = { callback, callbackData };
-        mSystemLayer.StartTimer(delay, timerCallback, &mTimers[i]);
+        mSelectLoop.StartTimer(delay, timerCallback, &mTimers[i]);
 
         return i;
     }
@@ -54,7 +54,7 @@ mobio::EventLoop::TimerId MobilusGtwEventLoopAdapter::startTimer(std::chrono::mi
 void MobilusGtwEventLoopAdapter::stopTimer(TimerId id)
 {
     if (id > kInvalidTimerId && id < CHIP_SYSTEM_CONFIG_NUM_TIMERS && nullptr != mTimers[id].callback) {
-        mSystemLayer.CancelTimer(timerCallback, &mTimers[id]);
+        mSelectLoop.CancelTimer(timerCallback, &mTimers[id]);
     }
 }
 
@@ -63,14 +63,14 @@ void MobilusGtwEventLoopAdapter::watchSocket(int socketFd, mobio::SocketEventHan
     auto& socketWatch = mSocketWatchList[socketFd];
     socketWatch.handler = handler;
 
-    mSystemLayer.StartWatchingSocket(socketFd, &socketWatch.token);
-    mSystemLayer.SetCallback(socketWatch.token, socketWatchCallback, reinterpret_cast<intptr_t>(handler));
+    (void)mSelectLoop.StartWatchingSocket(socketFd, &socketWatch.token);
+    (void)mSelectLoop.SetCallback(socketWatch.token, socketWatchCallback, reinterpret_cast<intptr_t>(handler));
 }
 
 void MobilusGtwEventLoopAdapter::unwatchSocket(int socketFd)
 {
     if (auto it = mSocketWatchList.find(socketFd); it != mSocketWatchList.end()) {
-        mSystemLayer.StopWatchingSocket(&it->second.token);
+        (void)mSelectLoop.StopWatchingSocket(&it->second.token);
         mSocketWatchList.erase(it);
     }
 }
@@ -81,15 +81,15 @@ Timestamp MobilusGtwEventLoopAdapter::PrepareEvents(Timestamp now)
         auto events = socketWatch.handler->socketEvents();
 
         if (events.has(mobio::SocketEvents::Read)) {
-            mSystemLayer.RequestCallbackOnPendingRead(socketWatch.token);
+            (void)mSelectLoop.RequestCallbackOnPendingRead(socketWatch.token);
         } else {
-            mSystemLayer.ClearCallbackOnPendingRead(socketWatch.token);
+            (void)mSelectLoop.ClearCallbackOnPendingRead(socketWatch.token);
         }
 
         if (events.has(mobio::SocketEvents::Write)) {
-            mSystemLayer.RequestCallbackOnPendingWrite(socketWatch.token);
+            (void)mSelectLoop.RequestCallbackOnPendingWrite(socketWatch.token);
         } else {
-            mSystemLayer.ClearCallbackOnPendingWrite(socketWatch.token);
+            (void)mSelectLoop.ClearCallbackOnPendingWrite(socketWatch.token);
         }
     }
 
@@ -117,7 +117,7 @@ void MobilusGtwEventLoopAdapter::timerCallback(chip::System::Layer* aLayer, void
     auto callback = timer->callback;
     auto callbackData = timer->callbackData;
 
-    *timer = {};
+    *timer = { };
     callback(callbackData);
 }
 

@@ -5,10 +5,10 @@
 
 namespace mobmatter::matter::event_loop {
 
-class DomainEventPublisherAdapter final : public matter::AppComponent,
-                                          public chip::System::EventLoopHandler {
+class DomainEventPublisherAdapter final : public chip::System::EventLoopHandler,
+                                          public AppComponent {
 public:
-    DomainEventPublisherAdapter(chip::System::LayerSocketsLoop& systemLayer);
+    explicit DomainEventPublisherAdapter(chip::System::LayerSelectLoop& selectLoop);
 
     void boot() override;
     void shutdown() override;
@@ -17,7 +17,7 @@ public:
     void HandleEvents() override;
 
 private:
-    chip::System::LayerSocketsLoop& mSystemLayer;
+    chip::System::LayerSelectLoop& mSelectLoop;
 };
 
 }
