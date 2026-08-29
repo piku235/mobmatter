@@ -2,23 +2,26 @@
 
 [![CI](https://github.com/piku235/mobmatter/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/piku235/mobmatter/actions/workflows/continuous-integration.yml)
 
-An uncertified Matter bridge built on the official [Matter SDK](https://github.com/project-chip/connectedhomeip) that exposes **Mobilus Cosmo GTW** and its connected devices to the Matter ecosystem.
+An uncertified Matter bridge built on the official [Matter SDK](https://github.com/project-chip/connectedhomeip) that
+exposes **Mobilus Cosmo GTW** and its connected devices to the Matter ecosystem.
 
 ## Overview
 
 <img width="120" src="qr.png" alt="qr" align="right" />
 
-This application acts as a **bridge** between the Matter ecosystem and Mobilus Cosmo GTW, enabling integration of window coverings (blinds, shutters) into Matter-compatible smart home platforms such as Apple HomeKit, Home Assistant and Google Home.
+This application acts as a **bridge** between the Matter ecosystem and Mobilus Cosmo GTW, enabling integration of window
+coverings (blinds, shutters) into Matter-compatible smart home platforms such as Apple HomeKit, Home Assistant and
+Google Home.
 
-It is a native application targeted to run on the Cosmo GTW itself, which runs OpenWRT 15.05.1 as its underlying operating system.
+It is a native application targeted to run on the Cosmo GTW itself, which runs OpenWRT 15.05.1 as its underlying
+operating system.
 
 **Supported devices:**
 
-* Senso - e.g. M35 ERS actuators
-* Cosmo - e.g. M35 MR actuators
+* actuators like ERS
 * C-MR
-
-For devices supported by the Cosmo GTW but not listed above, feel free to request support by [opening an issue](https://github.com/piku235/mobmatter/issues/new).
+* C-SW
+* C-ZR
 
 ## Features
 
@@ -36,9 +39,11 @@ Before installation, it is assumed that your Cosmo GTW is fully set up and confi
 
 ## Installation
 
-Installation is performed on the Cosmo GTW via SSH. How to enable SSH access, you'll find [here](https://forum.arturhome.pl/t/aktywacja-ssh-dla-mobilus-cosmo-gtw/15325).
+Installation is performed on the Cosmo GTW via SSH. How to enable SSH access, you'll
+find [here](https://forum.arturhome.pl/t/aktywacja-ssh-dla-mobilus-cosmo-gtw/15325).
 
-Once connected via SSH, run the following command to start the installation of the [**runtime**](https://github.com/piku235/mobgtw-runtime), which is required to run the **mobmatter**:
+Once connected via SSH, run the following command to start the installation of the [
+**runtime**](https://github.com/piku235/mobgtw-runtime), which is required to run the **mobmatter**:
 
 ```bash
 wget --no-check-certificate -qO- https://raw.githubusercontent.com/piku235/mobgtw-runtime/main/install.sh | sh
@@ -86,11 +91,14 @@ This project uses **GN (Generate Ninja)** as its build system, provided by the M
 
 This project targets Linux environments; attempts to build it on non-Linux platforms are likely to fail.
 
-For building project on your host you need to install all required libs and tools, follow the official [Matter SDK Prerequisites](https://project-chip.github.io/connectedhomeip-doc/guides/BUILDING.html#prerequisites).
+For building project on your host you need to install all required libs and tools, follow the
+official [Matter SDK Prerequisites](https://project-chip.github.io/connectedhomeip-doc/guides/BUILDING.html#prerequisites).
 
-To build the project for Cosmo GTW, you need to pull and build [OpenWRT](https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem).
+To build the project for Cosmo GTW, you need to pull and
+build [OpenWRT](https://openwrt.org/docs/guide-developer/toolchain/use-buildsystem).
 
-The Cosmo GTW uses the Hi-Link HLK-7668A module, so configure OpenWRT for the target platform `ramips` and subtarget `mt76x8`.
+The Cosmo GTW uses the Hi-Link HLK-7668A module, so configure OpenWRT for the target platform `ramips` and subtarget
+`mt76x8`.
 
 Clone the project with its submodules:
 
@@ -143,6 +151,8 @@ ninja -C out/target
 
 This project is licensed under the [MIT License](LICENSE).
 
-It includes portions of the [Matter SDK](https://github.com/project-chip/connectedhomeip), which is licensed under the Apache License 2.0. Use of Matter SDK does **not** imply compliance, certification, or endorsement by the Connectivity Standards Alliance.
+It includes portions of the [Matter SDK](https://github.com/project-chip/connectedhomeip), which is licensed under the
+Apache License 2.0. Use of Matter SDK does **not** imply compliance, certification, or endorsement by the Connectivity
+Standards Alliance.
 
 Please see [NOTICE](./NOTICE) for legal notices and attribution related to the Matter SDK.
