@@ -27,7 +27,6 @@ operating system.
 
 - Built on top of the official Matter SDK (CHIP)
 - Bridges Cosmo GTW connected devices into the Matter ecosystem
-- Supports window covering devices
 - Real-time updates of the connected devices
 - Runs natively on Cosmo GTW
 
