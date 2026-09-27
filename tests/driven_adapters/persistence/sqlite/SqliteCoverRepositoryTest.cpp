@@ -97,7 +97,7 @@ TEST_F(SqliteCoverRepositoryTest, FindsAll)
 
     ASSERT_EQ(2u, covers.size());
 
-    for (auto cover : covers) {
+    for (auto& cover : covers) {
         ASSERT_THAT(expectedCovers, ::testing::Contains(cover.endpointId()));
     }
 }

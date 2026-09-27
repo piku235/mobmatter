@@ -1,6 +1,7 @@
 source_set("sqlite") {
   sources = [
     "SqliteCoverRepositoryTest.cpp",
+    "SqliteSwitchRepositoryTest.cpp",
     "SqliteEndpointIdGeneratorTest.cpp",
   ]
 
