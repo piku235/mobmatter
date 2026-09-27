@@ -6,11 +6,6 @@ namespace mobmatter::application::model {
 
 class Switch final : public Device {
 public:
-    enum class Error {
-        Unknown,
-        Unreachable,
-    };
-
     [[nodiscard]] static Switch add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool onOff, std::string name);
     [[nodiscard]] static Switch restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, bool reachable, bool onOff, std::string name);
 
@@ -23,7 +18,7 @@ public:
     Result reportOn();
     Result reportOff();
     Result reportReachable();
-    Result reportError(Error error);
+    Result reportUnreachable();
 
     [[nodiscard]] bool isReachable() const { return mReachable; }
     [[nodiscard]] bool isOn() const { return mOnOff; }

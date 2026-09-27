@@ -123,36 +123,18 @@ bool MobilusSwitchHandler::apply(Switch& switch_, const proto::Event& event)
         return result;
     }
     case EventNumber::Error: {
-        auto error = parseError(event.value());
-
-        if (!error) {
-            mLogger.error(LOG_TAG "Unrecognized cover error: %s" LOG_SUFFIX_EP, event.value().c_str(), switch_.endpointId(), switch_.mobilusDeviceId());
-            return false;
-        }
-
-        if (Switch::Result::Ok == switch_.reportError(*error)) {
-            mLogger.notice(LOG_TAG "Cover reported error: %s" LOG_SUFFIX_EP, event.value().c_str(), switch_.endpointId(), switch_.mobilusDeviceId());
+        if ("NO_CONNECTION" == event.value() && Switch::Result::Ok == switch_.reportUnreachable()) {
+            mLogger.notice(LOG_TAG "Switch unreachable" LOG_SUFFIX_EP, event.value().c_str(), switch_.endpointId(), switch_.mobilusDeviceId());
             return true;
         }
 
+        mLogger.error(LOG_TAG "Switch error: %s" LOG_SUFFIX_EP, event.value().c_str(), switch_.endpointId(), switch_.mobilusDeviceId());
         return false;
     }
     default:
         mLogger.notice(LOG_TAG "Unknown event number");
         return false;
     }
-}
-
-std::optional<Switch::Error> MobilusSwitchHandler::parseError(const std::string& error)
-{
-    if ("UNKNOWN" == error) {
-        return Switch::Error::Unknown;
-    }
-    if ("NO_CONNECTION" == error) {
-        return Switch::Error::Unreachable;
-    }
-
-    return std::nullopt;
 }
 
 }

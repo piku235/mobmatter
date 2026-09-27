@@ -25,8 +25,6 @@ private:
     driven_ports::EndpointIdGenerator& mEndpointIdGenerator;
     logging::Logger& mLogger;
 
-    static std::optional<model::Switch::Error> parseError(const std::string& error);
-
     void init(const proto::Device& device, const proto::Event& lastEvent);
     bool apply(model::Switch& switch_, const proto::Device& device);
     bool apply(model::Switch& switch_, const proto::Event& event);

@@ -81,22 +81,16 @@ Switch::Result Switch::reportReachable()
     return Result::Ok;
 }
 
-Switch::Result Switch::reportError(Error error)
+Switch::Result Switch::reportUnreachable()
 {
-    switch (error) {
-    case Error::Unreachable:
-        if (!mReachable) {
-            return Result::NoChange;
-        }
-
-        mReachable = false;
-        raise(std::make_unique<SwitchMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
-
-        return Result::Ok;
-    case Error::Unknown:
-    default:
+    if (!mReachable) {
         return Result::NoChange;
     }
+
+    mReachable = false;
+    raise(std::make_unique<SwitchMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
+
+    return Result::Ok;
 }
 
 Switch::Result Switch::turnOn()

@@ -1,6 +1,7 @@
 source_set("application") {
   sources = [
     "model/PercentTest.cpp",
+    "model/SwitchTest.cpp",
     "model/window_covering/CoverTest.cpp",
     "model/window_covering/PositionTest.cpp",
   ]
