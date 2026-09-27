@@ -1,6 +1,6 @@
+#include "driven_adapters/mobilus/MqttMobilusDeviceControlService.h"
 #include "application/model/window_covering/Position.h"
 #include "common/logging/Logger.h"
-#include "driven_adapters/mobilus/MqttMobilusDeviceControlService.h"
 #include "mobilus/MockMqttMobilusGtwClient.hpp"
 
 #include <gtest/gtest.h>
@@ -89,4 +89,24 @@ TEST(MqttMobilusCoverControlServiceTest, StopsCoverMotion)
     coverControlService.stopCoverMotion(kDeviceId);
 
     assertSentCallEvent(client, "STOP");
+}
+
+TEST(MqttMobilusCoverControlServiceTest, TurnsSwitchOn)
+{
+    MockMqttMobilusGtwClient client;
+    MqttMobilusDeviceControlService coverControlService(client, Logger::noop());
+
+    coverControlService.turnSwitchOn(kDeviceId);
+
+    assertSentCallEvent(client, "ON");
+}
+
+TEST(MqttMobilusCoverControlServiceTest, TurnsSwitchOff)
+{
+    MockMqttMobilusGtwClient client;
+    MqttMobilusDeviceControlService coverControlService(client, Logger::noop());
+
+    coverControlService.turnSwitchOff(kDeviceId);
+
+    assertSentCallEvent(client, "OFF");
 }
