@@ -44,45 +44,25 @@ CHIP_ERROR CoverAttributeAccess::Read(const ConcreteReadAttributePath& path, Att
     case ConfigStatus::Id:
         return encoder.Encode(ConvertToConfigStatus(cover->specification().featureFlags()));
     case OperationalStatus::Id:
-        return encoder.Encode(ConvertToOperationalStatus(cover->liftState().motion(), cover->tiltState().motion()));
+        return encoder.Encode(ConvertToOperationalStatus(cover->liftState().motion(), cover->tiltState() ? cover->tiltState()->motion() : CoverMotion::NotMoving));
     case Mode::Id:
         return encoder.Encode(kWindowCoveringMode);
-    case TargetPositionLiftPercent100ths::Id: {
-        auto targetPosition = cover->liftState().targetPosition();
-
-        if (!targetPosition) {
+    case TargetPositionLiftPercent100ths::Id:
+        return encoder.Encode(cover->liftState().targetPosition().closedPercent().value100ths());
+    case CurrentPositionLiftPercent100ths::Id:
+        return encoder.Encode(cover->liftState().currentPosition().closedPercent().value100ths());
+    case TargetPositionTiltPercent100ths::Id:
+        if (!cover->tiltState()) {
             return CHIP_ERROR_UNINITIALIZED;
         }
 
-        return encoder.Encode(targetPosition->closedPercent().value100ths());
-    }
-    case CurrentPositionLiftPercent100ths::Id: {
-        auto currentPosition = cover->liftState().currentPosition();
-
-        if (!currentPosition) {
+        return encoder.Encode(cover->tiltState()->targetPosition().closedPercent().value100ths());
+    case CurrentPositionTiltPercent100ths::Id:
+        if (!cover->tiltState()) {
             return CHIP_ERROR_UNINITIALIZED;
         }
 
-        return encoder.Encode(currentPosition->closedPercent().value100ths());
-    }
-    case TargetPositionTiltPercent100ths::Id: {
-        auto targetPosition = cover->tiltState().targetPosition();
-
-        if (!targetPosition) {
-            return CHIP_ERROR_UNINITIALIZED;
-        }
-
-        return encoder.Encode(targetPosition->closedPercent().value100ths());
-    }
-    case CurrentPositionTiltPercent100ths::Id: {
-        auto currentPosition = cover->tiltState().currentPosition();
-
-        if (!currentPosition) {
-            return CHIP_ERROR_UNINITIALIZED;
-        }
-
-        return encoder.Encode(currentPosition->closedPercent().value100ths());
-    }
+        return encoder.Encode(cover->tiltState()->currentPosition().closedPercent().value100ths());
     case FeatureMap::Id:
         return encoder.Encode(ConvertToFeatureMap(cover->specification().featureFlags()));
     case ClusterRevision::Id:

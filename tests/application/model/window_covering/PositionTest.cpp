@@ -62,6 +62,12 @@ TEST(PositionTest, IsAndIsNotOpen)
 
 TEST(PositionTest, Compare)
 {
+    ASSERT_TRUE(Position::open(*Percent::from(100)).isHigherThan(Position::open(*Percent::from(99))));
+    ASSERT_FALSE(Position::open(*Percent::from(99)).isHigherThan(Position::open(*Percent::from(100))));
+    ASSERT_FALSE(Position::open(*Percent::from(50)).isHigherThan(Position::open(*Percent::from(50))));
+    ASSERT_TRUE(Position::open(*Percent::from(99)).isLowerThan(Position::open(*Percent::from(100))));
+    ASSERT_FALSE(Position::open(*Percent::from(100)).isLowerThan(Position::open(*Percent::from(99))));
+    ASSERT_FALSE(Position::open(*Percent::from(50)).isLowerThan(Position::open(*Percent::from(50))));
     ASSERT_EQ(Position::open(*Percent::from(10)), Position::closed(*Percent::from(90)));
     ASSERT_NE(Position::open(*Percent::from(10)), Position::closed(*Percent::from(10)));
 }

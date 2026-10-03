@@ -10,26 +10,25 @@ namespace mobmatter::application::model::window_covering {
 
 class [[nodiscard]] PositionState final {
 public:
-    static PositionState unavailable();
     static PositionState at(Position position);
-    static PositionState restore(PositionStatus status, CoverMotion motion, std::optional<Position> targetPosition, std::optional<Position> currentPosition);
+    static PositionState restore(PositionStatus status, CoverMotion motion, Position targetPosition, Position currentPosition);
 
-    PositionState movingTo(Position position) const;
-    PositionState stop() const;
-    PositionState reset() const;
+    [[nodiscard]] std::optional<PositionState> movingTo(Position position) const;
+    [[nodiscard]] std::optional<PositionState> stop() const;
+    [[nodiscard]] std::optional<PositionState> nowAt(Position position) const;
 
     PositionStatus status() const { return mStatus; }
     CoverMotion motion() const { return mMotion; }
-    [[nodiscard]] std::optional<Position> targetPosition() const { return mTargetPosition; }
-    [[nodiscard]] std::optional<Position> currentPosition() const { return mCurrentPosition; }
+    [[nodiscard]] Position targetPosition() const { return mTargetPosition; }
+    [[nodiscard]] Position currentPosition() const { return mCurrentPosition; }
 
 private:
     /* const */ PositionStatus mStatus;
     /* const */ CoverMotion mMotion;
-    /* const */ std::optional<Position> mTargetPosition;
-    /* const */ std::optional<Position> mCurrentPosition;
+    /* const */ Position mTargetPosition;
+    /* const */ Position mCurrentPosition;
 
-    PositionState(PositionStatus status, CoverMotion motion, std::optional<Position> targetPosition, std::optional<Position> currentPosition);
+    PositionState(PositionStatus status, CoverMotion motion, Position targetPosition, Position currentPosition);
 };
 
 }

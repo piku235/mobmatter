@@ -2,46 +2,58 @@
 
 namespace mobmatter::application::model::window_covering {
 
-PositionState PositionState::unavailable()
-{
-    return { PositionStatus::Unavailable, CoverMotion::NotMoving, std::nullopt, std::nullopt };
-}
-
 PositionState PositionState::at(Position position)
 {
     return { PositionStatus::Idle, CoverMotion::NotMoving, position, position };
 }
 
-PositionState PositionState::restore(PositionStatus status, CoverMotion motion, std::optional<Position> targetPosition, std::optional<Position> currentPosition)
+PositionState PositionState::restore(PositionStatus status, CoverMotion motion, Position targetPosition, Position currentPosition)
 {
-    return { status, motion, std::move(targetPosition), std::move(currentPosition) };
+    return { status, motion, targetPosition, currentPosition };
 }
 
-PositionState PositionState::movingTo(Position position) const
+std::optional<PositionState> PositionState::movingTo(Position position) const
 {
-    return {
-        mCurrentPosition != position ? PositionStatus::Moving : PositionStatus::Idle,
-        position.openPercent() > mCurrentPosition->openPercent() ? CoverMotion::Opening : (position.openPercent() < mCurrentPosition->openPercent() ? CoverMotion::Closing : CoverMotion::NotMoving),
+    if (PositionStatus::Moving == mStatus && mTargetPosition == position) {
+        return std::nullopt;
+    }
+
+    return PositionState {
+        PositionStatus::Moving,
+        position.isHigherThan(mCurrentPosition) ? CoverMotion::Opening : CoverMotion::Closing,
         position,
         mCurrentPosition,
     };
 }
 
-PositionState PositionState::stop() const
+std::optional<PositionState> PositionState::stop() const
 {
-    return { PositionStatus::Stopping, CoverMotion::NotMoving, mTargetPosition, mCurrentPosition };
+    if (PositionStatus::Stopping == mStatus) {
+        return std::nullopt;
+    }
+
+    return PositionState {
+        PositionStatus::Stopping,
+        mMotion,
+        mTargetPosition,
+        mCurrentPosition,
+    };
 }
 
-PositionState PositionState::reset() const
+std::optional<PositionState> PositionState::nowAt(Position position) const
 {
-    return { PositionStatus::Idle, CoverMotion::NotMoving, mCurrentPosition, mCurrentPosition };
+    if (PositionStatus::Idle == mStatus && mCurrentPosition == position) {
+        return std::nullopt;
+    }
+
+    return at(position);
 }
 
-PositionState::PositionState(PositionStatus status, CoverMotion motion, std::optional<Position> targetPosition, std::optional<Position> currentPosition)
+PositionState::PositionState(PositionStatus status, CoverMotion motion, Position targetPosition, Position currentPosition)
     : mStatus(status)
     , mMotion(motion)
-    , mTargetPosition(std::move(targetPosition))
-    , mCurrentPosition(std::move(currentPosition))
+    , mTargetPosition(targetPosition)
+    , mCurrentPosition(currentPosition)
 {
 }
 

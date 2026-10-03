@@ -80,12 +80,10 @@ MobilusDeviceEventHandler::Result MobilusCoverHandler::handle(const proto::Event
 
 void MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device& deviceInfo, const proto::Event& lastEvent)
 {
-    auto liftState = coverSpec.featureFlags().has(CoverFeature::Lift)
-        ? PositionState::at(Position::fullyClosed())
-        : PositionState::unavailable();
+    auto liftState = PositionState::at(Position::fullyClosed());
     auto tiltState = coverSpec.featureFlags().has(CoverFeature::Tilt)
-        ? PositionState::at(Position::fullyClosed())
-        : PositionState::unavailable();
+        ? std::optional(PositionState::at(Position::fullyClosed()))
+        : std::nullopt;
 
     if (EventNumber::Reached == lastEvent.event_number()) {
         auto result = MobilusCoverPositionState::parse(lastEvent.value());
@@ -114,8 +112,8 @@ void MobilusCoverHandler::init(CoverSpecification coverSpec, const proto::Device
         deviceInfo.id(),
         std::move(coverSpec),
         deviceInfo.name(),
-        std::move(liftState),
-        std::move(tiltState));
+        liftState,
+        tiltState);
     mCoverRepository.save(cover);
 
     mLogger.notice(LOG_TAG "Added cover" LOG_SUFFIX_EP, cover.endpointId(), deviceInfo.id());
@@ -154,11 +152,7 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
         }
 
         if ("STOP" == event.value()) {
-            if (Cover::Result::Ok == cover.reportStopMotion()) {
-                mLogger.notice(LOG_TAG "Stopping cover motion" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
-                return true;
-            }
-
+            mLogger.notice(LOG_TAG "Stopping cover motion" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
             return false;
         }
 
@@ -193,8 +187,8 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
 
         bool result = false;
 
-        if (Cover::Result::Ok == cover.reportReachable()) {
-            mLogger.notice(LOG_TAG "Cover marked as reachable" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
+        if (Cover::Result::Ok == cover.reportAsReachable()) {
+            mLogger.notice(LOG_TAG "Cover reported as reachable" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
             result = true;
         }
 
@@ -211,15 +205,24 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
         return result;
     }
     case EventNumber::Error: {
-        auto error = parseError(event.value());
+        if ("NO_CONNECTION" == event.value()) {
+            if (Cover::Result::Ok == cover.reportAsUnreachable()) {
+                mLogger.notice(LOG_TAG "Cover reported as reachable" LOG_SUFFIX_EP, cover.endpointId(), cover.mobilusDeviceId());
+                return true;
+            }
 
-        if (!error) {
-            mLogger.error(LOG_TAG "Unrecognized cover error: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
             return false;
         }
 
-        if (Cover::Result::Ok == cover.reportError(*error)) {
-            mLogger.notice(LOG_TAG "Cover reported error: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+        auto motionFault = parseMotionFault(event.value());
+
+        if (!motionFault) {
+            mLogger.error(LOG_TAG "Unrecognized motion fault: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
+            return false;
+        }
+
+        if (Cover::Result::Ok == cover.reportMotionFault(*motionFault)) {
+            mLogger.notice(LOG_TAG "Cover reported motion fault: %s" LOG_SUFFIX_EP, event.value().c_str(), cover.endpointId(), cover.mobilusDeviceId());
             return true;
         }
 
@@ -231,13 +234,13 @@ bool MobilusCoverHandler::apply(Cover& cover, const proto::Event& event)
     }
 }
 
-std::optional<Cover::Error> MobilusCoverHandler::parseError(const std::string& error)
+std::optional<CoverMotionFault> MobilusCoverHandler::parseMotionFault(const std::string& error)
 {
     if ("UNKNOWN" == error) {
-        return Cover::Error::Unknown;
+        return CoverMotionFault::Unknown;
     }
-    if ("NO_CONNECTION" == error) {
-        return Cover::Error::Unreachable;
+    if ("OBSTACLE" == error) {
+        return CoverMotionFault::Obstacle;
     }
 
     return std::nullopt;

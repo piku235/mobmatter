@@ -3,6 +3,7 @@
 #include "application/driven_ports/CoverRepository.h"
 #include "application/driven_ports/EndpointIdGenerator.h"
 #include "application/model/window_covering/Cover.h"
+#include "application/model/window_covering/CoverMotionFault.h"
 #include "application/model/window_covering/CoverSpecification.h"
 #include "common/logging/Logger.h"
 #include "driving_adapters/mobilus/MobilusDeviceEventHandler.h"
@@ -29,7 +30,7 @@ private:
     driven_ports::EndpointIdGenerator& mEndpointIdGenerator;
     logging::Logger& mLogger;
 
-    static std::optional<model::window_covering::Cover::Error> parseError(const std::string& error);
+    static std::optional<model::window_covering::CoverMotionFault> parseMotionFault(const std::string& error);
 
     void init(model::window_covering::CoverSpecification coverSpec, const proto::Device& device, const proto::Event& lastEvent);
     bool apply(model::window_covering::Cover& cover, const proto::Device& deviceInfo);

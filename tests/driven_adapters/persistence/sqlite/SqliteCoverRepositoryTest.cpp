@@ -21,7 +21,7 @@ auto liftAndTiltCover()
 
 auto liftCover()
 {
-    return Cover::add(2, 12, CoverSpecification::Senso(), "Senso", PositionState::at(Position::fullyOpen()), PositionState::unavailable());
+    return Cover::add(2, 12, CoverSpecification::Senso(), "Senso", PositionState::at(Position::fullyOpen()), std::nullopt);
 }
 
 }
@@ -39,27 +39,46 @@ protected:
     }
 };
 
-TEST_F(SqliteCoverRepositoryTest, Saves)
+TEST_F(SqliteCoverRepositoryTest, SavesLiftCover)
 {
-    for (auto& cover : { liftAndTiltCover(), liftCover() }) {
-        coverRepository.save(cover);
-        auto savedCover = coverRepository.find(cover.endpointId());
+    auto cover = liftCover();
+    coverRepository.save(cover);
+    auto savedCover = coverRepository.find(cover.endpointId());
 
-        ASSERT_TRUE(savedCover.has_value());
-        ASSERT_EQ(cover.endpointId(), savedCover->endpointId());
-        ASSERT_EQ(cover.mobilusDeviceId(), savedCover->mobilusDeviceId());
-        ASSERT_EQ(cover.specification(), savedCover->specification());
-        ASSERT_EQ(cover.isReachable(), savedCover->isReachable());
-        ASSERT_EQ(cover.name(), savedCover->name());
-        ASSERT_EQ(cover.liftState().status(), savedCover->liftState().status());
-        ASSERT_EQ(cover.liftState().motion(), savedCover->liftState().motion());
-        ASSERT_EQ(cover.liftState().targetPosition(), savedCover->liftState().targetPosition());
-        ASSERT_EQ(cover.liftState().currentPosition(), savedCover->liftState().currentPosition());
-        ASSERT_EQ(cover.tiltState().status(), savedCover->tiltState().status());
-        ASSERT_EQ(cover.tiltState().motion(), savedCover->tiltState().motion());
-        ASSERT_EQ(cover.tiltState().targetPosition(), savedCover->tiltState().targetPosition());
-        ASSERT_EQ(cover.tiltState().currentPosition(), savedCover->tiltState().currentPosition());
-    }
+    ASSERT_TRUE(savedCover.has_value());
+    ASSERT_EQ(cover.endpointId(), savedCover->endpointId());
+    ASSERT_EQ(cover.mobilusDeviceId(), savedCover->mobilusDeviceId());
+    ASSERT_EQ(cover.specification(), savedCover->specification());
+    ASSERT_EQ(cover.isReachable(), savedCover->isReachable());
+    ASSERT_EQ(cover.name(), savedCover->name());
+    ASSERT_EQ(cover.liftState().status(), savedCover->liftState().status());
+    ASSERT_EQ(cover.liftState().motion(), savedCover->liftState().motion());
+    ASSERT_EQ(cover.liftState().targetPosition(), savedCover->liftState().targetPosition());
+    ASSERT_EQ(cover.liftState().currentPosition(), savedCover->liftState().currentPosition());
+    ASSERT_FALSE(cover.tiltState().has_value());
+}
+
+TEST_F(SqliteCoverRepositoryTest, SavesLiftAndTiltCover)
+{
+    auto cover = liftAndTiltCover();
+    coverRepository.save(cover);
+    auto savedCover = coverRepository.find(cover.endpointId());
+
+    ASSERT_TRUE(savedCover.has_value());
+    ASSERT_EQ(cover.endpointId(), savedCover->endpointId());
+    ASSERT_EQ(cover.mobilusDeviceId(), savedCover->mobilusDeviceId());
+    ASSERT_EQ(cover.specification(), savedCover->specification());
+    ASSERT_EQ(cover.isReachable(), savedCover->isReachable());
+    ASSERT_EQ(cover.name(), savedCover->name());
+    ASSERT_EQ(cover.liftState().status(), savedCover->liftState().status());
+    ASSERT_EQ(cover.liftState().motion(), savedCover->liftState().motion());
+    ASSERT_EQ(cover.liftState().targetPosition(), savedCover->liftState().targetPosition());
+    ASSERT_EQ(cover.liftState().currentPosition(), savedCover->liftState().currentPosition());
+    ASSERT_TRUE(cover.tiltState().has_value());
+    ASSERT_EQ(cover.tiltState()->status(), savedCover->tiltState()->status());
+    ASSERT_EQ(cover.tiltState()->motion(), savedCover->tiltState()->motion());
+    ASSERT_EQ(cover.tiltState()->targetPosition(), savedCover->tiltState()->targetPosition());
+    ASSERT_EQ(cover.tiltState()->currentPosition(), savedCover->tiltState()->currentPosition());
 }
 
 TEST_F(SqliteCoverRepositoryTest, Removes)

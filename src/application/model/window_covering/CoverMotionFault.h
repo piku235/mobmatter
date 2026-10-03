@@ -2,10 +2,9 @@
 
 namespace mobmatter::application::model::window_covering {
 
-enum class [[nodiscard]] PositionStatus {
-    Idle,
-    Moving,
-    Stopping,
+enum class [[nodiscard]] CoverMotionFault {
+    Unknown,
+    Obstacle,
 };
 
 }

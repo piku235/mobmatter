@@ -1,5 +1,7 @@
 #include "InMemoryCoverRepository.h"
 
+#include <ranges>
+
 using namespace mobmatter::application::model;
 using namespace mobmatter::application::model::window_covering;
 
@@ -17,7 +19,7 @@ void InMemoryCoverRepository::remove(const Cover& cover)
 
 std::optional<Cover> InMemoryCoverRepository::findOfMobilusDeviceId(MobilusDeviceId deviceId) const
 {
-    for (auto& [_, cover] : mCovers) {
+    for (auto& cover : std::views::values(mCovers)) {
         if (deviceId == cover.mobilusDeviceId()) {
             return cover;
         }
@@ -42,7 +44,7 @@ std::vector<Cover> InMemoryCoverRepository::all() const
     std::vector<Cover> covers;
     covers.reserve(mCovers.size());
 
-    for (auto& [_, cover] : mCovers) {
+    for (auto& cover : std::views::values(mCovers)) {
         covers.push_back(cover);
     }
 

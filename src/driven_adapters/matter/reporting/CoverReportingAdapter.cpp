@@ -39,12 +39,12 @@ void CoverReportingAdapter::handle(const CoverTiltMotionChanged& event)
     MatterReportingAttributeChangeCallback(event.endpointId, WindowCovering::Id, WindowCovering::Attributes::OperationalStatus::Id);
 }
 
-void CoverReportingAdapter::handle(const CoverMarkedAsReachable& event)
+void CoverReportingAdapter::handle(const CoverBecameReachable& event)
 {
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::Reachable::Id);
 }
 
-void CoverReportingAdapter::handle(const CoverMarkedAsUnreachable& event)
+void CoverReportingAdapter::handle(const CoverBecameUnreachable& event)
 {
     MatterReportingAttributeChangeCallback(event.endpointId, BridgedDeviceBasicInformation::Id, BridgedDeviceBasicInformation::Attributes::Reachable::Id);
 }

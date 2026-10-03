@@ -141,13 +141,13 @@ struct CoverLiftTargetPositionChanged : common::domain::DomainEvent {
     const char* eventName() const override { return kEventName; }
 };
 
-struct CoverMarkedAsReachable : common::domain::DomainEvent {
-    static constexpr char kEventName[] = "cover_marked_as_reachable";
+struct CoverBecameReachable : common::domain::DomainEvent {
+    static constexpr char kEventName[] = "cover_became_reachable";
 
     const EndpointId endpointId;
     const MobilusDeviceId mobilusDeviceId;
 
-    CoverMarkedAsReachable(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId)
+    CoverBecameReachable(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId)
         : endpointId(aEndpointId)
         , mobilusDeviceId(aMobilusDeviceId)
     {
@@ -156,13 +156,13 @@ struct CoverMarkedAsReachable : common::domain::DomainEvent {
     const char* eventName() const override { return kEventName; }
 };
 
-struct CoverMarkedAsUnreachable : common::domain::DomainEvent {
-    static constexpr char kEventName[] = "cover_marked_as_unreachable";
+struct CoverBecameUnreachable : common::domain::DomainEvent {
+    static constexpr char kEventName[] = "cover_became_unreachable";
 
     const EndpointId endpointId;
     const MobilusDeviceId mobilusDeviceId;
 
-    CoverMarkedAsUnreachable(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId)
+    CoverBecameUnreachable(EndpointId aEndpointId, MobilusDeviceId aMobilusDeviceId)
         : endpointId(aEndpointId)
         , mobilusDeviceId(aMobilusDeviceId)
     {

@@ -24,10 +24,12 @@ public:
     Result reportRenamedTo(std::string name);
     void reportRemoved();
 
-    bool operator==(const Device& other) const { return mEndpointId == other.mEndpointId; }
     [[nodiscard]] EndpointId endpointId() const { return mEndpointId; }
     [[nodiscard]] MobilusDeviceId mobilusDeviceId() const { return mMobilusDeviceId; }
     [[nodiscard]] const std::string& name() const { return mName; }
+
+    bool operator==(const Device& other) const { return mEndpointId == other.mEndpointId; }
+    bool operator!=(const Device& other) const = default;
 
 protected:
     /* const */ EndpointId mEndpointId;

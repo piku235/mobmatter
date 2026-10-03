@@ -22,6 +22,8 @@ public:
     [[nodiscard]] constexpr bool isFullyOpen() const { return *this == fullyOpen(); }
     [[nodiscard]] constexpr bool isFullyClosed() const { return *this == fullyClosed(); }
     [[nodiscard]] constexpr bool isOpen() const { return *this != fullyClosed(); }
+    [[nodiscard]] constexpr bool isHigherThan(const Position& other) const { return mClosedPercent < other.mClosedPercent; }
+    [[nodiscard]] constexpr bool isLowerThan(const Position& other) const { return mClosedPercent > other.mClosedPercent; }
 
     constexpr bool operator==(const Position& other) const = default;
     constexpr bool operator!=(const Position& other) const = default;

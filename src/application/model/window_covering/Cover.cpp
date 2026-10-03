@@ -5,7 +5,7 @@ using namespace mobmatter::common::domain;
 
 namespace mobmatter::application::model::window_covering {
 
-Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, std::string name, PositionState liftState, PositionState tiltState)
+Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, std::string name, PositionState liftState, std::optional<PositionState> tiltState)
 {
     raise(std::make_unique<CoverAdded>(endpointId, mobilusDeviceId, specification));
 
@@ -15,12 +15,13 @@ Cover Cover::add(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSp
         std::move(specification),
         true,
         std::move(name),
-        std::move(liftState),
-        std::move(tiltState),
+        std::nullopt,
+        liftState,
+        tiltState,
     };
 }
 
-Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
+Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, std::optional<CoverMotionFault> motionFault, PositionState liftState, std::optional<PositionState> tiltState)
 {
     return {
         endpointId,
@@ -28,17 +29,19 @@ Cover Cover::restoreFrom(EndpointId endpointId, MobilusDeviceId mobilusDeviceId,
         std::move(specification),
         reachable,
         std::move(name),
-        std::move(liftState),
-        std::move(tiltState),
+        motionFault,
+        liftState,
+        tiltState,
     };
 }
 
-Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, PositionState liftState, PositionState tiltState)
+Cover::Cover(EndpointId endpointId, MobilusDeviceId mobilusDeviceId, CoverSpecification specification, bool reachable, std::string name, std::optional<CoverMotionFault> motionFault, PositionState liftState, std::optional<PositionState> tiltState)
     : Device(endpointId, mobilusDeviceId, std::move(name))
     , mSpecification(std::move(specification))
     , mReachable(reachable)
-    , mLiftState(std::move(liftState))
-    , mTiltState(std::move(tiltState))
+    , mMotionFault(motionFault)
+    , mLiftState(liftState)
+    , mTiltState(tiltState)
 {
 }
 
@@ -88,13 +91,22 @@ Cover::Result Cover::requestTiltTo(Position position)
 
 Cover::Result Cover::requestStopMotion()
 {
-    auto result = stopMotion();
+    auto liftState = mLiftState.stop();
+    auto tiltState = mTiltState ? mTiltState->stop() : std::nullopt;
 
-    if (Result::Ok == result) {
-        raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
+    if (!liftState && !tiltState) {
+        return Result::NoChange;
     }
 
-    return result;
+    if (liftState) {
+        mLiftState = *liftState;
+    }
+    if (tiltState) {
+        mTiltState = tiltState;
+    }
+
+    raise(std::make_unique<CoverStopMotionRequested>(mEndpointId, mMobilusDeviceId));
+    return Result::Ok;
 }
 
 Cover::Result Cover::reportOpen()
@@ -114,21 +126,18 @@ Cover::Result Cover::reportLiftTo(Position position)
 
 Cover::Result Cover::reportLiftPosition(Position position)
 {
-    if (PositionStatus::Unavailable == mLiftState.status()) {
-        return Result::NotSupported;
-    }
-
-    bool movement = PositionStatus::Moving == mLiftState.status();
-    bool currentPositionChanged = position != mLiftState.currentPosition();
-    bool targetPositionChanged = position != mLiftState.targetPosition();
-
-    if (!currentPositionChanged && !targetPositionChanged) {
+    auto liftState = mLiftState.nowAt(position);
+    if (!liftState) {
         return Result::NoChange;
     }
 
-    mLiftState = PositionState::at(position);
+    auto motionChanged = liftState->motion() != mLiftState.motion();
+    auto targetPositionChanged = liftState->targetPosition() != mLiftState.targetPosition();
+    auto currentPositionChanged = liftState->currentPosition() != mLiftState.currentPosition();
 
-    if (movement) {
+    mLiftState = *liftState;
+
+    if (motionChanged) {
         raise(std::make_unique<CoverLiftMotionChanged>(mEndpointId, mMobilusDeviceId, mLiftState.motion()));
     }
     if (targetPositionChanged) {
@@ -148,22 +157,23 @@ Cover::Result Cover::reportTiltTo(Position position)
 
 Cover::Result Cover::reportTiltPosition(Position position)
 {
-    if (PositionStatus::Unavailable == mTiltState.status()) {
+    if (!mTiltState) {
         return Result::NotSupported;
     }
 
-    bool movement = PositionStatus::Moving == mTiltState.status();
-    bool currentPositionChanged = position != mTiltState.currentPosition();
-    bool targetPositionChanged = position != mTiltState.targetPosition();
-
-    if (!currentPositionChanged && !targetPositionChanged) {
+    auto tiltState = mTiltState->nowAt(position);
+    if (!tiltState) {
         return Result::NoChange;
     }
 
-    mTiltState = PositionState::at(position);
+    auto motionChanged = tiltState->motion() != mTiltState->motion();
+    auto targetPositionChanged = tiltState->targetPosition() != mTiltState->targetPosition();
+    auto currentPositionChanged = tiltState->currentPosition() != mTiltState->currentPosition();
 
-    if (movement) {
-        raise(std::make_unique<CoverTiltMotionChanged>(mEndpointId, mMobilusDeviceId, mTiltState.motion()));
+    mTiltState = *tiltState;
+
+    if (motionChanged) {
+        raise(std::make_unique<CoverTiltMotionChanged>(mEndpointId, mMobilusDeviceId, mTiltState->motion()));
     }
     if (targetPositionChanged) {
         raise(std::make_unique<CoverTiltTargetPositionChanged>(mEndpointId, mMobilusDeviceId, position));
@@ -175,49 +185,57 @@ Cover::Result Cover::reportTiltPosition(Position position)
     return Result::Ok;
 }
 
-Cover::Result Cover::reportStopMotion()
-{
-    return stopMotion();
-}
-
-Cover::Result Cover::reportReachable()
+Cover::Result Cover::reportAsReachable()
 {
     if (mReachable) {
         return Result::NoChange;
     }
 
     mReachable = true;
-    raise(std::make_unique<CoverMarkedAsReachable>(mEndpointId, mMobilusDeviceId));
+    raise(std::make_unique<CoverBecameReachable>(mEndpointId, mMobilusDeviceId));
 
     return Result::Ok;
 }
 
-Cover::Result Cover::reportError(Error error)
+Cover::Result Cover::reportAsUnreachable()
 {
-    auto result = Result::NoChange;
-
-    if (Error::Unreachable == error && mReachable) {
-        mReachable = false;
-        raise(std::make_unique<CoverMarkedAsUnreachable>(mEndpointId, mMobilusDeviceId));
-
-        result = Result::Ok;
+    if (!mReachable) {
+        return Result::NoChange;
     }
-    if (PositionStatus::Moving == mLiftState.status()) {
-        mLiftState = mLiftState.reset();
+
+    mReachable = false;
+    raise(std::make_unique<CoverBecameUnreachable>(mEndpointId, mMobilusDeviceId));
+
+    return Result::Ok;
+}
+
+Cover::Result Cover::reportMotionFault(CoverMotionFault fault)
+{
+    if (mMotionFault == fault) {
+        return Result::NoChange;
+    }
+
+    auto liftMovement = PositionStatus::Moving == mLiftState.status();
+    auto tiltMovement = mTiltState && PositionStatus::Moving == mTiltState->status();
+
+    if (!liftMovement && !tiltMovement) {
+        return Result::NoChange;
+    }
+
+    mMotionFault = fault;
+
+    if (liftMovement) {
+        mLiftState = PositionState::at(mLiftState.currentPosition());
         raise(std::make_unique<CoverLiftMotionChanged>(mEndpointId, mMobilusDeviceId, mLiftState.motion()));
-        raise(std::make_unique<CoverLiftTargetPositionChanged>(mEndpointId, mMobilusDeviceId, *mLiftState.targetPosition()));
-
-        result = Result::Ok;
+        raise(std::make_unique<CoverLiftTargetPositionChanged>(mEndpointId, mMobilusDeviceId, mLiftState.targetPosition()));
     }
-    if (PositionStatus::Moving == mTiltState.status()) {
-        mTiltState = mTiltState.reset();
-        raise(std::make_unique<CoverTiltMotionChanged>(mEndpointId, mMobilusDeviceId, mTiltState.motion()));
-        raise(std::make_unique<CoverTiltTargetPositionChanged>(mEndpointId, mMobilusDeviceId, *mTiltState.targetPosition()));
-
-        result = Result::Ok;
+    if (tiltMovement) {
+        mTiltState = PositionState::at(mTiltState->currentPosition());
+        raise(std::make_unique<CoverTiltMotionChanged>(mEndpointId, mMobilusDeviceId, mTiltState->motion()));
+        raise(std::make_unique<CoverTiltTargetPositionChanged>(mEndpointId, mMobilusDeviceId, mTiltState->targetPosition()));
     }
 
-    return result;
+    return Result::Ok;
 }
 
 Cover::Result Cover::changeLiftAndTiltTargetPosition(Position position)
@@ -230,57 +248,35 @@ Cover::Result Cover::changeLiftAndTiltTargetPosition(Position position)
 
 Cover::Result Cover::changeLiftTargetPosition(Position position)
 {
-    if (PositionStatus::Unavailable == mLiftState.status()) {
-        return Result::NotSupported;
+    if (auto state = mLiftState.movingTo(position)) {
+        mMotionFault = std::nullopt;
+        mLiftState = *state;
+
+        raise(std::make_unique<CoverLiftMotionChanged>(mEndpointId, mMobilusDeviceId, mLiftState.motion()));
+        raise(std::make_unique<CoverLiftTargetPositionChanged>(mEndpointId, mMobilusDeviceId, position));
+
+        return Result::Ok;
     }
-    if (position == mLiftState.targetPosition()) {
-        return Result::NoChange;
-    }
 
-    mLiftState = mLiftState.movingTo(position);
-
-    raise(std::make_unique<CoverLiftMotionChanged>(mEndpointId, mMobilusDeviceId, mLiftState.motion()));
-    raise(std::make_unique<CoverLiftTargetPositionChanged>(mEndpointId, mMobilusDeviceId, position));
-
-    return Result::Ok;
+    return Result::NoChange;
 }
 
 Cover::Result Cover::changeTiltTargetPosition(Position position)
 {
-    if (PositionStatus::Unavailable == mTiltState.status()) {
+    if (!mTiltState) {
         return Result::NotSupported;
     }
-    if (position == mTiltState.targetPosition()) {
-        return Result::NoChange;
+    if (auto state = mTiltState->movingTo(position)) {
+        mMotionFault = std::nullopt;
+        mTiltState = state;
+
+        raise(std::make_unique<CoverTiltMotionChanged>(mEndpointId, mMobilusDeviceId, mTiltState->motion()));
+        raise(std::make_unique<CoverTiltTargetPositionChanged>(mEndpointId, mMobilusDeviceId, position));
+
+        return Result::Ok;
     }
 
-    mTiltState = mTiltState.movingTo(position);
-
-    raise(std::make_unique<CoverTiltMotionChanged>(mEndpointId, mMobilusDeviceId, mTiltState.motion()));
-    raise(std::make_unique<CoverTiltTargetPositionChanged>(mEndpointId, mMobilusDeviceId, position));
-
-    return Result::Ok;
-}
-
-Cover::Result Cover::stopMotion()
-{
-    bool liftMovement = PositionStatus::Moving == mLiftState.status();
-    bool tiltMovement = PositionStatus::Moving == mTiltState.status();
-
-    if (!liftMovement && !tiltMovement) {
-        return Result::NoChange;
-    }
-
-    if (liftMovement) {
-        mLiftState = mLiftState.stop();
-        raise(std::make_unique<CoverLiftMotionChanged>(mEndpointId, mMobilusDeviceId, mLiftState.motion()));
-    }
-    if (tiltMovement) {
-        mTiltState = mTiltState.stop();
-        raise(std::make_unique<CoverTiltMotionChanged>(mEndpointId, mMobilusDeviceId, mTiltState.motion()));
-    }
-
-    return Result::Ok;
+    return Result::NoChange;
 }
 
 std::unique_ptr<DomainEvent> Cover::deviceRemoved()
