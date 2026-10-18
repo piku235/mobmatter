@@ -64,7 +64,7 @@ jobs:
 
       - name: Cache CHIP pigweed
         id: pigweed-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           key: ${{ runner.os }}-build-pigweed-${{ hashFiles('third_party/connectedhomeip/scripts/setup/requirements*.txt', 'third_party/connectedhomeip/third_party/pigweed/repo/package-lock.json') }}
           path: third_party/connectedhomeip/.environment
