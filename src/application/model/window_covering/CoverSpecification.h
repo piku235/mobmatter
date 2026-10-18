@@ -17,6 +17,8 @@ public:
     [[nodiscard]] static CoverSpecification SensoZ();
     [[nodiscard]] static CoverSpecification Cosmo();
     [[nodiscard]] static CoverSpecification Cmr();
+    [[nodiscard]] static CoverSpecification Czr();
+    [[nodiscard]] static CoverSpecification Mzr();
 
     [[nodiscard]] const std::string& model() const { return mModel; }
     [[nodiscard]] MobilusDeviceType mobilusDeviceType() const { return mMobilusDeviceType; }

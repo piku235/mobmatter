@@ -13,6 +13,10 @@ std::optional<CoverSpecification> CoverSpecification::findFor(MobilusDeviceType 
         return Cosmo();
     case MobilusDeviceType::Cmr:
         return Cmr();
+    case MobilusDeviceType::CosmoCzr:
+        return Czr();
+    case MobilusDeviceType::CosmoMzr:
+        return Mzr();
     default:
         return std::nullopt;
     }
@@ -72,11 +76,41 @@ CoverSpecification CoverSpecification::Cmr()
     };
 }
 
+CoverSpecification CoverSpecification::Czr()
+{
+    return {
+        "C-ZR",
+        MobilusDeviceType::CosmoCzr,
+        CoverEndProductType::VenetianBlind,
+        {
+            CoverFeature::Lift,
+            CoverFeature::Tilt,
+            CoverFeature::EdgePositionAwareLift,
+            CoverFeature::PositionAwareTilt,
+        }
+    };
+}
+
+CoverSpecification CoverSpecification::Mzr()
+{
+    return {
+        "M-ZR",
+        MobilusDeviceType::CosmoCzr,
+        CoverEndProductType::VenetianBlind,
+        {
+            CoverFeature::Lift,
+            CoverFeature::Tilt,
+            CoverFeature::EdgePositionAwareLift,
+            CoverFeature::PositionAwareTilt,
+        }
+    };
+}
+
 CoverSpecification::CoverSpecification(std::string model, MobilusDeviceType mobilusDeviceType, CoverEndProductType endProductType, Flags<CoverFeature> featureFlags)
     : mModel(std::move(model))
     , mMobilusDeviceType(mobilusDeviceType)
     , mEndProductType(endProductType)
-    , mFeatureFlags(std::move(featureFlags))
+    , mFeatureFlags(featureFlags)
 {
 }
 
