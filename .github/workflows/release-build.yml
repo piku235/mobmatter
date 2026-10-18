@@ -18,7 +18,7 @@ jobs:
       ARCH: "mipsel_24kc"
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Common strings
         id: strings
@@ -57,7 +57,7 @@ jobs:
         run: scripts/checkout_submodules.py --shallow --platform linux
 
       - name: Cache protoc
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           key: ${{ runner.os }}-build-protoc
           path: third_party/protobuf/bin/protoc
@@ -100,6 +100,6 @@ jobs:
         run: tar --owner=0 --group=0 -czf mobmatter.jpk -C target .
 
       - name: Upload
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: mobmatter.jpk
