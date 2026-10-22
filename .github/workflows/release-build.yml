@@ -30,9 +30,6 @@ jobs:
           VERSION="${{ github.event.release.tag_name }}"
           echo "version=${VERSION#v}" >> "$GITHUB_OUTPUT"
 
-      - name: Install extra dependencies
-        run: apt-get update && apt-get install -y libsqlite3-dev
-
       - name: Mark workspace as safe for git
         run: git config --system --add safe.directory '*'
 
