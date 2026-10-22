@@ -10,6 +10,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/project-chip/chip-build:217
+
     env:
       OPENWRT_VERSION: "25.12.5"
       GCC_VERSION: "14.3.0"
@@ -27,8 +30,11 @@ jobs:
           VERSION="${{ github.event.release.tag_name }}"
           echo "version=${VERSION#v}" >> "$GITHUB_OUTPUT"
 
-      - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y git gcc g++ pkg-config cmake libssl-dev libdbus-1-dev libglib2.0-dev libavahi-client-dev ninja-build python3-venv python3-dev python3-pip unzip libgirepository1.0-dev libcairo2-dev libreadline-dev default-jre
+      - name: Install extra dependencies
+        run: apt-get update && apt-get install -y libsqlite3-dev
+
+      - name: Mark workspace as safe for git
+        run: git config --system --add safe.directory '*'
 
       - name: Setup project dependencies
         run: git submodule update --init
@@ -73,12 +79,13 @@ jobs:
         working-directory: third_party/connectedhomeip
         env:
           PW_NO_CIPD_CACHE_DIR: 1
+        shell: bash
         run: source scripts/bootstrap.sh -p all,linux
 
       - name: Configure GN
-        run: |
-          source third_party/connectedhomeip/scripts/activate.sh
-          gn gen out/target --args='import("//build/target.gni")'
+        env:
+          GN_ARGS: import("//build/target.gni")
+        run: third_party/connectedhomeip/scripts/run_in_build_env.sh 'gn gen out/target --args="$GN_ARGS"'
 
       - name: Build mobmatter
         run: third_party/connectedhomeip/scripts/run_in_build_env.sh "ninja -C out/target"
