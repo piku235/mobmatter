@@ -59,6 +59,7 @@ jobs:
         working-directory: third_party/connectedhomeip
         env:
           PW_NO_CIPD_CACHE_DIR: 1
+        shell: bash
         run: source scripts/bootstrap.sh -p all,linux
 
       - name: Configure GN
