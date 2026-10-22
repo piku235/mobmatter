@@ -63,9 +63,15 @@ jobs:
         run: source scripts/bootstrap.sh -p all,linux
 
       - name: Configure GN
-        run: |
-          source third_party/connectedhomeip/scripts/activate.sh
-          gn gen out/build --args='is_debug=false custom_toolchain="custom" is_clang=${{ matrix.is_clang }} target_cc="${{ matrix.cc }}" target_cxx="${{ matrix.cxx }}" target_ar="ar"'
+        env:
+          GN_ARGS: >-
+            is_debug=false
+            custom_toolchain="custom"
+            is_clang=${{ matrix.is_clang }}
+            target_cc="${{ matrix.cc }}"
+            target_cxx="${{ matrix.cxx }}"
+            target_ar="ar"
+        run: third_party/connectedhomeip/scripts/run_in_build_env.sh 'gn gen out/build --args="$GN_ARGS"'
 
       - name: Compiler version
         run: ${{ matrix.cxx }} --version
