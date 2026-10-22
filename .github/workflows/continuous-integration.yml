@@ -32,6 +32,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Mark workspace as safe for git
+        run: git config --system --add safe.directory '*'
+
       - name: Setup project dependencies
         run: git submodule update --init
 
