@@ -51,7 +51,7 @@ jobs:
       - name: Export OpenWRT
         run: |
           TOOLCHAIN="toolchain-${ARCH}_gcc-${GCC_VERSION}_musl"
-          echo "PATH=${PWD}/openwrt-toolchain/$TOOLCHAIN/bin:$PATH" >> $GITHUB_ENV
+          echo "${PWD}/openwrt-toolchain/$TOOLCHAIN/bin" >> "$GITHUB_PATH"
           echo "STAGING_DIR=${PWD}/openwrt-toolchain/$TOOLCHAIN" >> $GITHUB_ENV
           echo "OPENWRT_SYSROOT_DIR=${PWD}/target-sysroot" >> $GITHUB_ENV
 
