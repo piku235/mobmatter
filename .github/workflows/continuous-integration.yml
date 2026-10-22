@@ -32,6 +32,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install extra dependencies
+        run: apt-get update && apt-get install -y libsqlite3-dev
+
       - name: Mark workspace as safe for git
         run: git config --system --add safe.directory '*'
 
