@@ -370,6 +370,53 @@ TEST(MobilusCoverHandlerTest, HandlesCoverReachedPositionEvent)
     ASSERT_EQ(Position::fullyClosed(), cover->tiltState()->currentPosition());
 }
 
+TEST(MobilusCoverHandlerTest, HandlesCoverRemovedEvent)
+{
+    InMemoryCoverRepository coverRepository;
+    InMemoryEndpointIdGenerator endpointIdGenerator(1u);
+    MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
+
+    {
+        auto cover = liftAndTiltCover();
+        (void)cover.reportLiftTo(Position::fullyClosed());
+        (void)cover.reportTiltTo(Position::fullyClosed());
+
+        coverRepository.save(cover);
+    }
+
+    proto::Event event;
+    event.set_device_id(kMobilusDeviceId);
+    event.set_value("REMOVE");
+    event.set_event_number(EventNumber::Device);
+
+    ASSERT_EQ(MobilusDeviceEventHandler::Result::Handled, handler.handle(event));
+    auto cover = coverRepository.find(1u);
+
+    ASSERT_FALSE(cover.has_value());
+}
+
+TEST(MobilusCoverHandlerTest, DoesNotHandleOtherDeviceEvents)
+{
+    InMemoryCoverRepository coverRepository;
+    InMemoryEndpointIdGenerator endpointIdGenerator(1u);
+    MobilusCoverHandler handler(coverRepository, endpointIdGenerator, Logger::noop());
+
+    {
+        auto cover = liftAndTiltCover();
+        (void)cover.reportLiftTo(Position::fullyClosed());
+        (void)cover.reportTiltTo(Position::fullyClosed());
+
+        coverRepository.save(cover);
+    }
+
+    proto::Event event;
+    event.set_device_id(kMobilusDeviceId);
+    event.set_value("ADD");
+    event.set_event_number(EventNumber::Device);
+
+    ASSERT_EQ(MobilusDeviceEventHandler::Result::Unmatched, handler.handle(event));
+}
+
 TEST(MobilusCoverHandlerTest, HandlesCoverFailureEvent)
 {
     InMemoryCoverRepository coverRepository;

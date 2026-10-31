@@ -33,8 +33,13 @@ private:
     static std::optional<model::window_covering::CoverMotionFault> parseMotionFault(const std::string& error);
 
     void init(model::window_covering::CoverSpecification coverSpec, const proto::Device& device, const proto::Event& lastEvent);
+    void remove(model::window_covering::Cover& cover);
+    Result handleDeviceEvent(model::window_covering::Cover& cover, const proto::Event& event);
     bool apply(model::window_covering::Cover& cover, const proto::Device& deviceInfo);
     bool apply(model::window_covering::Cover& cover, const proto::Event& event);
+    bool applySentEvent(model::window_covering::Cover& cover, const proto::Event& event);
+    bool applyReachedEvent(model::window_covering::Cover& cover, const proto::Event& event);
+    bool applyErrorEvent(model::window_covering::Cover& cover, const proto::Event& event);
 };
 
 }
